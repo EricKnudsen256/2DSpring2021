@@ -5,12 +5,20 @@
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
 
-typedef struct 
+typedef struct Entity_s
 {
-	Bool _inuse;
-	Vector2D position;
-	Sprite *sprite;
-	float frame;
+	Bool		_inuse;
+	Vector2D	position;
+	Vector2D	velocity;
+	Sprite		*sprite;
+	float		frame;
+	float		frameRate;
+	int			frameCount;
+	void		(*update)(struct Entity_s *self);
+	void		(*think)(struct Entity_s *self);
+	void		(*draw)(struct Entity_s *self);
+	void		(*free)(struct Entity_s *self);
+	void		*data;
 }Entity;
 
 /**
@@ -40,7 +48,9 @@ void entity_free(Entity *ent);
 * @brief draws provided entity
 * @param ent the entity to draw
 */
-void entitty_draw(Entity *ent);
+void entity_draw(Entity *ent);
+
+
 
 #endif
 

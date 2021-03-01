@@ -10,16 +10,17 @@
 #include "entity.h"
 
 
+
 int main(int argc, char * argv[])
 {
     /*variable declarations*/
     int done = 0;
     const Uint8 * keys;
-    Sprite *sprite;
 	Entity *ent;
     
     int mx,my;
     float mf = 0;
+	Sprite *sprite;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
     
@@ -66,14 +67,15 @@ int main(int argc, char * argv[])
 
 		ent->position.x++;
 
-
+		
 
         
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
-            gf2d_sprite_draw_image(sprite,vector2d(0,0));
-            
+
+			gf2d_sprite_draw_image(sprite, vector2d(0, 0));
+
 			entity_draw(ent);
 
             //UI elements last
@@ -86,6 +88,7 @@ int main(int argc, char * argv[])
                 NULL,
                 &mouseColor,
                 (int)mf);
+
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
