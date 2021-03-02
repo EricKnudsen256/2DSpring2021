@@ -7,25 +7,43 @@
 
 typedef struct Entity_s
 {
-	Bool		_inuse;
-	Vector2D	position;
-	Vector2D	velocity;
-	Sprite		*sprite;
-	float		frame;
-	float		frameRate;
-	int			frameCount;
-	void		(*update)(struct Entity_s *self);
-	void		(*think)(struct Entity_s *self);
-	void		(*draw)(struct Entity_s *self);
-	void		(*free)(struct Entity_s *self);
-	void		*data;
+	Bool       _inuse;
+	Vector2D    position;
+	Vector2D    velocity;
+	Vector3D    rotation; //(x,y) = rotation center, z = degrees of rotation
+	Sprite     *sprite;
+	float       frame;
+	float       frameRate;
+	int         frameCount;
+	void(*update)(struct Entity_s *self);
+	void(*think)(struct Entity_s *self);
+	void(*draw)(struct Entity_s *self);
+	void(*free)(struct Entity_s *self);
+	void       *data;
 }Entity;
 
 /**
 * @brief initialize internal entity management system
-* @param max_entities how many concurent entities to support
+* @param max_entities how many concurrent entities to support
 */
 void entity_manager_init(Uint32 max_entities);
+
+/**
+* @brief calls update function on all entities
+*/
+void entity_manager_update_entities();
+
+/**
+* @brief call think function for all entities
+*/
+void entity_manager_think_entities();
+
+
+/**
+* @brief call draw on all entities
+*/
+void entity_manager_draw_entities();
+
 
 /**
 * @brief free all entities in the system and destroy entity manager
@@ -45,12 +63,9 @@ Entity *entity_new();
 void entity_free(Entity *ent);
 
 /**
-* @brief draws provided entity
+* @brief draws an entity to the current render frame
 * @param ent the entity to draw
 */
 void entity_draw(Entity *ent);
 
-
-
 #endif
-
