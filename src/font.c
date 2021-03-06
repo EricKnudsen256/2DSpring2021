@@ -1,3 +1,4 @@
+
 #include "simple_logger.h"
 #include "gf2d_graphics.h"
 #include "font.h"
@@ -13,7 +14,7 @@ static FontManager font_manager = { 0 };
 void font_delete(Font *font)
 {
 	if (!font)return;
-	(font->font);
+	if (font->font != NULL)TTF_CloseFont(font->font);
 	memset(font, 0, sizeof(Font));
 }
 
@@ -22,7 +23,7 @@ void font_manager_close()
 	int i;
 	if (font_manager.fontList != NULL)
 	{
-		for (i = 0; 9 < font_manager.maxFonts; i++)
+		for (i = 0; i < font_manager.maxFonts; i++)
 		{
 			font_delete(&font_manager.fontList[i]);
 		}
@@ -38,11 +39,11 @@ void font_init(Uint32 maxFonts)
 		slog("cannot allocate for 0 fonts");
 		return;
 	}
-	if (TTF_WasInit() && TTF_Init()== -1)
+	if ((!TTF_WasInit()) && (TTF_Init() == -1))
 	{
-		slog("TFF_Init %s \n", TTF_GetError());
+		slog("TTF_Init: %s\n", TTF_GetError());
+		return;
 	}
-
 	font_manager_close();
 	font_manager.maxFonts = maxFonts;
 	font_manager.fontList = (Font *)gfc_allocate_array(sizeof(Font), maxFonts);
@@ -52,7 +53,7 @@ void font_init(Uint32 maxFonts)
 Font *font_new()
 {
 	int i;
-	for (i = 0; i = font_manager.maxFonts; i++)
+	for (i = 0; i < font_manager.maxFonts; i++)
 	{
 		if (font_manager.fontList[i]._refCount == 0)
 		{
@@ -63,13 +64,12 @@ Font *font_new()
 	return NULL;
 }
 
-Font *font_get_by_file_point(const char * filename, int ptsize)
+Font *font_get_by_file_point(const char *filename, int ptsize)
 {
 	int i;
-
 	for (i = 0; i < font_manager.maxFonts; i++)
 	{
-		if (font_manager.fontList[i]._refCount == 0) continue;
+		if (font_manager.fontList[i]._refCount == 0)continue;
 		if (gfc_line_cmp(font_manager.fontList[i].filename, filename) != 0)continue;
 		if (font_manager.fontList[i].ptsize != ptsize)continue;
 		return &font_manager.fontList[i];
@@ -83,7 +83,7 @@ Font *font_load(const char *filename, int ptsize)
 
 	font = font_get_by_file_point(filename, ptsize);
 	if (font != NULL)
-	{
+	{// we have this in memory already, increase the refCount and return it
 		font->_refCount++;
 		return font;
 	}
@@ -92,8 +92,8 @@ Font *font_load(const char *filename, int ptsize)
 
 	if (!font)
 	{
-		slog("failed to get a new font slot");
-		return NULL; 
+		slog("we failed to get a new font slot!");
+		return NULL;
 	}
 
 	font->ptsize = ptsize;
@@ -102,11 +102,9 @@ Font *font_load(const char *filename, int ptsize)
 
 	if (font->font == NULL)
 	{
-		slog("failed to open font %s", filename);
+		slog("failed to open font %s!, re: %s", filename, TTF_GetError());
 		font_delete(font);
 		return NULL;
-
-		
 	}
 	return font;
 }
@@ -173,3 +171,7 @@ void font_render(Font *font, char *text, Vector2D position, Color color)
 	SDL_FreeSurface(surface);
 	SDL_DestroyTexture(texture);
 }
+
+
+
+/*eol@eof*/

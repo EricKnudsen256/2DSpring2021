@@ -36,7 +36,7 @@ void player_update(Entity *self)
 	cameraSize = camera_get_dimensions();
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
-	//camera_set_position(camera);
+	camera_set_position(camera);
 	// apply dampening on velocity
 	vector2d_scale(self->velocity, self->velocity, 0.75);
 	if (vector2d_magnitude_squared(self->velocity) < 2)
@@ -44,7 +44,7 @@ void player_update(Entity *self)
 		vector2d_clear(self->velocity);
 	}
 
-	vector2d_add(self->position, self->position, self->velocity);
+	//vector2d_add(self->position, self->position, self->velocity);
 }
 
 void player_think(Entity *self)

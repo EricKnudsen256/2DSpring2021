@@ -8,9 +8,10 @@
 #include "gf2d_sprite.h"
 
 #include "font.h"
+#include "camera.h"
 #include "entity.h"
 #include "player.h"
-
+#include "level.h"
 
 
 int main(int argc, char * argv[])
@@ -19,10 +20,13 @@ int main(int argc, char * argv[])
     int done = 0;
     const Uint8 * keys;
 
+	Level *level;
+	Font *font;
+	TextLine fps_text;
+
     
     int mx,my;
     float mf = 0;
-	Sprite *sprite;
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
     
@@ -43,17 +47,20 @@ int main(int argc, char * argv[])
 	camera_set_position(vector2d(0, 0));
 
 	gf2d_sprite_init(1024);
-
+	font_init(10);
 
 	entity_manager_init(100);
 	
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
-    sprite = gf2d_sprite_load_image("images/backgrounds/bg_flat.png");
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
+	level = level_load("levels/example_level.json");
+	//level = level_random(16, 16);
 
 	player_spawn(vector2d(100, 100));
+
+	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 
     /*main game loop*/
@@ -71,13 +78,14 @@ int main(int argc, char * argv[])
 		entity_manager_think_entities();
 		entity_manager_update_entities();
 
-
+		level_update(level);
 
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
 
-			gf2d_sprite_draw_image(sprite, vector2d(0, 0));
+		level_draw(level);
+
 
 			entity_manager_draw_entities();
 
@@ -92,10 +100,12 @@ int main(int argc, char * argv[])
                 &mouseColor,
                 (int)mf);
 
+		gfc_line_sprintf(fps_text, "FPS:%f", gf2d_graphics_get_frames_per_second());
+		font_render(font, fps_text, vector2d(32, 32), gfc_color8(255, 255, 255, 255));
+
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
         if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
-       // slog("Rendering at %f FPS",gf2d_graphics_get_frames_per_second());
     }
 
     slog("---==== END ====---");
