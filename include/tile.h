@@ -13,11 +13,15 @@ typedef enum
 
 typedef struct
 {
-	Bool       _inuse;
 	Vector2D	gridPos;	//position of tile on tilegrid
 	Sprite		*sprite;
 	int			tileWidth;
 	int			tileHeight;
+
+	void(*update)(struct Tile *tile);
+	void(*think)(struct Tile *tile);
+	void(*draw)(struct Tile *tile);
+	void(*free)(struct Tile *tile);
 
 }Tile;
 
