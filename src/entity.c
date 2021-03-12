@@ -3,6 +3,7 @@
 
 #include "camera.h"
 #include "entity.h"
+#include "level.h"
 
 typedef struct
 {
@@ -53,6 +54,12 @@ void entity_update(Entity *self)
 	if (self->frame >= self->frameCount)self->frame = 0;
 	// IF THERE IS A CUSTOM UPDATE, DO THAT NOW
 	if (self->update)self->update(self);
+
+	if (&self->hitbox)
+	{
+		self->hitbox.x = self->position.x;
+		self->hitbox.y = self->position.y;
+	}
 }
 
 void entity_manager_update_entities()
@@ -123,6 +130,13 @@ Entity *entity_new()
 	return NULL;
 }
 
+void entity_check_collions(Entity *ent)
+{
+	Level *level;
+
+	level = level_manager_get_current();
+}
+
 void entity_free(Entity *ent)
 {
 	if (!ent)
@@ -171,7 +185,24 @@ void entity_draw(Entity *ent)
 			NULL,
 			NULL,
 			(Uint32)ent->frame);
+
+		if (&ent->hitbox)
+		{
+
+			SDL_Rect tempDraw;
+
+			tempDraw.x = ent->hitbox.x + offset.x;
+			tempDraw.y = ent->hitbox.y + offset.y;
+			tempDraw.w = ent->hitbox.w;
+			tempDraw.h = ent->hitbox.h;
+
+			SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 255, 255);
+
+			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
+		}
 	}
+
+
 }
 
 

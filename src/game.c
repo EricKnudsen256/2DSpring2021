@@ -50,12 +50,13 @@ int main(int argc, char * argv[])
 	font_init(10);
 
 	entity_manager_init(100);
+	level_manager_init(64);
 	
     SDL_ShowCursor(SDL_DISABLE);
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	level = level_random(16, 16);
+	level = level_random(32, 32);
 	//level = level_random(16, 16);
 
 	player_spawn(vector2d(100, 100));
@@ -102,6 +103,7 @@ int main(int argc, char * argv[])
 
 		gfc_line_sprintf(fps_text, "FPS:%f", gf2d_graphics_get_frames_per_second());
 		font_render(font, fps_text, vector2d(32, 32), gfc_color8(255, 255, 255, 255));
+
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         

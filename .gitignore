@@ -58,3 +58,5 @@ gf2d
 *.log
 
 makefile.dep
+
+win32/2dGameFramework/2dGameFramework.opensdf

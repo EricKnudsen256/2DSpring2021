@@ -23,6 +23,12 @@ Entity *player_spawn(Vector2D position)
 	ent->think = player_think;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
+	ent->hitbox.x = 0;
+	ent->hitbox.y = 0;
+	ent->hitbox.w = 128;
+	ent->hitbox.h = 128;
+
+
 	return ent;
 }
 
@@ -33,24 +39,17 @@ void player_update(Entity *self)
 	Vector2D cameraSize;
 
 	if (!self)return;
+
 	cameraSize = camera_get_dimensions();
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
 	camera_set_position(camera);
-	// apply dampening on velocity
-	vector2d_scale(self->velocity, self->velocity, 0.75);
-	if (vector2d_magnitude_squared(self->velocity) < 2)
-	{
-		vector2d_clear(self->velocity);
-	}
-
-	//vector2d_add(self->position, self->position, self->velocity);
 }
 
 void player_think(Entity *self)
 {
 	const Uint8 *keys;
-	Vector2D aimdir, camera, thrust;
+	Vector2D camera, gravity;
 	float angle;
 	int mx, my;
 	if (!self)return;
@@ -59,23 +58,33 @@ void player_think(Entity *self)
 	camera = camera_get_position();
 	mx += camera.x;
 	my += camera.y;
-	aimdir.x = mx - (self->position.x + 64);
-	aimdir.y = my - (self->position.y + 64);
-	angle = vector_angle(aimdir.x, aimdir.y);
-	self->rotation.z = angle + 90;
 
+	//put loop to check for floor collision on gravity
 
-	// turn aimdir into a unit vector
-	vector2d_normalize(&aimdir);
-
+	self->velocity.y += 1;
 	
-	// check for motion
-	if (keys[SDL_SCANCODE_W])
+	self->velocity.y += .1;
+
+	if (self->velocity.y > 2)
 	{
-		vector2d_scale(thrust, aimdir, 2);
-		vector2d_add(self->velocity, self->velocity, thrust);
+		self->velocity.y = 2;
+	}
+
+
+	if (keys[SDL_SCANCODE_D])
+	{
+		self->velocity.x = 2;
+	}
+	else if (keys[SDL_SCANCODE_A])
+	{
+		self->velocity.x = -2;
+	}
+	else
+	{
+		self->velocity.x = 0;
 	}
 
 }
+
 
 /**/

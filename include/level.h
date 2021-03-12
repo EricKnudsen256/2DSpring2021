@@ -10,6 +10,8 @@
 
 typedef struct
 {
+	Bool		_current; /**<set to true for the level that is currently in use*/
+	Bool		_inuse;
 	Sprite     **bgImage;    /**<the background image for the level*/
 	int         bgImageCount;/**<how many we have*/
 	Vector2D    levelSize;   /**<how large, in pixels, the level is*/
@@ -24,6 +26,20 @@ typedef struct
 	int         tileHeight;  /**<how many pixels tall each tile is*/
 	int         tileFPL;
 }Level;
+
+/**
+* @brief starts the level_manager and allocates the memory for it to run
+* @params the number of level that will be in the level_list
+*/
+
+void level_manager_init(Uint32 max_levels);
+
+
+/**
+* @brief frees all resources used by the level manager
+*/
+
+void level_manager_free();
 
 
 /**

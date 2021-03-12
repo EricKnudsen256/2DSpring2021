@@ -57,10 +57,10 @@ void tile_draw(Tile *tile)
 		if (!camera_rect_on_screen(gfc_sdl_rect((tile->gridPos.x * tile->tileWidth), (tile->gridPos.y * tile->tileHeight), tile->sprite->frame_w, tile->sprite->frame_h)))
 		{
 			//entity is off camera, skip
-			return;
+			//return;
 		}
-		drawPosition.x = (tile->gridPos.x * 32);
-		drawPosition.y = (tile->gridPos.y * 32);
+		drawPosition.x = (tile->gridPos.x * 32) + offset.x;
+		drawPosition.y = (tile->gridPos.y * 32) + offset.y;
 
 		gf2d_sprite_draw(
 			tile->sprite,

@@ -12,16 +12,58 @@ typedef struct
 	Uint32  max_levels;
 }LevelManager;
 
-static LevelManager level_list = { 0 };
+static LevelManager level_manager = { 0 };
+
+
+void level_manager_init(Uint32 max_levels)
+{
+	if (max_levels == 0)
+	{
+		slog("cannot allocate 0 levels!");
+		return;
+	}
+	if (level_manager.level_list != NULL)
+	{
+		entity_manager_free();
+	}
+	level_manager.level_list = (Level *)gfc_allocate_array(sizeof (Level), max_levels);
+	if (level_manager.level_list == NULL)
+	{
+		slog("failed to allocate entity list!");
+		return;
+	}
+	level_manager.max_levels = max_levels;
+	atexit(level_manager_free);
+	slog("level system initialized");
+}
+
+void level_manager_free()
+{
+	if (level_manager.level_list != NULL)
+	{
+		free(level_manager.level_list);
+	}
+	memset(&level_manager, 0, sizeof(LevelManager));
+	slog("entity system closed");
+}
+
 
 Level *level_new()
 {
+	int i;
 	Level *level;
 	level = (Level *)malloc(sizeof(Level));
 	if (!level)
 	{
 		slog("failed to allocate memory for the game level");
 		return NULL;
+	}
+	for (i = 0; i < level_manager.max_levels; i++)
+	{
+		if (level_manager.level_list[i]._inuse)continue;// someone else is using this one
+		memset(&level_manager.level_list[i], 0, sizeof(Level));
+		level_manager.level_list[i]._inuse = 1;
+		return &level_manager.level_list[i];
 	}
 	memset(level, 0, sizeof(Level));
 	return level;
@@ -231,9 +273,6 @@ Level *level_random(int width, int height)
 					level_free(level);
 					return NULL;
 				}
-				
-
-
 			}
 		}
 	}
@@ -242,8 +281,25 @@ Level *level_random(int width, int height)
 	level->levelSize.x = level->levelWidth * level->tileWidth;
 	level->levelSize.y = level->levelHeight * level->tileHeight;
 	
+	level->_inuse = 1;
+
 	return level;
 
+}
+
+Level *level_manager_get_current()
+{
+	int i;
+	for (i = 0; i < level_manager.max_levels; i++)
+	{
+		if (level_manager.level_list[i]._current)
+		{
+			return &level_manager.level_list[i];
+		}
+	}
+	slog("no current level found, returning NULL");
+
+	return NULL;
 }
 
 

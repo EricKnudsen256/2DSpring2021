@@ -10,8 +10,7 @@ typedef struct Entity_s
 	Bool       _inuse;
 	Vector2D    position;
 	Vector2D    velocity;
-	Vector2D	hitboxSize;		//size of the hitbox for the entity, x = width, y = height
-	Vector2D	hitboxCenter;	//center of the hitbox in relation to entity position
+	SDL_Rect	hitbox;	
 	Vector3D    rotation;		//(x,y) = rotation center, z = degrees of rotation
 	Sprite     *sprite;
 	float       frame;
@@ -40,6 +39,13 @@ void entity_manager_update_entities();
 */
 void entity_manager_think_entities();
 
+/**
+* @brief checks collions on all entities in the entity manager
+* @param ent the entity to check for collisions
+*/
+
+void entity_manager_check_collions(Entity *ent);
+
 
 /**
 * @brief call draw on all entities
@@ -59,9 +65,17 @@ void entity_manager_free();
 Entity *entity_new();
 
 /**
+* @brief checks collions on entities against all tiles, adjusts 
+* @param ent the entity to check for collisions
+*/
+
+void entity_check_collions(Entity *ent);
+
+/**
 * @brief frees provided entity
 * @param ent the entity to free
 */
+
 void entity_free(Entity *ent);
 
 /**
