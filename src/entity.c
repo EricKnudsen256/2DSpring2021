@@ -62,21 +62,6 @@ void entity_update(Entity *self)
 	}
 }
 
-void entity_manager_update_entities()
-{
-	int i;
-	if (entity_manager.entity_list == NULL)
-	{
-		slog("entity system does not exist");
-		return;
-	}
-	for (i = 0; i < entity_manager.max_entities; i++)
-	{
-		if (entity_manager.entity_list[i]._inuse == 0)continue;
-		entity_update(&entity_manager.entity_list[i]);
-	}
-}
-
 void entity_manager_think_entities()
 {
 	int i;
@@ -92,6 +77,38 @@ void entity_manager_think_entities()
 		{
 			entity_manager.entity_list[i].think(&entity_manager.entity_list[i]);
 		}
+	}
+}
+
+void entity_manager_update_entities()
+{
+	int i;
+	if (entity_manager.entity_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i]._inuse == 0)continue;
+		entity_update(&entity_manager.entity_list[i]);
+	}
+	entity_manager_check_collions();
+}
+
+
+void entity_manager_check_collions()
+{
+	int i;
+	if (entity_manager.entity_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i]._inuse == 0)continue;
+		entity_check_collisions(&entity_manager.entity_list[i]);
 	}
 }
 
@@ -130,11 +147,47 @@ Entity *entity_new()
 	return NULL;
 }
 
-void entity_check_collions(Entity *ent)
+void entity_check_collisions(Entity *ent)
 {
+	int i;
 	Level *level;
+	SDL_bool isIntersect;
 
 	level = level_manager_get_current();
+
+	if (!ent)
+	{
+		slog("No entity provided");
+		return;
+	}
+	if (!level)
+	{
+		slog("Current level not found");
+		return;
+	}
+	if (!level->tileArray)
+	{
+		slog("Level does not have a tile array");
+		return;
+	}
+
+	for (i = 0; i < level->tileArrayLen; i++)
+	{
+		//slog("Collision check");
+
+		if (!level->tileArray[i])
+		{
+			continue;
+		}
+
+		isIntersect = SDL_HasIntersection(&ent->hitbox, &level->tileArray[i]->hitbox);
+
+		if (isIntersect == SDL_TRUE)
+		{
+			slog("Collision detected");
+		}
+	}
+
 }
 
 void entity_free(Entity *ent)
@@ -185,6 +238,8 @@ void entity_draw(Entity *ent)
 			NULL,
 			NULL,
 			(Uint32)ent->frame);
+
+		//test code to draw the hitboxes for an ent that has one
 
 		if (&ent->hitbox)
 		{

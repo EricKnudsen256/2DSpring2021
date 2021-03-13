@@ -282,6 +282,7 @@ Level *level_random(int width, int height)
 	level->levelSize.y = level->levelHeight * level->tileHeight;
 	
 	level->_inuse = 1;
+	level->_current = 1;
 
 	return level;
 

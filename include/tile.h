@@ -15,6 +15,7 @@ typedef struct
 {
 	Vector2D	gridPos;	//position of tile on tilegrid
 	Sprite		*sprite;
+	SDL_Rect	hitbox;
 	int			tileWidth;
 	int			tileHeight;
 

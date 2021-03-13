@@ -7,7 +7,8 @@
 
 typedef struct Entity_s
 {
-	Bool       _inuse;
+	Bool        _inuse;
+	Bool		onGround;
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	
@@ -44,7 +45,7 @@ void entity_manager_think_entities();
 * @param ent the entity to check for collisions
 */
 
-void entity_manager_check_collions(Entity *ent);
+void entity_manager_check_collions();
 
 
 /**
@@ -69,7 +70,7 @@ Entity *entity_new();
 * @param ent the entity to check for collisions
 */
 
-void entity_check_collions(Entity *ent);
+void entity_check_collisions(Entity *ent);
 
 /**
 * @brief frees provided entity

@@ -16,8 +16,18 @@ Tile *tile_new(int width, int height, Vector2D position)
 	}
 	memset(tile, 0, sizeof(Tile));
 	tile->sprite = gf2d_sprite_load_image("assets/sprites/testTile.png");
+
+	tile->tileWidth = width;
+	tile->tileHeight = height;
+
 	tile->gridPos.x = position.x;
 	tile->gridPos.y = position.y;
+
+	tile->hitbox.x = position.x * width;
+	tile->hitbox.y = position.y * height;
+	tile->hitbox.w = tile->tileWidth;
+	tile->hitbox.h = tile->tileHeight;
+
 	return tile;
 }
 
@@ -71,5 +81,22 @@ void tile_draw(Tile *tile)
 			NULL,
 			NULL,
 			NULL);
+	}
+
+	//test code to draw the hitboxes for an ent that has one
+
+	if (&tile->hitbox)
+	{
+
+		SDL_Rect tempDraw;
+
+		tempDraw.x = tile->hitbox.x + offset.x;
+		tempDraw.y = tile->hitbox.y + offset.y;
+		tempDraw.w = tile->hitbox.w;
+		tempDraw.h = tile->hitbox.h;
+
+		SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 0, 255, 0, 255);
+
+		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 	}
 }
