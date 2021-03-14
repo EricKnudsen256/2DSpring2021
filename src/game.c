@@ -77,7 +77,9 @@ int main(int argc, char * argv[])
 
 
 		entity_manager_think_entities();
+		entity_manager_check_collions();
 		entity_manager_update_entities();
+		
 
 		level_update(level);
 

@@ -65,19 +65,21 @@ void player_think(Entity *self)
 	
 	self->velocity.y += .1;
 
-	if (self->velocity.y > 2)
+
+	//edit this to change max speed
+	if (self->velocity.y > 3)
 	{
-		self->velocity.y = 2;
+		self->velocity.y = 3;
 	}
 
 
 	if (keys[SDL_SCANCODE_D])
 	{
-		self->velocity.x = 2;
+		self->velocity.x = 3;
 	}
 	else if (keys[SDL_SCANCODE_A])
 	{
-		self->velocity.x = -2;
+		self->velocity.x = -3;
 	}
 	else
 	{

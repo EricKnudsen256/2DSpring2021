@@ -85,4 +85,31 @@ void entity_free(Entity *ent);
 */
 void entity_draw(Entity *ent);
 
+/**
+* @brief checks to see if left side of rect 1 is intersecting right side of rect 2
+* @param ent the hitbox of the entity, tile the hitbox of the tile
+* @return a true if there is a left side collision, false otherwise
+*/
+Bool entity_check_left_collision(SDL_Rect ent, SDL_Rect tile);
+
+/**
+* @brief checks to see if right side of rect 1 is intersecting left side of rect 2
+* @param ent the hitbox of the entity, tile the hitbox of the tile
+* @return a true if there is a right side collision, false otherwise
+*/
+Bool entity_check_right_collision(SDL_Rect ent, SDL_Rect tile);
+
+/**
+* @brief checks to see if bottom side of rect 1 is intersecting top side of rect 2
+* @param ent the hitbox of the entity, tile the hitbox of the tile
+* @return a true if there is a bottom side collision, false otherwise
+*/
+Bool entity_check_below_collision(SDL_Rect ent, SDL_Rect tile);
+
+/**
+* @brief checks to see if top side of rect 1 is intersecting bottom side of rect 2
+* @param ent the hitbox of the entity, tile the hitbox of the tile
+* @return a true if there is a bottom side collision, false otherwise
+*/
+Bool entity_check_above_collision(SDL_Rect ent, SDL_Rect tile);
 #endif
