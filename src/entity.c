@@ -179,7 +179,6 @@ void entity_check_collisions(Entity *ent)
 
 	for (i = 0; i < level->tileArrayLen; i++)
 	{
-		//slog("Collision check");
 
 		if (!level->tileArray[i])
 		{
@@ -215,6 +214,7 @@ void entity_check_collisions(Entity *ent)
 				ent->position.y = testMove.y;
 				ent->hitbox.y = testMove.y;
 				ent->velocity.y = 0;
+				ent->onGround = true;
 			}
 		}
 		//if above
@@ -235,7 +235,7 @@ void entity_check_collisions(Entity *ent)
 			testMove.y = tile->hitbox.y + tile->hitbox.h;
 			if (!entity_check_above_collision(testMove, tile->hitbox))
 			{
-				//slog("collision on top");
+				slog("collision on top");
 				ent->position.y = testMove.y;
 				ent->hitbox.y = testMove.y;
 				ent->velocity.y = 0;
@@ -377,7 +377,7 @@ Bool entity_check_below_collision(SDL_Rect ent, SDL_Rect tile)
 }
 Bool entity_check_above_collision(SDL_Rect ent, SDL_Rect tile)
 {
-	return tile.y + tile.h > ent.y && ent.y > tile.y;
+	return tile.y + tile.h > ent.y && ent.y < tile.y;
 }
 
 /*eol@eof*/
