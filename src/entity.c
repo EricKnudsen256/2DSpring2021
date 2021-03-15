@@ -358,7 +358,7 @@ Bool entity_check_below_collision(SDL_Rect ent, SDL_Rect tile)
 }
 Bool entity_check_above_collision(SDL_Rect ent, SDL_Rect tile)
 {
-	return tile.y + tile.h > ent.y && ent.y < tile.y;
+	return tile.y + tile.h > ent.y && ent.y > tile.y;
 }
 
 /*eol@eof*/
