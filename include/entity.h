@@ -8,7 +8,7 @@
 typedef struct Entity_s
 {
 	Bool        _inuse;
-	Bool		onGround;
+	Bool		onGround, onLeft, onRight, onRoof;
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	

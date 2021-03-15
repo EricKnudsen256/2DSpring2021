@@ -61,12 +61,26 @@ void player_think(Entity *self)
 
 	//put loop to check for floor collision on gravity
 
-	self->velocity.y += 1;
-	
-	self->velocity.y += .1;
+	if (self->velocity.y >= 0)
+	{
+		self->velocity.y *= 1.02;
+	}
+	else if (self->velocity.y < 0)
+	{
+		self->velocity.y *= .98;
+	}
+
+	if (self->velocity.y >= -.2 && self->velocity.y <= .2)
+	{
+		self->velocity.y = 0;
+	}
+	if (self->velocity.y == 0 && !self->onGround)
+	{
+		self->velocity.y = .2;
+	}
 
 
-	//edit this to change max speed
+	//edit this to change max fall speed
 	if (self->velocity.y > 3)
 	{
 		self->velocity.y = 3;
@@ -75,16 +89,36 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_D])
 	{
-		self->velocity.x = 3;
+		if (self->onRight == false)
+		{
+			self->velocity.x = 3;
+			self->onLeft = false;
+		}
+		
 	}
 	else if (keys[SDL_SCANCODE_A])
 	{
-		self->velocity.x = -3;
+		if (self->onLeft == false)
+		{
+			self->velocity.x = -3;
+			self->onRight = false;
+		}
 	}
 	else
 	{
+		self->onRight = false;
+		self->onLeft = false;
 		self->velocity.x = 0;
 	}
+
+	if (keys[SDL_SCANCODE_SPACE] && self->onGround == true)
+	{
+		self->velocity.y = -5;
+		self->position.y -= .1;
+		self->onGround = false;
+	}
+
+	//slog("onLeft: %i", self->onLeft);
 
 }
 

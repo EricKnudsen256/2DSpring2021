@@ -193,6 +193,7 @@ void entity_check_collisions(Entity *ent)
 
 		if (!isIntersect)
 		{
+
 			continue;
 		}
 		else
@@ -218,24 +219,13 @@ void entity_check_collisions(Entity *ent)
 			}
 		}
 		//if above
-		isIntersect = SDL_HasIntersection(&ent->hitbox, &level->tileArray[i]->hitbox);
-		if (!isIntersect)
-		{
-			continue;
-		}
-		else
-		{
-			testMove.x = ent->hitbox.x;
-			testMove.y = ent->hitbox.y;
-
-		}
 		if (entity_check_above_collision(ent->hitbox, tile->hitbox) && ent->velocity.y < 0)
 		{
 
 			testMove.y = tile->hitbox.y + tile->hitbox.h;
 			if (!entity_check_above_collision(testMove, tile->hitbox))
 			{
-				slog("collision on top");
+				//slog("collision on top");
 				ent->position.y = testMove.y;
 				ent->hitbox.y = testMove.y;
 				ent->velocity.y = 0;
@@ -264,22 +254,12 @@ void entity_check_collisions(Entity *ent)
 				ent->position.x = testMove.x;
 				ent->hitbox.x = testMove.x;
 				ent->velocity.x = 0;
+				ent->onLeft = true;
 			}
 		}
 
 
 		//if on right
-		isIntersect = SDL_HasIntersection(&ent->hitbox, &level->tileArray[i]->hitbox);
-		if (!isIntersect)
-		{
-			continue;
-		}
-		else
-		{
-			testMove.x = ent->hitbox.x;
-			testMove.y = ent->hitbox.y;
-
-		}
 		if (entity_check_right_collision(ent->hitbox, tile->hitbox) && ent->velocity.x > 0)
 		{
 			
@@ -290,6 +270,7 @@ void entity_check_collisions(Entity *ent)
 				ent->position.x = testMove.x;
 				ent->hitbox.x = testMove.x;
 				ent->velocity.x = 0;
+				ent->onRight = true;
 			}
 		}
 	}
