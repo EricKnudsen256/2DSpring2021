@@ -15,18 +15,18 @@ Entity *player_spawn(Vector2D position)
 		slog("failed to create entity for the player");
 		return NULL;
 	}
-	ent->sprite = gf2d_sprite_load_all("images/ed210_top.png", 128, 128, 16);
+	ent->sprite = gf2d_sprite_load_all("assets/sprites/newPlayer.png", 64, 64, 1);
 	vector2d_copy(ent->position, position);
 	ent->frameRate = 0.1;
-	ent->frameCount = 16;
+	ent->frameCount = 1;
 	ent->update = player_update;
 	ent->think = player_think;
 	ent->rotation.x = 64;
 	ent->rotation.y = 64;
 	ent->hitbox.x = 0;
 	ent->hitbox.y = 0;
-	ent->hitbox.w = 128;
-	ent->hitbox.h = 128;
+	ent->hitbox.w = 64;
+	ent->hitbox.h = 64;
 
 
 	return ent;
@@ -44,6 +44,7 @@ void player_update(Entity *self)
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
 	camera_set_position(camera);
+
 }
 
 void player_think(Entity *self)
@@ -61,32 +62,26 @@ void player_think(Entity *self)
 
 	//put loop to check for floor collision on gravity
 
-	if (self->velocity.y >= 0)
+	if (!self->onGround)
 	{
-		self->velocity.y *= 1.02;
-	}
-	else if (self->velocity.y < 0)
-	{
-		self->velocity.y *= .98;
+		self->velocity.y += .075;
 	}
 
-	if (self->velocity.y >= -.2 && self->velocity.y <= .2)
-	{
-		self->velocity.y = 0;
-	}
-	if (self->velocity.y == 0 && !self->onGround)
-	{
-		self->velocity.y = .2;
-	}
 
 
 	//edit this to change max fall speed
-	if (self->velocity.y > 3)
+	if (self->velocity.y > 4)
 	{
-		self->velocity.y = 3;
+		self->velocity.y = 4;
 	}
 
 
+	if (self->onGround)
+	{
+		self->doubleJumped = false;
+	}
+
+	//check for any keys pressed
 	if (keys[SDL_SCANCODE_D])
 	{
 		if (self->onRight == false)
@@ -111,16 +106,36 @@ void player_think(Entity *self)
 		self->velocity.x = 0;
 	}
 
-	if (keys[SDL_SCANCODE_SPACE] && self->onGround == true)
+	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self) && (self->onGround == true || self->doubleJumped == false))
 	{
 		self->velocity.y = -5;
 		self->position.y -= .1;
+		
+		if (!self->onGround)
+		{
+			self->doubleJumped = true;
+		}
+
 		self->onGround = false;
+		self->lastJump = SDL_GetTicks();
+
+		slog("onGround: %i", self->onGround);
+		slog("doubleJumped: %i", self->doubleJumped);
 	}
-
-	//slog("onLeft: %i", self->onLeft);
-
 }
 
+Bool player_is_allowed_jump(Entity *self)
+{
+	Uint32 currentTime;
+	currentTime = SDL_GetTicks();
+
+	if (currentTime >= self->lastJump + 350)
+	{
+		return true;
+	}
+	return false;
+
+
+}
 
 /**/

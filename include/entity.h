@@ -9,6 +9,7 @@ typedef struct Entity_s
 {
 	Bool        _inuse;
 	Bool		onGround, onLeft, onRight, onRoof;
+	Bool		doubleJumped;
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	
@@ -17,6 +18,7 @@ typedef struct Entity_s
 	float       frame;
 	float       frameRate;
 	int         frameCount;
+	Uint32		lastJump;
 	void(*update)(struct Entity_s *self);
 	void(*think)(struct Entity_s *self);
 	void(*draw)(struct Entity_s *self);
