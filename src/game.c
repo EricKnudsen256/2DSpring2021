@@ -56,13 +56,16 @@ int main(int argc, char * argv[])
     
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	level = level_random(32, 32);
+	level = level_random(48, 32);
 	//level = level_random(16, 16);
 
 	player_spawn(vector2d(100, 100));
 
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
+	srand(SDL_GetTicks());
+
+	
 
     /*main game loop*/
     while(!done)
@@ -88,7 +91,6 @@ int main(int argc, char * argv[])
             //backgrounds drawn first
 
 		level_draw(level);
-
 
 			entity_manager_draw_entities();
 

@@ -119,8 +119,8 @@ void player_think(Entity *self)
 		self->onGround = false;
 		self->lastJump = SDL_GetTicks();
 
-		slog("onGround: %i", self->onGround);
-		slog("doubleJumped: %i", self->doubleJumped);
+		//slog("onGround: %i", self->onGround);
+		//slog("doubleJumped: %i", self->doubleJumped);
 	}
 }
 

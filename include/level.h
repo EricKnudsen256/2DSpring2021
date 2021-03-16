@@ -15,6 +15,8 @@ typedef struct
 	Sprite     **bgImage;    /**<the background image for the level*/
 	int         bgImageCount;/**<how many we have*/
 	Vector2D    levelSize;   /**<how large, in pixels, the level is*/
+	Vector2D	levelPos;	// gridPos for where the level is, 0, 0 will be hub room
+	Vector2D	door1, door2, door3, door4;  //door1 on left, door2 on top, door3 on right, door4 on bottom
 	Tile		**tileArray;  // array of all tiles that are in the level
 	int			tileArrayLen;
 	Sprite     *tileSet;     /**<sprite for the tileset*/
@@ -25,6 +27,8 @@ typedef struct
 	int         tileWidth;   /**<now many pixels wide the tiles are*/
 	int         tileHeight;  /**<how many pixels tall each tile is*/
 	int         tileFPL;
+
+
 }Level;
 
 /**
@@ -64,9 +68,17 @@ Level *level_load(const char *filename);
 Level *level_random(int width, int height);
 
 /**
+* @brief creates a new tile in the tile manager
+* @param the position to create the tile
+*/
+
+Tile *level_new_tile(Level * level, Vector2D pos);
+
+/**
 * @brief free up a previously loaded level
 * @param level a pointer to the level to free
 */
+
 void level_free(Level *level);
 
 /**
@@ -81,6 +93,13 @@ void level_update(Level *level);
 * @param level the level the draw
 */
 void level_draw(Level *level);
+
+/**
+* @brief finds and returns the index of a tile in the tile array with the given gridpos
+* @param x and y of the tile to find, the level to search
+* @return the index of the tile in tileArray, -1 if no tile found
+*/
+int level_find_tile_by_pos(Level *level, int x, int y);
 
 
 

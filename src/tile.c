@@ -41,7 +41,11 @@ void tile_free(Tile *tile)
 
 	tile->sprite = NULL;
 
-	free(tile);
+	tile = NULL;
+
+
+	slog("free sucessful");
+
 }
 
 

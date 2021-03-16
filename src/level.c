@@ -5,6 +5,7 @@
 
 #include "camera.h"
 #include "level.h"
+#include "random.h"
 
 typedef struct
 {
@@ -188,8 +189,13 @@ Level *level_random(int width, int height)
 	const char *string;
 	Level *level;
 	int count;
+	int tileIndex;
 	int i;
 	int r, c;
+	int maxPlatHeight = 8;
+	int minPlatHeight = 4;
+	int maxHoleSize = 5;
+	int maxPlats = 10;
 
 	level = level_new();
 	if (!level)
@@ -240,29 +246,44 @@ Level *level_random(int width, int height)
 	level->tileArrayLen = (level->levelWidth * level->levelHeight);
 	level->tileArray = (Tile **)gfc_allocate_array(sizeof(Tile*), level->tileArrayLen);
 
-	
 
-	for (r = 0; r < level->levelWidth; r++)
+	//loop to initialize the tiles in the level
+	for (r = 0; r < level->levelHeight; r++)
 	{
 		for (c = 0; c < level->levelWidth; c++)
 		{
+
 			//test code to make sure that the tiles are being created properly
-			if (r == 0 || r == level->levelWidth - 1 || c == 0 || c == level->levelHeight - 1)
+			if (r == 0 || r == level->levelHeight - 1 || c == 0 || c == level->levelWidth - 1)
 			{
 				Bool tilePlaced = false;
-				slog("creating tile at x:%i, y:%i", r, c);
-				temp.x = r;
-				temp.y = c;
+				//slog("creating tile at x:%i, y:%i", c, r);
+				temp.x = c;
+				temp.y = r;
+
+				level_new_tile(level, temp);
+			}		
+
+
+
+			//code for placing platforms
+
+			if (false)//(r % 5 == 0 && c < 30)
+			{
+				Bool tilePlaced = false;
+				slog("creating tile at x:%i, y:%i", c, r);
+				temp.x = c;
+				temp.y = r;
 
 				//for loop checking if is any space in the tileArray
 				for (i = 0; i < level->tileArrayLen; i++)
 				{
-					
+
 					if (level->tileArray[i])continue;// someone else is using this one
-					
+
 					memset(&level->tileArray[i], 0, sizeof(Tile));
 					level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, temp);
-					
+
 					tilePlaced = true;
 
 					break;
@@ -274,9 +295,38 @@ Level *level_random(int width, int height)
 					return NULL;
 				}
 			}
-		}
+		} //end of loop 1
+
+	} //end of loop 2
+
+
+
+	level->door1.x = 0;
+	level->door1.y = level->levelHeight / 2;
+
+	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
 	}
 
+	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 1);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 2);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+	level->door1.x += 1;
+	level->door1.y += 1;
+
+	level_new_tile(level, level->door1);
+	
 
 	level->levelSize.x = level->levelWidth * level->tileWidth;
 	level->levelSize.y = level->levelHeight * level->tileHeight;
@@ -284,7 +334,28 @@ Level *level_random(int width, int height)
 	level->_inuse = 1;
 	level->_current = 1;
 
+
+
 	return level;
+
+}
+
+Tile *level_new_tile(Level * level, Vector2D pos)
+{
+	int i;
+	//for loop checking if is any space in the tileArray
+	for (i = 0; i < level->tileArrayLen; i++)
+	{
+
+		if (level->tileArray[i])continue;// someone else is using this one
+
+		memset(&level->tileArray[i], 0, sizeof(Tile));
+		level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, pos);
+		return level->tileArray[i];
+	}
+
+	slog("no free tiles available");
+	return NULL;
 
 }
 
@@ -377,38 +448,43 @@ void level_draw(Level *level)
 		slog("not tiles loaded for the level, cannot draw it");
 		return;
 	}
+	
 	for (i = 0; i < level->tileArrayLen; i++)
 	{
-		if (!level->tileArray[i])continue;
 		
+		if (!level->tileArray[i])continue;
 
 		tile_draw(level->tileArray[i]);
-		/*
-		drawPosition.x = (level->tileArray[i]->gridPos.x * 32);
-		drawPosition.y = (level->tileArray[i]->gridPos.y * 32);
-		if (!camera_rect_on_screen(gfc_sdl_rect(drawPosition.x, drawPosition.y, level->tileArray[i]->sprite->frame_w, level->tileArray[i]->sprite->frame_h)))
-		{
-			//tile is off camera, skip
-			slog("tile offscreen");
-			continue;
-		}
-		drawPosition.x += offset.x;
-		drawPosition.y += offset.y;
-		gf2d_sprite_draw(
-			level->tileArray[i]->sprite,
-			drawPosition,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL);
-		slog("tile drawn at x:%i, y:%i", level->tileArray[i]->gridPos.x, level->tileArray[i]->gridPos.y);
-		*/
 	}
 }
 
+int level_find_tile_by_pos(Level *level, int x, int y)
+{
+	int i;
 
+	if (!level)
+	{
+		slog("no level given to search");
+		return -1;
+	}
+
+	for (i = 0; i < level->tileArrayLen; i++)
+	{
+		//slog("i: %i\ntileArrayLen: %i", i, level->tileArrayLen);
+
+		if (!level->tileArray[i])
+		{
+			continue;
+		}
+
+		if (level->tileArray[i]->gridPos.x == x && level->tileArray[i]->gridPos.y == y)
+		{
+			return i;
+		}
+	}
+	
+	return -1;
+}
 
 
 /*file footer*/
