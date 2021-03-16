@@ -13,6 +13,7 @@ typedef enum
 
 typedef struct
 {
+	Bool		_inuse;
 	Vector2D	gridPos;	//position of tile on tilegrid
 	Sprite		*sprite;
 	SDL_Rect	hitbox;

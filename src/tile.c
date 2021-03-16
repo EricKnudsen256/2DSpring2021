@@ -28,6 +28,8 @@ Tile *tile_new(int width, int height, Vector2D position)
 	tile->hitbox.w = tile->tileWidth;
 	tile->hitbox.h = tile->tileHeight;
 
+	tile->_inuse = true;
+
 	return tile;
 }
 
@@ -37,14 +39,14 @@ void tile_free(Tile *tile)
 	int i;
 	if (!tile)return;// nothing to do
 
+
+
 	gf2d_sprite_free(tile->sprite);
 
 	tile->sprite = NULL;
 
+	tile->_inuse = false;
 	tile = NULL;
-
-
-	slog("free sucessful");
 
 }
 
@@ -57,6 +59,11 @@ void tile_draw(Tile *tile)
 		slog("cannot draww a NULL tile");
 		return;
 	}
+	if (!tile->_inuse)
+	{
+		return;
+	}
+
 	if (tile->draw)
 	{
 		tile->draw(tile);

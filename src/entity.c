@@ -186,7 +186,11 @@ void entity_check_collisions(Entity *ent)
 	for (i = 0; i < level->tileArrayLen; i++)
 	{
 
-		if (!level->tileArray[i])
+		if (level->tileArray[i] == NULL)
+		{
+			continue;
+		}
+		if (!level->tileArray[i]->_inuse)
 		{
 			continue;
 		}

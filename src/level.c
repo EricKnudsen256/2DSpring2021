@@ -279,7 +279,7 @@ Level *level_random(int width, int height)
 				for (i = 0; i < level->tileArrayLen; i++)
 				{
 
-					if (level->tileArray[i])continue;// someone else is using this one
+					if (level->tileArray[i]->_inuse)continue;// someone else is using this one
 
 					memset(&level->tileArray[i], 0, sizeof(Tile));
 					level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, temp);
@@ -310,11 +310,13 @@ Level *level_random(int width, int height)
 		tile_free(level->tileArray[tileIndex]);
 	}
 
+
 	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 1);
 	if (tileIndex != -1)
 	{
 		tile_free(level->tileArray[tileIndex]);
 	}
+
 
 	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 2);
 	if (tileIndex != -1)
@@ -322,8 +324,13 @@ Level *level_random(int width, int height)
 		tile_free(level->tileArray[tileIndex]);
 	}
 
+
 	level->door1.x += 1;
 	level->door1.y += 1;
+
+	level_new_tile(level, level->door1);
+
+	level->door1.x += 1;
 
 	level_new_tile(level, level->door1);
 	
