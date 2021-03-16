@@ -158,6 +158,12 @@ void entity_check_collisions(Entity *ent)
 	SDL_bool isIntersect;
 	Tile *tile;
 	SDL_Rect testMove;
+	Bool foundBot, foundAbove, foundLeft, foundRight;
+
+	foundBot = false;
+	foundAbove = false;
+	foundLeft = false;
+	foundRight = false;
 
 	level = level_manager_get_current();
 
@@ -203,6 +209,7 @@ void entity_check_collisions(Entity *ent)
 			testMove.w = ent->hitbox.w;
 			testMove.h = ent->hitbox.h;
 		}
+
 
 		//if below
 		if (entity_check_below_collision(ent->hitbox, tile->hitbox) && ent->velocity.y > 0)
@@ -274,6 +281,66 @@ void entity_check_collisions(Entity *ent)
 			}
 		}
 	}
+
+	for (i = 0; i < level->tileArrayLen; i++)
+	{
+
+		if (!level->tileArray[i])
+		{
+			continue;
+		}
+
+		tile = level->tileArray[i];
+
+		//check if there are tiles in the way of the player, adjust onX values if none are found
+		//change move values for tolerance
+
+		testMove.x = ent->hitbox.x;
+		testMove.y = ent->hitbox.y;
+		testMove.w = ent->hitbox.w;
+		testMove.h = ent->hitbox.h;
+
+		//check bottom side
+		testMove.y += 1;
+		if (SDL_HasIntersection(&testMove, &tile->hitbox))
+		{
+
+			foundBot = true;
+		}
+
+		testMove.y = ent->hitbox.y;
+
+		//check right side
+		testMove.x += 1;
+		if (SDL_HasIntersection(&testMove, &tile->hitbox))
+		{
+			foundRight = true;
+		}
+
+		testMove.x = ent->hitbox.x;
+
+		//check right side
+		testMove.x -= 1;
+		if (SDL_HasIntersection(&testMove, &tile->hitbox))
+		{
+			foundLeft = true;
+		}
+	}
+
+	if (!foundBot)
+	{
+		ent->onGround = false;
+	}
+	if (!foundLeft)
+	{
+		ent->onLeft = false;
+	}
+	if (!foundRight)
+	{
+		ent->onRight = false;
+	}
+	//slog("foundBot:%i", foundBot);
+
 }
 
 void entity_free(Entity *ent)
