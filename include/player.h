@@ -6,12 +6,12 @@
 
 typedef struct Player_s
 {
-	Entity playerEnt;
 	//void(*update)(struct Entity_s *self);
 	//void(*think)(struct Entity_s *self);
 	//void(*draw)(struct Entity_s *self);
 	//void(*free)(struct Entity_s *self);
 	void       *data;
+
 }Player;
 
 /**

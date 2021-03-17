@@ -60,6 +60,7 @@ int main(int argc, char * argv[])
 	//level = level_random(16, 16);
 
 	player_spawn(vector2d(100, 100));
+	enemy_spawn(vector2d(300, 100));
 
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 

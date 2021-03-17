@@ -105,6 +105,7 @@
     <ClCompile Include="..\..\..\gfc\src\gfc_types.c" />
     <ClCompile Include="..\..\..\gfc\src\gfc_vector.c" />
     <ClCompile Include="..\..\..\src\camera.c" />
+    <ClCompile Include="..\..\..\src\enemy.c" />
     <ClCompile Include="..\..\..\src\entity.c" />
     <ClCompile Include="..\..\..\src\font.c" />
     <ClCompile Include="..\..\..\src\game.c" />
@@ -130,6 +131,7 @@
     <ClInclude Include="..\..\..\gfc\simple_json\include\simple_json.h" />
     <ClInclude Include="..\..\..\gfc\simple_logger\include\simple_logger.h" />
     <ClInclude Include="..\..\..\include\camera.h" />
+    <ClInclude Include="..\..\..\include\enemy.h" />
     <ClInclude Include="..\..\..\include\entity.h" />
     <ClInclude Include="..\..\..\include\font.h" />
     <ClInclude Include="..\..\..\include\gf2d_draw.h" />
