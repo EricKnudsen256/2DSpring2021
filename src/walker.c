@@ -9,8 +9,6 @@ Entity *walker_spawn(Vector2D position)
 {
 	Entity *ent;
 
-
-
 	ent = enemy_spawn(position);
 	if (!ent)
 	{
@@ -29,7 +27,7 @@ Entity *walker_spawn(Vector2D position)
 	ent->hitbox.w = 64;
 	ent->hitbox.h = 64;
 
-	
+	ent->health = 50;
 
 	return ent;
 }
@@ -86,6 +84,7 @@ void walker_think(Entity *self)
 		self->velocity.x = 1.5;
 	}
 }
+
 
 
 /**/

@@ -5,13 +5,9 @@
 #include "entity.h"
 #include "level.h"
 
-typedef struct
-{
-	Entity *entity_list;
-	Uint32  max_entities;
-}EntityManager;
 
-static EntityManager entity_manager = { 0 };
+
+
 
 void entity_manager_init(Uint32 max_entities)
 {
@@ -81,6 +77,7 @@ void entity_update(Entity *self)
 		self->hitbox.x = self->position.x;
 		self->hitbox.y = self->position.y;
 	}
+
 }
 
 void entity_manager_update_entities()
@@ -143,6 +140,16 @@ Entity *entity_manager_get_player_ent()
 	}
 	slog("Player entity not found");
 	return NULL;
+}
+
+EntityManager entity_manager_get_manager()
+{
+	return entity_manager;
+}
+
+int entity_manager_get_max_ents()
+{
+	return entity_manager.max_entities;
 }
 
 
@@ -426,6 +433,23 @@ void entity_draw(Entity *ent)
 			SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 255, 255);
 
 			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
+
+
+			SDL_Rect attackbox;
+
+			if (ent->isPlayer)
+			{
+				gfc_rect_set(attackbox, ent->hitbox.x - 50 + offset.x, ent->hitbox.y + offset.y, 50, ent->hitbox.h);
+
+				SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 0, 255);
+
+				SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
+
+				gfc_rect_set(attackbox, ent->hitbox.x + ent->hitbox.w + offset.x, ent->hitbox.y + offset.y, 50, ent->hitbox.h);
+
+				SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
+			}
+
 		}
 	}
 }

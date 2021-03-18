@@ -12,6 +12,10 @@ typedef struct Entity_s
 	Bool		isPlayer;
 	Bool		doubleJumped;
 	int			health;
+	int			contactDamage;
+	int			attackDamage;
+	int			lastAttack;		//measured in ms
+	int			facing;			//1 = left, 2 = up, 3 = right, 4 = down
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	
@@ -28,7 +32,13 @@ typedef struct Entity_s
 	void       *data;
 }Entity;
 
+typedef struct
+{
+	Entity *entity_list;
+	Uint32  max_entities;
+}EntityManager;
 
+static EntityManager entity_manager = { 0 };
 
 /**
 * @brief initialize internal entity management system
@@ -71,6 +81,11 @@ void entity_manager_free();
 * @return the player entity if found, NULL otherwise
 */
 Entity *entity_manager_get_player_ent();
+
+EntityManager entity_manager_get_manager();
+
+int entity_manager_get_max_ents();
+
 
 /**
 * @brief allocate an entity, initialize it to zero and return a pointer to it

@@ -27,8 +27,10 @@ Entity *player_spawn(Vector2D position)
 	ent->hitbox.y = 0;
 	ent->hitbox.w = 64;
 	ent->hitbox.h = 64;
+
 	ent->isPlayer = true;
 	ent->health = 100;
+	ent->attackDamage = 100;
 
 
 	return ent;
@@ -50,8 +52,13 @@ void player_update(Entity *self)
 	if (self->health <= 0)
 	{
 		self->health = 0;
-		slog("dead lmao");
 	}
+	if (self->facing < 0 || self->facing > 5)
+	{
+		slog("player cannot face this direction, defualting to right");
+		self->facing = 3;
+	}
+
 
 }
 
@@ -94,6 +101,7 @@ void player_think(Entity *self)
 	//check for any keys pressed
 	if (keys[SDL_SCANCODE_D])
 	{
+		self->facing = 3;
 		if (self->onRight == false)
 		{
 			self->velocity.x = 3;
@@ -103,6 +111,7 @@ void player_think(Entity *self)
 	}
 	else if (keys[SDL_SCANCODE_A])
 	{
+		self->facing = 1;
 		if (self->onLeft == false)
 		{
 			self->velocity.x = -3;
@@ -132,6 +141,59 @@ void player_think(Entity *self)
 		//slog("onGround: %i", self->onGround);
 		//slog("doubleJumped: %i", self->doubleJumped);
 	}
+	SDL_Event e;
+	while (SDL_PollEvent(&e))
+	{
+		if (e.type == SDL_MOUSEBUTTONDOWN)
+		{
+			player_attack(self);
+		}
+
+	}
+}
+
+void player_attack(Entity *self)
+{
+	SDL_Rect attackbox;
+	Entity *ent;
+	EntityManager entManager;
+	int i;
+
+	entManager = entity_manager_get_manager();
+
+	if (self->facing == 1)
+	{
+		gfc_rect_set(attackbox, self->hitbox.x + 50, self->hitbox.y, 50, self->hitbox.h);
+	}
+	else if (self->facing == 3)
+	{
+		gfc_rect_set(attackbox, self->hitbox.x + self->hitbox.w, self->hitbox.y, 50, self->hitbox.h);
+	}
+	else
+	{
+		slog("attack direction not found");
+		gfc_rect_set(attackbox, self->hitbox.x + self->hitbox.w, self->hitbox.y, 50, self->hitbox.h);
+	}
+
+	if (SDL_GetTicks() >= self->lastAttack + 500)
+	{
+		slog("attack attempt");
+		for (i = 0; i < entManager.max_entities; i++)
+		{
+
+			if (entManager.entity_list[i]._inuse == 0)continue;
+
+			ent = &entManager.entity_list[i];
+			if (SDL_HasIntersection(&attackbox, &ent->hitbox))
+			{
+				slog("attack hit");
+				ent->health -= self->attackDamage;
+			}
+		}
+
+		self->lastAttack = SDL_GetTicks();
+	}
+	
 }
 
 Bool player_is_allowed_jump(Entity *self)

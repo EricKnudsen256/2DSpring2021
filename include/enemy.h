@@ -26,4 +26,7 @@ void enemy_draw(Entity *self);
 */
 Bool enemy_check_player_collision(Entity *ent);
 
+void enemy_die(Entity *self);
+
+
 #endif

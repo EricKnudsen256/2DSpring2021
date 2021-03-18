@@ -25,6 +25,11 @@ void enemy_update(Entity *self)
 {
 	if (!self)return;
 
+	if (self->health <= 0)
+	{
+		enemy_die(self);
+	}
+
 }
 
 void enemy_think(Entity *self)
@@ -68,9 +73,19 @@ Bool enemy_check_player_collision(Entity *ent)
 
 }
 
-void enemy_draw(Entity *self)
+void enemy_die(Entity *self)
 {
+	int i;
+	if (!self)return;// nothing to do
 
+
+
+	gf2d_sprite_free(self->sprite);
+
+	self->sprite = NULL;
+
+	self->_inuse = false;
+	self = NULL;
 }
 
 
