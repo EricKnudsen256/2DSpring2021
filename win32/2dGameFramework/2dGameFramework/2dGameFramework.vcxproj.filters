@@ -105,6 +105,9 @@
     <ClCompile Include="..\..\..\src\enemy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\walker.c">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\gfc\simple_logger\include\simple_logger.h">
@@ -175,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\enemy.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\walker.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,7 +22,8 @@ int main(int argc, char * argv[])
 
 	Level *level;
 	Font *font;
-	TextLine fps_text;
+	TextLine fps_text, health_text;
+	Entity *player;
 
     
     int mx,my;
@@ -59,8 +60,8 @@ int main(int argc, char * argv[])
 	level = level_random(48, 32);
 	//level = level_random(16, 16);
 
-	player_spawn(vector2d(100, 100));
-	enemy_spawn(vector2d(300, 100));
+	player = player_spawn(vector2d(100, 100));
+	walker_spawn(vector2d(300, 100));
 
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
@@ -108,6 +109,9 @@ int main(int argc, char * argv[])
 
 		gfc_line_sprintf(fps_text, "FPS:%f", gf2d_graphics_get_frames_per_second());
 		font_render(font, fps_text, vector2d(32, 32), gfc_color8(255, 255, 255, 255));
+
+		gfc_line_sprintf(health_text, "Health:%i", player->health);
+		font_render(font, health_text, vector2d(32, 64), gfc_color8(255, 255, 255, 255));
 
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame

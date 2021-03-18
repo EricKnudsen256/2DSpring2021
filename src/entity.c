@@ -130,6 +130,21 @@ void entity_manager_draw_entities()
 	}
 }
 
+Entity *entity_manager_get_player_ent()
+{
+	int i;
+	for (i = 0; i < entity_manager.max_entities; i++)
+	{
+		if (entity_manager.entity_list[i].isPlayer == true)
+		{
+			return &entity_manager.entity_list[i];
+		}
+
+	}
+	slog("Player entity not found");
+	return NULL;
+}
+
 
 Entity *entity_new()
 {

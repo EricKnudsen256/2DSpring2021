@@ -9,7 +9,9 @@ typedef struct Entity_s
 {
 	Bool        _inuse;
 	Bool		onGround, onLeft, onRight, onRoof;
+	Bool		isPlayer;
 	Bool		doubleJumped;
+	int			health;
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	
@@ -25,6 +27,8 @@ typedef struct Entity_s
 	void(*free)(struct Entity_s *self);
 	void       *data;
 }Entity;
+
+
 
 /**
 * @brief initialize internal entity management system
@@ -60,6 +64,13 @@ void entity_manager_draw_entities();
 * @brief free all entities in the system and destroy entity manager
 */
 void entity_manager_free();
+
+
+/**
+* @brief returns the current player if there is one
+* @return the player entity if found, NULL otherwise
+*/
+Entity *entity_manager_get_player_ent();
 
 /**
 * @brief allocate an entity, initialize it to zero and return a pointer to it

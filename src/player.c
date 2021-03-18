@@ -27,6 +27,8 @@ Entity *player_spawn(Vector2D position)
 	ent->hitbox.y = 0;
 	ent->hitbox.w = 64;
 	ent->hitbox.h = 64;
+	ent->isPlayer = true;
+	ent->health = 100;
 
 
 	return ent;
@@ -45,6 +47,12 @@ void player_update(Entity *self)
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
 	camera_set_position(camera);
 
+	if (self->health <= 0)
+	{
+		self->health = 0;
+		slog("dead lmao");
+	}
+
 }
 
 void player_think(Entity *self)
@@ -59,6 +67,8 @@ void player_think(Entity *self)
 	camera = camera_get_position();
 	mx += camera.x;
 	my += camera.y;
+
+
 
 	//put loop to check for floor collision on gravity
 

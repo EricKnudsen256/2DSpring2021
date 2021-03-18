@@ -4,15 +4,6 @@
 #include "entity.h"
 
 
-typedef struct Enemy_s
-{
-	//void(*update)(struct Entity_s *self);
-	//void(*think)(struct Entity_s *self);
-	//void(*draw)(struct Entity_s *self);
-	//void(*free)(struct Entity_s *self);
-	void       *data;
-
-}Enemy;
 
 /**
 * @brief spawn a player entity
@@ -28,5 +19,11 @@ Entity *enemy_spawn(Vector2D position);
 */
 
 void enemy_draw(Entity *self);
+
+/**
+* @brief checks every frame to see if enemy is colliding with the player
+* @param self the enemy
+*/
+Bool enemy_check_player_collision(Entity *ent);
 
 #endif
