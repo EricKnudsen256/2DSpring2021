@@ -63,7 +63,7 @@ int main(int argc, char * argv[])
 	//level = level_random(16, 16);
 
 	player = player_spawn(vector2d(100, 100));
-	walker_spawn(vector2d(300, 100));
+	flyer_spawn(vector2d(300, 200));
 
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 

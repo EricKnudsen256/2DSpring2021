@@ -15,6 +15,8 @@ Entity *walker_spawn(Vector2D position)
 		slog("failed to create entity for the player");
 		return NULL;
 	}
+
+	ent->enemy_type = ENEMY_WALKER;
 	ent->sprite = gf2d_sprite_load_all("assets/sprites/enemy1.png", 64, 64, 1);
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;
@@ -29,6 +31,7 @@ Entity *walker_spawn(Vector2D position)
 
 	ent->health = 50;
 	ent->contactDamage = 10;
+
 
 	return ent;
 }

@@ -28,7 +28,7 @@ Entity *walker_spawn(Vector2D position);
 * @return true if it has been longer than 350 ms, false otherwise
 */
 
-void walker_draw(Walker * self);
+void walker_draw(Entity* self);
 
 
 /**

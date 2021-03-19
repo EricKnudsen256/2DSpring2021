@@ -5,8 +5,19 @@
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
 
+typedef enum 
+{
+	ENEMY_WALKER,
+	ENEMY_FLYER,
+	ENEMY_ARCHER,
+	ENEMY_BOUNCER,
+	ENEMY_MINIBOSS1
+
+}ENEMY_TYPE;
+
 typedef struct Entity_s
 {
+	ENEMY_TYPE	enemy_type;		//enum of what type an enemy is
 	Bool        _inuse;
 	Bool		onGround, onLeft, onRight, onRoof;
 	Bool		isPlayer;
@@ -20,6 +31,7 @@ typedef struct Entity_s
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	
+	SDL_Rect	hitbox2;		//used for secondary purposes. For flyer, box to check distance from the ground. For archer, used for player aim box
 	Vector3D    rotation;		//(x,y) = rotation center, z = degrees of rotation
 	Sprite     *sprite;
 	float       frame;
@@ -30,6 +42,7 @@ typedef struct Entity_s
 	void(*think)(struct Entity_s *self);
 	void(*draw)(struct Entity_s *self);
 	void(*free)(struct Entity_s *self);
+	void(*check_collision)(struct Entity_s *self);
 	void       *data;
 }Entity;
 

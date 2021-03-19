@@ -183,6 +183,8 @@ void player_attack(Entity *self)
 
 			if (entManager.entity_list[i]._inuse == 0)continue;
 
+			if (entManager.entity_list[i].isPlayer == 1)continue;
+
 			ent = &entManager.entity_list[i];
 			if (SDL_HasIntersection(&attackbox, &ent->hitbox))
 			{

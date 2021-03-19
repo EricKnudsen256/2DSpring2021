@@ -5,8 +5,7 @@
 #include "entity.h"
 #include "level.h"
 
-
-
+void entity_check_collisions(Entity *ent);
 
 
 void entity_manager_init(Uint32 max_entities)
@@ -108,6 +107,11 @@ void entity_manager_check_collions()
 	for (i = 0; i < entity_manager.max_entities; i++)
 	{
 		if (entity_manager.entity_list[i]._inuse == 0)continue;
+		if (entity_manager.entity_list[i].check_collision)
+		{
+			entity_manager.entity_list[i].check_collision(&entity_manager.entity_list[i]);
+			continue;
+		}
 		entity_check_collisions(&entity_manager.entity_list[i]);
 	}
 }
@@ -182,6 +186,8 @@ void entity_check_collisions(Entity *ent)
 	SDL_Rect testMove;
 	Bool foundBot, foundAbove, foundLeft, foundRight;
 
+
+
 	foundBot = false;
 	foundAbove = false;
 	foundLeft = false;
@@ -251,6 +257,10 @@ void entity_check_collisions(Entity *ent)
 				ent->onGround = true;
 			}
 		}
+
+		//condition for if flyer
+
+
 		//if above
 		if (entity_check_above_collision(ent->hitbox, tile->hitbox) && ent->velocity.y < 0)
 		{
@@ -434,23 +444,40 @@ void entity_draw(Entity *ent)
 
 			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 
+		}
 
+		if (ent->isPlayer)
+		{
 			SDL_Rect attackbox;
 
-			if (ent->isPlayer)
-			{
-				gfc_rect_set(attackbox, ent->hitbox.x - 50 + offset.x, ent->hitbox.y + offset.y, 50, ent->hitbox.h);
+			gfc_rect_set(attackbox, ent->hitbox.x - 50 + offset.x, ent->hitbox.y + offset.y, 50, ent->hitbox.h);
 
-				SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 0, 255);
+			SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 0, 255);
 
-				SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
+			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
 
-				gfc_rect_set(attackbox, ent->hitbox.x + ent->hitbox.w + offset.x, ent->hitbox.y + offset.y, 50, ent->hitbox.h);
+			gfc_rect_set(attackbox, ent->hitbox.x + ent->hitbox.w + offset.x, ent->hitbox.y + offset.y, 50, ent->hitbox.h);
 
-				SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
-			}
-
+			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
 		}
+
+		if (ent->enemy_type == ENEMY_FLYER)
+		{
+			//slog("x:%i, y:%i, w:%i, h:%i", ent->hitbox2.x, ent->hitbox2.y, ent->hitbox2.w, ent->hitbox2.h);
+			SDL_Rect tempDraw;
+
+			tempDraw.x = ent->hitbox2.x + offset.x;
+			tempDraw.y = ent->hitbox2.y + offset.y;
+			tempDraw.w = ent->hitbox2.w;
+			tempDraw.h = ent->hitbox2.h;
+
+			gfc_rect_set(tempDraw, ent->hitbox2.x + offset.x, ent->hitbox2.y + offset.y, ent->hitbox2.w,ent->hitbox2.h);
+
+			SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 0, 0, 0, 255);
+
+			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
+		}
+
 	}
 }
 
