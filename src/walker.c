@@ -28,6 +28,7 @@ Entity *walker_spawn(Vector2D position)
 	ent->hitbox.h = 64;
 
 	ent->health = 50;
+	ent->contactDamage = 10;
 
 	return ent;
 }

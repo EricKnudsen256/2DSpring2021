@@ -20,9 +20,11 @@ int main(int argc, char * argv[])
     int done = 0;
     const Uint8 * keys;
 
+	Bool gameOver = false;
+
 	Level *level;
 	Font *font;
-	TextLine fps_text, health_text;
+	TextLine fps_text, health_text, game_over_text;
 	Entity *player;
 
     
@@ -112,6 +114,17 @@ int main(int argc, char * argv[])
 
 		gfc_line_sprintf(health_text, "Health:%i", player->health);
 		font_render(font, health_text, vector2d(32, 64), gfc_color8(255, 255, 255, 255));
+
+		if (entity_manager_get_player_ent()->health <= 0)
+		{
+			gameOver = true;
+		}
+
+		if (gameOver)
+		{
+			gfc_line_sprintf(game_over_text, "GAME OVER");
+			font_render(font, game_over_text, vector2d(500, 250), gfc_color8(255, 255, 255, 255));
+		}
 
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame

@@ -51,7 +51,7 @@ void player_update(Entity *self)
 
 	if (self->health <= 0)
 	{
-		self->health = 0;
+		player_die(self);
 	}
 	if (self->facing < 0 || self->facing > 5)
 	{
@@ -209,5 +209,37 @@ Bool player_is_allowed_jump(Entity *self)
 
 
 }
+
+void player_die(Entity *self)
+{
+	if (!self)return;// nothing to do
+
+	gf2d_sprite_free(self->sprite);
+
+	gfc_rect_set(self->hitbox, -1, -1, -1, -1);
+	self->position.x = -1;
+	self->position.y = -1;
+
+	self->sprite = NULL;
+
+	self->_inuse = false;
+	self = NULL;
+}
+
+void player_damage(Entity *player, int damage)
+{
+	if (SDL_GetTicks() >= player->lastDamaged + 1000)
+	{
+		player->health -= damage;
+		
+		if (player->health <= 0)
+		{
+			player_die(player);
+		}
+
+		player->lastDamaged = SDL_GetTicks();
+	}
+}
+
 
 /**/

@@ -15,6 +15,7 @@ typedef struct Entity_s
 	int			contactDamage;
 	int			attackDamage;
 	int			lastAttack;		//measured in ms
+	int			lastDamaged;
 	int			facing;			//1 = left, 2 = up, 3 = right, 4 = down
 	Vector2D    position;
 	Vector2D    velocity;

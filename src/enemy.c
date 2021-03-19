@@ -65,7 +65,17 @@ Bool enemy_check_player_collision(Entity *ent)
 		return;
 	}
 
-	player->health -= 1;
+	if (ent->contactDamage)
+	{
+		player_damage(player, ent->contactDamage);
+	}
+	else
+	{
+		slog("no contact damage found for ent");
+		player_damage(player, 10);
+	}
+
+
 
 
 	return true;
