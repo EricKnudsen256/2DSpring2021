@@ -53,6 +53,7 @@ int main(int argc, char * argv[])
 	font_init(10);
 
 	entity_manager_init(100);
+	projectile_manager_init(100);
 	level_manager_init(64);
 	
     SDL_ShowCursor(SDL_DISABLE);
@@ -86,6 +87,10 @@ int main(int argc, char * argv[])
 		entity_manager_think_entities();
 		entity_manager_check_collions();
 		entity_manager_update_entities();
+
+		projectile_manager_think_projectiles();
+		projectile_manager_check_collisions();
+		projectile_manager_update_projectiles();
 		
 
 		level_update(level);
@@ -97,6 +102,7 @@ int main(int argc, char * argv[])
 		level_draw(level);
 
 			entity_manager_draw_entities();
+			projectile_manager_draw_projectiles();
 
             //UI elements last
             gf2d_sprite_draw(

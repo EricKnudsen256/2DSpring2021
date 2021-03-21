@@ -117,6 +117,9 @@
     <ClCompile Include="..\..\..\src\bouncer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\projectile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\gfc\simple_logger\include\simple_logger.h">
@@ -204,6 +207,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\miniboss.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
