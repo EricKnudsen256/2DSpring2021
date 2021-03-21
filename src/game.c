@@ -88,7 +88,6 @@ int main(int argc, char * argv[])
 		entity_manager_check_collions();
 		entity_manager_update_entities();
 
-		projectile_manager_think_projectiles();
 		projectile_manager_check_collisions();
 		projectile_manager_update_projectiles();
 		

@@ -418,6 +418,7 @@ void entity_draw(Entity *ent)
 		drawPosition.x = ent->position.x + offset.x;
 		drawPosition.y = ent->position.y + offset.y;
 
+
 		gf2d_sprite_draw(
 			ent->sprite,
 			drawPosition,

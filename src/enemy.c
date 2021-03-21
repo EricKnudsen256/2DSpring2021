@@ -98,5 +98,17 @@ void enemy_die(Entity *self)
 	self = NULL;
 }
 
+void enemy_damage(Entity *ent, int damage)
+{
+
+	ent->health -= damage;
+
+	if (ent->health <= 0)
+	{
+		enemy_die(ent);
+	}
+
+}
+
 
 /**/

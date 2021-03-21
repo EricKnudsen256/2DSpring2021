@@ -32,6 +32,8 @@ void player_draw(Entity *self);
 
 void player_attack(Entity *self);
 
+void player_ranged(Entity *self);
+
 void player_die(Entity *self);
 
 void player_damage(Entity *player, int damage);

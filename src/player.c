@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "player.h"
+#include "projectile.h"
 #include "camera.h"
 
 void player_update(Entity *self);
@@ -146,7 +147,15 @@ void player_think(Entity *self)
 	{
 		if (e.type == SDL_MOUSEBUTTONDOWN)
 		{
-			player_attack(self);
+			if (e.button.button == SDL_BUTTON_LEFT)
+			{
+				player_attack(self);
+			}
+			if (e.button.button == SDL_BUTTON_RIGHT)
+			{
+				player_ranged(self);
+			}
+			
 		}
 
 	}
@@ -196,6 +205,45 @@ void player_attack(Entity *self)
 		self->lastAttack = SDL_GetTicks();
 	}
 	
+}
+
+void player_ranged(Entity *self)
+{
+	Entity *ent;
+	EntityManager entManager;
+	int i;
+
+	Vector2D position, velocity;
+	vector2d_copy(position, self->position);
+
+	velocity.y = 0;
+
+	entManager = entity_manager_get_manager();
+
+
+	if (SDL_GetTicks() >= self->lastAttack + 500)
+	{
+		slog("ranged attempt");
+
+		if (self->facing == 1)
+		{
+			velocity.x = -8;
+			projectile_spawn(25, 2000, self, position, velocity);
+		}
+		else if (self->facing == 3)
+		{
+			velocity.x = 8;
+			projectile_spawn(25, 2000, self, position, velocity);
+		}
+		else
+		{
+			slog("ranged direction not found");
+
+		}
+
+		self->lastAttack = SDL_GetTicks();
+	}
+
 }
 
 Bool player_is_allowed_jump(Entity *self)
