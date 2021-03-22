@@ -22,12 +22,14 @@ typedef struct Entity_s
 	Bool		onGround, onLeft, onRight, onRoof;
 	Bool		isPlayer;
 	Bool		doubleJumped;
+	Bool		hasTarget;
 	int			health;
 	int			contactDamage;
 	int			attackDamage;
 	int			lastAttack;		//measured in ms
 	int			lastDamaged;
 	int			facing;			//1 = left, 2 = up, 3 = right, 4 = down
+	int			targetingFrames;
 	Vector2D    position;
 	Vector2D    velocity;
 	SDL_Rect	hitbox;	

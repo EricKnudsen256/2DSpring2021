@@ -462,7 +462,7 @@ void entity_draw(Entity *ent)
 			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &attackbox);
 		}
 
-		if (ent->enemy_type == ENEMY_FLYER)
+		if (&ent->hitbox2)
 		{
 			//slog("x:%i, y:%i, w:%i, h:%i", ent->hitbox2.x, ent->hitbox2.y, ent->hitbox2.w, ent->hitbox2.h);
 			SDL_Rect tempDraw;

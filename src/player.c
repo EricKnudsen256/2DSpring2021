@@ -278,6 +278,11 @@ void player_die(Entity *self)
 
 void player_damage(Entity *player, int damage)
 {
+	if (damage == 0)
+	{
+		return;
+	}
+
 	if (SDL_GetTicks() >= player->lastDamaged + 1000)
 	{
 		player->health -= damage;
