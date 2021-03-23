@@ -246,7 +246,7 @@ void entity_check_collisions(Entity *ent)
 		//if below
 		if (entity_check_below_collision(ent->hitbox, tile->hitbox) && ent->velocity.y > 0)
 		{
-
+			
 			testMove.y = tile->hitbox.y - testMove.h;
 			if (!entity_check_below_collision(testMove, tile->hitbox))
 			{
@@ -258,7 +258,6 @@ void entity_check_collisions(Entity *ent)
 			}
 		}
 
-		//condition for if flyer
 
 
 		//if above
@@ -266,9 +265,9 @@ void entity_check_collisions(Entity *ent)
 		{
 
 			testMove.y = tile->hitbox.y + tile->hitbox.h;
-			if (!entity_check_above_collision(testMove, tile->hitbox))
+			if (!entity_check_above_collision(testMove, tile->hitbox) && !(entity_check_right_collision(testMove, tile->hitbox) || entity_check_left_collision(testMove, tile->hitbox)))
 			{
-				//slog("collision on top");
+				slog("collision on top");
 				ent->position.y = testMove.y;
 				ent->hitbox.y = testMove.y;
 				ent->velocity.y = 0;
@@ -291,7 +290,7 @@ void entity_check_collisions(Entity *ent)
 		{
 
 			testMove.x = tile->hitbox.x + tile->hitbox.w;
-			if (!entity_check_left_collision(testMove, tile->hitbox))
+			if (!entity_check_left_collision(testMove, tile->hitbox) && !entity_check_above_collision(testMove, tile->hitbox))
 			{
 				//slog("collision on left");
 				ent->position.x = testMove.x;
@@ -307,7 +306,7 @@ void entity_check_collisions(Entity *ent)
 		{
 			
 			testMove.x = tile->hitbox.x - testMove.w;
-			if (!entity_check_left_collision(testMove, tile->hitbox))
+			if (!entity_check_right_collision(testMove, tile->hitbox) && !entity_check_above_collision(testMove, tile->hitbox))
 			{
 				//slog("collision on right");
 				ent->position.x = testMove.x;
@@ -413,7 +412,7 @@ void entity_draw(Entity *ent)
 		if (!camera_rect_on_screen(gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h)))
 		{
 			//entity is off camera, skip
-			return;
+			//return;
 		}
 		drawPosition.x = ent->position.x + offset.x;
 		drawPosition.y = ent->position.y + offset.y;
