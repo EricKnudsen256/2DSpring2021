@@ -45,6 +45,8 @@ void player_update(Entity *self)
 
 	if (!self)return;
 
+	//slog("Player: x:%f, y:%f", self->position.x, self->position.y);
+
 	cameraSize = camera_get_dimensions();
 	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
 	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
@@ -135,6 +137,7 @@ void player_think(Entity *self)
 			self->velocity.x *= 1.5;;
 		}
 	}
+
 	else
 	{
 		self->onRight = false;
@@ -202,7 +205,21 @@ void player_think(Entity *self)
 			}
 			
 		}
+	}
 
+	if (self->position.x <= -60)
+	{
+		level_change(1);
+
+		self->position = vector2d(1440, 480);
+		
+	}
+
+	if (self->position.x >= 1532)
+	{
+		level_change(3);
+
+		self->position = vector2d(32, 480);
 	}
 }
 

@@ -66,6 +66,8 @@ Level *level_new()
 		level_manager.level_list[i]._inuse = 1;
 		return &level_manager.level_list[i];
 	}
+
+
 	memset(level, 0, sizeof(Level));
 	return level;
 }
@@ -183,7 +185,7 @@ Level *level_load(const char *filename)
 	return level;
 }
 
-Level *level_random(int width, int height)
+Level *level_random(int width, int height, Vector2D levelPos)
 {
 	Vector2D temp;
 	const char *string;
@@ -325,6 +327,7 @@ Level *level_random(int width, int height)
 		tile_free(level->tileArray[tileIndex]);
 	}
 
+	//create extra structures around door 1 to prevent getting out of map
 
 	level->door1.x += 1;
 	level->door1.y += 1;
@@ -333,6 +336,33 @@ Level *level_random(int width, int height)
 
 	level->door1.x += 1;
 
+	level_new_tile(level, level->door1);
+
+	level->door1.x -= 3;
+	level_new_tile(level, level->door1);
+
+	level->door1.x -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.x -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.x += 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.x += 1;
 	level_new_tile(level, level->door1);
 
 	//door 2
@@ -367,9 +397,34 @@ Level *level_random(int width, int height)
 	level_new_tile(level, level->door2);
 
 	level->door2.x -= 1;
-
 	level_new_tile(level, level->door2);
 
+	level->door2.x += 3;
+	level_new_tile(level, level->door2);
+
+	level->door2.x += 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x += 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x -= 1;
+	level_new_tile(level, level->door2);
 
 	//call to create random platforms
 	create_random_platform(platNum, 4, 10, level);
@@ -379,6 +434,10 @@ Level *level_random(int width, int height)
 
 	level->_inuse = 1;
 	level->_current = 1;
+
+	level->levelPos = levelPos;
+
+	slog("LevelPos: x:%f, y:%f", levelPos.x, levelPos.y);
 
 	return level;
 
@@ -671,6 +730,76 @@ Bool spawn_platform(Vector2D gridPos, int width, Level *level)
 			
 		}
 	}
+}
+
+
+void level_change(int door)
+{
+	Level *newLevel, *currentLevel;
+	Vector2D newLevelPos;
+
+	currentLevel = level_manager_get_current();
+
+
+	vector2d_copy(newLevelPos, currentLevel->levelPos);
+
+	currentLevel->_current = false;
+
+	if (door == 1)
+	{
+		newLevelPos.x--;
+	}
+	else if (door == 2)
+	{
+		newLevelPos.y--;
+	}
+	else if (door == 3)
+	{
+		newLevelPos.x++;
+	}
+	else if (door == 4)
+	{
+		newLevelPos.y++;
+	}
+
+	newLevel = level_find_level_by_pos(newLevelPos);
+
+	if (!newLevel)
+	{	
+		//slog("No level found");
+		newLevel = level_random(48, 32, newLevelPos);
+	}
+	else
+	{
+		//slog("Level found");
+		newLevel->_inuse = true;
+		newLevel->_current = true;
+	}
+}
+
+
+
+Level *level_find_level_by_pos(Vector2D position)
+{
+	int i;
+
+	for (i = 0; i < level_manager.max_levels; i++)
+	{
+
+		if (level_manager.level_list[i]._inuse == 0)
+		{
+			continue;
+		}
+
+		//slog("X:%f, Y:%f", level_manager.level_list[i].levelPos.x, level_manager.level_list[i].levelPos.y);
+
+		if (level_manager.level_list[i].levelPos.x == position.x && level_manager.level_list[i].levelPos.y == position.y)
+		{
+			return &level_manager.level_list[i];
+		}
+	}
+
+	return NULL;
 }
 
 

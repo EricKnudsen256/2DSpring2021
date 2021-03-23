@@ -64,10 +64,10 @@ int main(int argc, char * argv[])
 
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	level = level_random(48, 32);
+	level = level_random(48, 32, vector2d(0, 0));
 	//level = level_random(16, 16);
 
-	player = player_spawn(vector2d(100, 100));
+	player = player_spawn(vector2d(32, 480));
 	bouncer_spawn(vector2d(300, 200));
 
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
@@ -77,6 +77,7 @@ int main(int argc, char * argv[])
     /*main game loop*/
     while(!done)
     {
+		
         SDL_PumpEvents();   // update SDL's internal event structures
         keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
         /*update things here*/
@@ -93,6 +94,8 @@ int main(int argc, char * argv[])
 		projectile_manager_check_collisions();
 		projectile_manager_update_projectiles();
 		
+
+		level = level_manager_get_current();
 
 		level_update(level);
 

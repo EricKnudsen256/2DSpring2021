@@ -267,7 +267,7 @@ void entity_check_collisions(Entity *ent)
 			testMove.y = tile->hitbox.y + tile->hitbox.h;
 			if (!entity_check_above_collision(testMove, tile->hitbox) && !(entity_check_right_collision(testMove, tile->hitbox) || entity_check_left_collision(testMove, tile->hitbox)))
 			{
-				slog("collision on top");
+				//slog("collision on top");
 				ent->position.y = testMove.y;
 				ent->hitbox.y = testMove.y;
 				ent->velocity.y = 0;
