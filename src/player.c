@@ -126,21 +126,50 @@ void player_think(Entity *self)
 		self->velocity.x = 0;
 	}
 
-	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self) && (self->onGround == true || self->doubleJumped == false))
+	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self))
 	{
-		self->velocity.y = -5;
-		self->position.y -= .1;
-		
-		if (!self->onGround)
+		if (self->onGround == true || self->doubleJumped == false)
 		{
-			self->doubleJumped = true;
+			self->velocity.y = -5;
+			self->position.y -= .1;
+		
+			if (!self->onGround)
+			{
+				self->doubleJumped = true;
+			}
+
+			self->onGround = false;
+			self->lastJump = SDL_GetTicks();
+
+			//slog("onGround: %i", self->onGround);
+			//slog("doubleJumped: %i", self->doubleJumped);
 		}
+		else if (self->onRight)
+		{
+			self->velocity.y = -5;
+			self->position.y -= .1;
 
-		self->onGround = false;
-		self->lastJump = SDL_GetTicks();
+			if (!self->onGround)
+			{
+				self->doubleJumped = true;
+			}
 
-		//slog("onGround: %i", self->onGround);
-		//slog("doubleJumped: %i", self->doubleJumped);
+			self->onGround = false;
+			self->lastJump = SDL_GetTicks();
+		}
+		else if (self->onLeft)
+		{
+			self->velocity.y = -5;
+			self->position.y -= .1;
+
+			if (!self->onGround)
+			{
+				self->doubleJumped = true;
+			}
+
+			self->onGround = false;
+			self->lastJump = SDL_GetTicks();
+		}
 	}
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
