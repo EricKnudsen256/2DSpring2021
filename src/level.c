@@ -7,6 +7,11 @@
 #include "level.h"
 #include "random.h"
 
+#include "walker.h"
+#include "flyer.h"
+#include "archer.h"
+#include "bouncer.h"
+
 typedef struct
 {
 	Level *level_list;
@@ -248,6 +253,9 @@ Level *level_random(int width, int height, Vector2D levelPos)
 	level->tileArrayLen = (level->levelWidth * level->levelHeight);
 	level->tileArray = (Tile **)gfc_allocate_array(sizeof(Tile*), level->tileArrayLen);
 
+	level->entityArrayLen = 50;
+	level->entityArray = (Entity **)gfc_allocate_array(sizeof(Entity*), level->entityArrayLen);
+
 
 	//loop to initialize the tiles in the level
 	for (r = 0; r < level->levelHeight; r++)
@@ -304,7 +312,7 @@ Level *level_random(int width, int height, Vector2D levelPos)
 	//open doors
 
 	level->door1.x = 0;
-	level->door1.y = level->levelHeight / 2;
+	level->door1.y = level->levelHeight / 2 - 1;
 
 
 	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y);
@@ -368,7 +376,7 @@ Level *level_random(int width, int height, Vector2D levelPos)
 	//door 2
 
 	level->door2.x = level->levelWidth - 1;
-	level->door2.y = level->levelHeight / 2;
+	level->door2.y = level->levelHeight / 2 - 1;
 
 	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y);
 	if (tileIndex != -1)
@@ -437,6 +445,8 @@ Level *level_random(int width, int height, Vector2D levelPos)
 
 	level->levelPos = levelPos;
 
+	level_layout_random_enemies(3, 5, level);
+
 	slog("LevelPos: x:%f, y:%f", levelPos.x, levelPos.y);
 
 	return level;
@@ -458,6 +468,57 @@ Tile *level_new_tile(Level * level, Vector2D pos)
 	}
 
 	slog("no free tiles available");
+	return NULL;
+
+}
+
+Entity *level_new_enemy(Level * level, Vector2D gridPos, int enemy)
+{
+	int i;
+	//for loop checking if is any space in the tileArray
+
+	Entity *test;
+
+
+	for (i = 0; i < level->entityArrayLen; i++)
+	{
+
+		test = level->entityArray[i];
+
+		
+
+		if (test)continue;// someone else is using this on
+
+
+		memset(&level->entityArray[i], 0, sizeof(Entity));
+
+		slog("enemy:%i", enemy);
+
+
+		switch (enemy)
+		{
+		case 0:
+			slog("Spawn walker");
+			level->entityArray[i] = walker_spawn(gridPos);
+			return &level->entityArray[i];
+		case 1:
+			slog("Spawn flyer");
+			level->entityArray[i] = flyer_spawn(gridPos);
+			return &level->entityArray[i];
+		case 2:
+			slog("Spawn bouncer");
+			level->entityArray[i] = bouncer_spawn(gridPos);
+			return &level->entityArray[i];
+		case 3:
+			slog("Spawn archer");
+			level->entityArray[i] = archer_spawn(gridPos);
+			return &level->entityArray[i];
+		}
+
+		
+	}
+
+	slog("no free entities available");
 	return NULL;
 
 }
@@ -610,7 +671,7 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 
 		platLength = random_int_range(minWidth, maxWidth);
 
-		x = random_int_range(4 + (minWidth / 2), level->levelWidth - 4 - (minWidth / 2));
+		x = random_int_range(4 + (minWidth / 2) + 2, level->levelWidth - 6 - (minWidth / 2));
 		y = random_int_range(4, level->levelHeight);
 
 		tileIndex = level_find_tile_by_pos(level, x, y);
@@ -745,6 +806,8 @@ void level_change(int door)
 
 	currentLevel->_current = false;
 
+	//slog("test");
+
 	if (door == 1)
 	{
 		newLevelPos.x--;
@@ -761,6 +824,19 @@ void level_change(int door)
 	{
 		newLevelPos.y++;
 	}
+
+
+	for (int i = 0; i < currentLevel->entityArrayLen; i++)
+	{
+		//slog("test2");
+		if (currentLevel->entityArray[i])
+		{
+			currentLevel->entityArray[i]->_inuse = 0;
+		}
+		
+	}
+
+	//slog("test3");
 
 	newLevel = level_find_level_by_pos(newLevelPos);
 
@@ -800,6 +876,40 @@ Level *level_find_level_by_pos(Vector2D position)
 	}
 
 	return NULL;
+}
+
+void level_layout_random_enemies(int minEnemies, int maxEnemies, Level *level)
+{
+	int enemiesToSpawn = random_int_range(minEnemies, maxEnemies);
+	int x, y;
+	int enemy;
+	Vector2D spawnPos;
+
+	while (enemiesToSpawn > 0)
+	{
+		slog("Enemies to spawn: %i", enemiesToSpawn);
+
+
+
+		x = random_int_range(4, level->levelWidth - 4);
+		y = random_int_range(4, level->levelHeight);
+
+		if (level_find_tile_by_pos(level, x, y) != -1)
+		{
+			
+
+			spawnPos = vector2d(x * 32, (y - 2) * 32);
+
+			enemy = random_int_range(0, 3);
+			slog("Enemy: %i", enemy);
+
+			if (level_new_enemy(level, spawnPos, enemy))
+			{
+				enemiesToSpawn--;
+			}
+			continue;
+		}
+	}
 }
 
 

@@ -6,6 +6,7 @@
 #include "gf2d_sprite.h"
 
 #include "tile.h"
+#include "entity.h"
 
 
 typedef struct
@@ -18,7 +19,9 @@ typedef struct
 	Vector2D	levelPos;	// gridPos for where the level is, 0, 0 will be hub room
 	Vector2D	door1, door2, door3, door4;  //door1 on left, door2 on top, door3 on right, door4 on bottom
 	Tile		**tileArray;  // array of all tiles that are in the level
+	Entity		**entityArray; //array of all enemies and their spawn positions
 	int			tileArrayLen;
+	int			entityArrayLen;
 	Sprite     *tileSet;     /**<sprite for the tileset*/
 	TileTypes  *tileMap;     /**<the tiles for the level*/
 	Uint32      tileCount;
@@ -74,6 +77,8 @@ Level *level_random(int width, int height, Vector2D levelPos);
 
 Tile *level_new_tile(Level * level, Vector2D pos);
 
+Entity *level_new_enemy(Level * level, Vector2D gridPos, int enemy);
+
 /**
 * @brief free up a previously loaded level
 * @param level a pointer to the level to free
@@ -114,4 +119,6 @@ void level_change(int door);
 */
 
 Level *level_find_level_by_pos(Vector2D position);
+
+void level_layout_random_enemies(int minEnemies, int maxEnemies, Level *level);
 #endif

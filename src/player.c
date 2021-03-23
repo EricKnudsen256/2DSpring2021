@@ -211,7 +211,7 @@ void player_think(Entity *self)
 	{
 		level_change(1);
 
-		self->position = vector2d(1440, 480);
+		self->position = vector2d(1440, 448);
 		
 	}
 
@@ -219,7 +219,7 @@ void player_think(Entity *self)
 	{
 		level_change(3);
 
-		self->position = vector2d(32, 480);
+		self->position = vector2d(32, 448);
 	}
 }
 

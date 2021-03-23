@@ -32,6 +32,7 @@ typedef struct Entity_s
 	int			targetingFrames;
 	Vector2D    position;
 	Vector2D    velocity;
+	Vector2D	gridPos;		//girdPos that this entity was spawned at
 	SDL_Rect	hitbox;	
 	SDL_Rect	hitbox2;		//used for secondary purposes. For flyer, box to check distance from the ground. For archer, used for player aim box
 	Vector3D    rotation;		//(x,y) = rotation center, z = degrees of rotation

@@ -32,6 +32,8 @@ Entity *flyer_spawn(Vector2D position)
 	ent->hitbox.w = 64;
 	ent->hitbox.h = 64;
 
+	ent->gridPos = vector2d(position.x / 32, position.y / 32);
+
 
 	gfc_rect_set(ent->hitbox2, ent->hitbox.x, ent->hitbox.y + ent->hitbox.h, ent->hitbox.w, 75);
 
