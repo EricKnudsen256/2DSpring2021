@@ -195,7 +195,7 @@ Level *level_random(int width, int height)
 	int platNum;
 	
 
-	platNum = random_int_range(5, 10);
+	platNum = random_int_range(16, 30);
 
 	level = level_new();
 	if (!level)
@@ -372,7 +372,7 @@ Level *level_random(int width, int height)
 
 
 	//call to create random platforms
-	create_random_platform(platNum, 5, 10, level);
+	create_random_platform(platNum, 4, 10, level);
 
 	level->levelSize.x = level->levelWidth * level->tileWidth;
 	level->levelSize.y = level->levelHeight * level->tileHeight;
@@ -545,18 +545,18 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 
 	for (i = 0; i < number; i++)
 	{
-		slog("loop1");
+		//slog("loop1");
 
 		foundBlock = false;
 
 		platLength = random_int_range(minWidth, maxWidth);
 
 		x = random_int_range(4 + (minWidth / 2), level->levelWidth - 4 - (minWidth / 2));
-		y = random_int_range(4, level->levelHeight - 4);
+		y = random_int_range(4, level->levelHeight);
 
 		tileIndex = level_find_tile_by_pos(level, x, y);
 
-		slog("platLength:%i", platLength);
+		//slog("platLength:%i", platLength);
 
 		if (tileIndex == -1)
 		{
@@ -568,7 +568,7 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 			for (j = 0; j < platLength / 2; j++)
 			{
 
-				slog("loop2");
+				//slog("loop2");
 
 				cursor.x--;
 
@@ -586,7 +586,7 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 			for (j = 0; j < platLength / 2; j++)
 			{
 
-				slog("loop3");
+				//slog("loop3");
 				if (foundBlock)
 				{
 					break;
@@ -619,26 +619,33 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 Bool spawn_platform(Vector2D gridPos, int width, Level *level)
 {
 	int i;
-	Vector2D cursor;
+	Vector2D cursor, adjustedGridPos;
 
-	
-	level_new_tile(level, gridPos);
+
+
+	vector2d_copy(adjustedGridPos, gridPos);
+
+	adjustedGridPos.y = (int)adjustedGridPos.y - ((int)adjustedGridPos.y % 4);
+
+	vector2d_copy(cursor, adjustedGridPos);
+
+	level_new_tile(level, cursor);
 
 	if (width % 2 == 1)
 	{
-		vector2d_copy(cursor, gridPos);
+		vector2d_copy(cursor, adjustedGridPos);
 		for (i = 0; i < width / 2 + 1; i++)
 		{
-			slog("tile x:%f, y%f", cursor.x, cursor.y);
+			//slog("tile x:%f, y%f", cursor.x, cursor.y);
 			cursor.x--;
 			level_new_tile(level, cursor);
 			
 		}
 		
-		vector2d_copy(cursor, gridPos);
+		vector2d_copy(cursor, adjustedGridPos);
 		for (i = 0; i < width / 2 + 1; i++)
 		{
-			slog("tile x:%f, y%f", cursor.x, cursor.y);
+			//slog("tile x:%f, y%f", cursor.x, cursor.y);
 			cursor.x++;
 			level_new_tile(level, cursor);
 			
@@ -646,19 +653,19 @@ Bool spawn_platform(Vector2D gridPos, int width, Level *level)
 	}
 	else if (width % 2 == 0)
 	{
-		vector2d_copy(cursor, gridPos);
+		vector2d_copy(cursor, adjustedGridPos);
 		for (i = 0; i < (width / 2); i++)
 		{
-			slog("tile x:%f, y%f", cursor.x, cursor.y);
+			//slog("tile x:%f, y%f", cursor.x, cursor.y);
 			cursor.x--;
 			level_new_tile(level, cursor);
 			
 		}
 
-		vector2d_copy(cursor, gridPos);
+		vector2d_copy(cursor, adjustedGridPos);
 		for (i = 0; i < width / 2 + 1; i++)
 		{
-			slog("tile x:%f, y%f", cursor.x, cursor.y);
+			//slog("tile x:%f, y%f", cursor.x, cursor.y);
 			cursor.x++;
 			level_new_tile(level, cursor);
 			
