@@ -99,6 +99,14 @@ void player_think(Entity *self)
 		self->doubleJumped = false;
 	}
 
+	if ((self->onRight || self->onLeft) && !self->onGround)
+	{
+		if (self->velocity.y > 1)
+		{
+			self->velocity.y = 1;
+		}
+	}
+
 	//check for any keys pressed
 	if (keys[SDL_SCANCODE_D])
 	{
@@ -107,6 +115,10 @@ void player_think(Entity *self)
 		{
 			self->velocity.x = 3;
 			self->onLeft = false;
+		}
+		if (keys[SDL_SCANCODE_LSHIFT])
+		{
+			self->velocity.x *= 1.5;;
 		}
 		
 	}
@@ -117,6 +129,10 @@ void player_think(Entity *self)
 		{
 			self->velocity.x = -3;
 			self->onRight = false;
+		}
+		if (keys[SDL_SCANCODE_LSHIFT])
+		{
+			self->velocity.x *= 1.5;;
 		}
 	}
 	else
