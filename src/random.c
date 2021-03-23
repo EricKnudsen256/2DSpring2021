@@ -1,5 +1,11 @@
 #include "random.h"
 
+void init_random()
+{
+
+	srand((unsigned)time(0));
+}
+
 float random()
 {
 	return (float)rand() / (float)RAND_MAX;
@@ -9,5 +15,5 @@ float random()
 
 int random_int_range(int min, int max)
 {
-	return min + (int)(rand() / (float)(RAND_MAX + 1) * (max - min + 1));
+	return rand() % (min - max + 1) + min;
 }

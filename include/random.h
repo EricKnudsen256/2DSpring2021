@@ -3,6 +3,9 @@
 
 #include <stdlib.h>
 
+
+void init_random();
+
 /**
 * @brief returns a random float between 0 and 1
 */

@@ -101,6 +101,8 @@ void level_draw(Level *level);
 */
 int level_find_tile_by_pos(Level *level, int x, int y);
 
+Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level);
 
+Bool spawn_platform(Vector2D gridPos, int width, Level *level);
 
 #endif

@@ -12,7 +12,7 @@
 #include "entity.h"
 #include "player.h"
 #include "level.h"
-
+#include "random.h"
 
 int main(int argc, char * argv[])
 {
@@ -33,6 +33,7 @@ int main(int argc, char * argv[])
     Sprite *mouse;
     Vector4D mouseColor = {255,100,255,200};
     
+
     /*program initializtion*/
     init_logger("gf2d.log");
     slog("---==== BEGIN ====---");
@@ -57,7 +58,10 @@ int main(int argc, char * argv[])
 	level_manager_init(64);
 	
     SDL_ShowCursor(SDL_DISABLE);
-    
+
+
+	init_random();
+
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
 	level = level_random(48, 32);
@@ -67,8 +71,6 @@ int main(int argc, char * argv[])
 	bouncer_spawn(vector2d(300, 200));
 
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
-
-	srand(SDL_GetTicks());
 
 	
 
@@ -119,6 +121,7 @@ int main(int argc, char * argv[])
 
 		gfc_line_sprintf(health_text, "Health:%i", player->health);
 		font_render(font, health_text, vector2d(32, 64), gfc_color8(255, 255, 255, 255));
+
 
 		if (entity_manager_get_player_ent()->health <= 0)
 		{
