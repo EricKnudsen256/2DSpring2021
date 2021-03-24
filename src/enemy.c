@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "enemy.h"
+#include "camera.h"
 
 void enemy_update(Entity *self);
 void enemy_think(Entity *self);
@@ -101,6 +102,89 @@ void enemy_damage(Entity *ent, int damage)
 	}
 
 }
+
+void enemy_draw(Entity *ent)
+{
+	Vector2D offset, drawPosition;
+
+	SDL_Rect healthBG, health;
+
+
+	if (ent->sprite == NULL)
+	{
+		return;// nothing to draw
+	}
+	offset = camera_get_offset();
+	if (!camera_rect_on_screen(gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h)))
+	{
+		//entity is off camera, skip
+		//return;
+	}
+	drawPosition.x = ent->position.x + offset.x;
+	drawPosition.y = ent->position.y + offset.y;
+
+
+	gf2d_sprite_draw(
+		ent->sprite,
+		drawPosition,
+		NULL,
+		NULL,
+		&ent->rotation,
+		NULL,
+		NULL,
+		(Uint32)ent->frame);
+
+	//drawing health bars
+
+	gfc_rect_set(healthBG, ent->position.x + offset.x, ent->position.y - 20 + offset.y, ent->hitbox.w, 15);
+
+	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 215, 215, 215, 255);
+
+	SDL_RenderFillRect(gf2d_graphics_get_renderer(), &healthBG);
+
+
+	gfc_rect_set(healthBG, ent->position.x + offset.x, ent->position.y - 20 + offset.y, ent->hitbox.w * ((float)ent->health / (float)ent->startingHealth), 15);
+
+	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 232, 67, 67, 255);
+
+	SDL_RenderFillRect(gf2d_graphics_get_renderer(), &healthBG);
+
+	if (&ent->hitbox)
+	{
+
+		SDL_Rect tempDraw;
+
+		tempDraw.x = ent->hitbox.x + offset.x;
+		tempDraw.y = ent->hitbox.y + offset.y;
+		tempDraw.w = ent->hitbox.w;
+		tempDraw.h = ent->hitbox.h;
+
+		SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 255, 255);
+
+		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
+
+	}
+
+
+	if (&ent->hitbox2)
+	{
+		//slog("x:%i, y:%i, w:%i, h:%i", ent->hitbox2.x, ent->hitbox2.y, ent->hitbox2.w, ent->hitbox2.h);
+		SDL_Rect tempDraw;
+
+		tempDraw.x = ent->hitbox2.x + offset.x;
+		tempDraw.y = ent->hitbox2.y + offset.y;
+		tempDraw.w = ent->hitbox2.w;
+		tempDraw.h = ent->hitbox2.h;
+
+		gfc_rect_set(tempDraw, ent->hitbox2.x + offset.x, ent->hitbox2.y + offset.y, ent->hitbox2.w, ent->hitbox2.h);
+
+		SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 0, 0, 0, 255);
+
+		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
+	}
+
+}
+
 
 
 /**/

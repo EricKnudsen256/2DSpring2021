@@ -29,8 +29,12 @@ Entity *walker_spawn(Vector2D position)
 	ent->hitbox.w = 64;
 	ent->hitbox.h = 64;
 
+	ent->draw = enemy_draw;
+
 	ent->gridPos = vector2d(position.x / 32, position.y / 32);
 
+
+	ent->startingHealth = 50;
 	ent->health = 50;
 	ent->contactDamage = 10;
 

@@ -24,6 +24,7 @@ typedef struct Entity_s
 	Bool		doubleJumped;
 	Bool		hasTarget;
 	int			health;
+	int			startingHealth;
 	int			contactDamage;
 	int			attackDamage;
 	int			lastAttack;		//measured in ms

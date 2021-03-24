@@ -290,12 +290,12 @@ void player_ranged(Entity *self)
 		if (self->facing == 1)
 		{
 			velocity.x = -8;
-			projectile_spawn(25, 2000, self, position, velocity);
+			projectile_spawn(10, 2000, self, position, velocity);
 		}
 		else if (self->facing == 3)
 		{
 			velocity.x = 8;
-			projectile_spawn(25, 2000, self, position, velocity);
+			projectile_spawn(10, 2000, self, position, velocity);
 		}
 		else
 		{

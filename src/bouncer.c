@@ -32,10 +32,14 @@ Entity *bouncer_spawn(Vector2D position)
 	ent->hitbox.h = 64;
 
 
+	ent->draw = enemy_draw;
+
 	ent->gridPos = vector2d(position.x / 32, position.y / 32);
 
 	ent->check_collision = bouncer_check_player_collision;
+	
 
+	ent->startingHealth = 10;
 	ent->health = 10;
 	ent->contactDamage = 20;
 
