@@ -66,7 +66,7 @@ int main(int argc, char * argv[])
 
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
-	level = level_random(48, 32, vector2d(0, 0));
+	level = level_hub();
 	//level = level_random(16, 16);
 
 	player = player_spawn(vector2d(32, 448));

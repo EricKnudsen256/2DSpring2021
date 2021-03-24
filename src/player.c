@@ -4,6 +4,7 @@
 #include "projectile.h"
 #include "camera.h"
 #include "globals.h"
+#include "level.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -215,17 +216,48 @@ void player_think(Entity *self)
 
 	if (self->position.x <= -60)
 	{
-		level_change(1);
+		Level *level = level_manager_get_current();
 
-		self->position = vector2d(1440, 448);
+
+		if (self->position.y <= 180)
+		{
+			level_change(self, 1, -1);
+
+		}
+		else if (self->position.y >= 900)
+		{
+			level_change(self, 1, 1);
+		}
+		else
+		{
+			level_change(self, 1, level->levelPos.y);
+		}
+		
+
+		
 		
 	}
 
 	if (self->position.x >= 1532)
 	{
-		level_change(3);
 
-		self->position = vector2d(32, 448);
+		Level *level = level_manager_get_current();
+
+		if (self->position.y <= 180)
+		{
+			level_change(self, 3, -1);
+		}
+		else if (self->position.y >= 900)
+		{
+			level_change(self, 3, 1);
+		}
+		else
+		{
+			level_change(self, 3, level->levelPos.y);
+			
+		}
+
+		
 	}
 }
 

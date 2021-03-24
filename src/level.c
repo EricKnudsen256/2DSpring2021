@@ -190,6 +190,128 @@ Level *level_load(const char *filename)
 	return level;
 }
 
+Level *level_hub()
+{
+	Vector2D temp;
+	const char *string;
+	Level *level;
+	int count;
+	int tileIndex;
+	int i;
+	int r, c;
+	int platNum;
+
+
+	platNum = random_int_range(16, 30);
+
+	level = level_new();
+	if (!level)
+	{
+		return NULL;
+	}
+
+	level->levelWidth = 48;
+	level->levelHeight = 32;
+
+	count = 1;
+	level->bgImageCount = count;
+
+	//testing values with 1, change when paralax required, for loop will need to be changed as well
+
+	if (count)
+	{
+		level->bgImage = (Sprite **)gfc_allocate_array(sizeof(Sprite*), count);
+		for (i = 0; i < count; i++)
+		{
+			//string = sj_get_string_value(sj_array_get_nth(array, i));
+			//if (string)
+			//{
+			level->bgImage[i] = gf2d_sprite_load_image("images/backgrounds/layers0.png");
+			//}
+		}
+	}
+
+	//Test tileset, add paramter to function for this
+
+	string = "images/basetileset.png";
+	slog("loading tile set %s", string);
+
+	level->tileWidth = 32;
+	level->tileHeight = 32;
+	level->tileFPL = 16;
+
+
+	level->tileSet = gf2d_sprite_load_all(
+		(char *)string,
+		level->tileWidth,
+		level->tileHeight,
+		level->tileFPL);
+
+	//System to initialize random level
+
+	//Initializes tileArray to the size needed if all tiles were used in the level
+	level->tileArrayLen = (level->levelWidth * level->levelHeight);
+	level->tileArray = (Tile **)gfc_allocate_array(sizeof(Tile*), level->tileArrayLen);
+
+	level->entityArrayLen = 50;
+	level->entityArray = (Entity **)gfc_allocate_array(sizeof(Entity*), level->entityArrayLen);
+
+
+	//loop to initialize the tiles in the level
+	for (r = 0; r < level->levelHeight; r++)
+	{
+		for (c = 0; c < level->levelWidth; c++)
+		{
+
+			//test code to make sure that the tiles are being created properly
+			if (r == 0 || r == level->levelHeight - 1 || c == 0 || c == level->levelWidth - 1)
+			{
+				Bool tilePlaced = false;
+				//slog("creating tile at x:%i, y:%i", c, r);
+				temp.x = c;
+				temp.y = r;
+
+				level_new_tile(level, temp);
+			}
+
+
+
+			//code for placing platforms
+
+			if (r % 5 == 0 && r < 28 && ((c > 8 && c <= 22) || (c >= 26 && c < 40)))
+			{
+
+				temp.x = c;
+				temp.y = r;
+
+				//for loop checking if is any space in the tileArray
+
+				level_new_tile(level, temp);
+
+			}
+		} //end of loop 1
+
+	} //end of loop 2
+
+	//open doors
+
+	level_create_doors(level, level->levelHeight / 2 - 1);
+	level_create_doors(level, level->levelHeight - 2);
+	level_create_doors(level, 6);
+
+
+	level->levelSize.x = level->levelWidth * level->tileWidth;
+	level->levelSize.y = level->levelHeight * level->tileHeight;
+
+	level->_inuse = 1;
+	level->_current = 1;
+
+	level->levelPos = vector2d(0, 0);
+
+
+	return level;
+}
+
 Level *level_random(int width, int height, Vector2D levelPos)
 {
 	Vector2D temp;
@@ -311,128 +433,7 @@ Level *level_random(int width, int height, Vector2D levelPos)
 
 	//open doors
 
-	level->door1.x = 0;
-	level->door1.y = level->levelHeight / 2 - 1;
-
-
-	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y);
-	if (tileIndex != -1)
-	{
-		tile_free(level->tileArray[tileIndex]);
-	}
-
-
-	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 1);
-	if (tileIndex != -1)
-	{
-		tile_free(level->tileArray[tileIndex]);
-	}
-
-
-	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 2);
-	if (tileIndex != -1)
-	{
-		tile_free(level->tileArray[tileIndex]);
-	}
-
-	//create extra structures around door 1 to prevent getting out of map
-
-	level->door1.x += 1;
-	level->door1.y += 1;
-
-	level_new_tile(level, level->door1);
-
-	level->door1.x += 1;
-
-	level_new_tile(level, level->door1);
-
-	level->door1.x -= 3;
-	level_new_tile(level, level->door1);
-
-	level->door1.x -= 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.x -= 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.y -= 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.y -= 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.y -= 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.y -= 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.x += 1;
-	level_new_tile(level, level->door1);
-
-	level->door1.x += 1;
-	level_new_tile(level, level->door1);
-
-	//door 2
-
-	level->door2.x = level->levelWidth - 1;
-	level->door2.y = level->levelHeight / 2 - 1;
-
-	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y);
-	if (tileIndex != -1)
-	{
-		tile_free(level->tileArray[tileIndex]);
-	}
-
-
-	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y - 1);
-	if (tileIndex != -1)
-	{
-		tile_free(level->tileArray[tileIndex]);
-	}
-
-
-	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y - 2);
-	if (tileIndex != -1)
-	{
-		tile_free(level->tileArray[tileIndex]);
-	}
-
-
-	level->door2.x -= 1;
-	level->door2.y += 1;
-
-	level_new_tile(level, level->door2);
-
-	level->door2.x -= 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.x += 3;
-	level_new_tile(level, level->door2);
-
-	level->door2.x += 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.x += 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.y -= 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.y -= 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.y -= 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.y -= 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.x -= 1;
-	level_new_tile(level, level->door2);
-
-	level->door2.x -= 1;
-	level_new_tile(level, level->door2);
+	level_create_doors(level, level->levelHeight / 2 - 1);
 
 	//call to create random platforms
 	create_random_platform(platNum, 4, 10, level);
@@ -793,14 +794,143 @@ Bool spawn_platform(Vector2D gridPos, int width, Level *level)
 	}
 }
 
+Bool level_create_doors(Level *level, int y)
+{
+	int tileIndex;
 
-void level_change(int door)
+	level->door1.x = 0;
+	level->door1.y = y;
+
+
+	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+
+	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 1);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+
+	tileIndex = level_find_tile_by_pos(level, level->door1.x, level->door1.y - 2);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+	//create extra structures around door 1 to prevent getting out of map
+
+	level->door1.x += 1;
+	level->door1.y += 1;
+
+	level_new_tile(level, level->door1);
+
+	level->door1.x += 1;
+
+	level_new_tile(level, level->door1);
+
+	level->door1.x -= 3;
+	level_new_tile(level, level->door1);
+
+	level->door1.x -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.x -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.y -= 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.x += 1;
+	level_new_tile(level, level->door1);
+
+	level->door1.x += 1;
+	level_new_tile(level, level->door1);
+
+	//door 2
+
+	level->door2.x = level->levelWidth - 1;
+	level->door2.y = y;
+
+	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+
+	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y - 1);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+
+	tileIndex = level_find_tile_by_pos(level, level->door2.x, level->door2.y - 2);
+	if (tileIndex != -1)
+	{
+		tile_free(level->tileArray[tileIndex]);
+	}
+
+
+	level->door2.x -= 1;
+	level->door2.y += 1;
+
+	level_new_tile(level, level->door2);
+
+	level->door2.x -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x += 3;
+	level_new_tile(level, level->door2);
+
+	level->door2.x += 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x += 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.y -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x -= 1;
+	level_new_tile(level, level->door2);
+
+	level->door2.x -= 1;
+	level_new_tile(level, level->door2);
+}
+
+
+void level_change(Entity *player, int door, int y)
 {
 	Level *newLevel, *currentLevel;
 	Vector2D newLevelPos;
 
 	currentLevel = level_manager_get_current();
 
+	slog("y:%i", y);
 
 	vector2d_copy(newLevelPos, currentLevel->levelPos);
 
@@ -824,6 +954,14 @@ void level_change(int door)
 	{
 		newLevelPos.y++;
 	}
+
+	newLevelPos.y = y;
+
+	if (newLevelPos.x == 0)
+	{
+		newLevelPos = vector2d(0, 0);
+	}
+		
 
 
 	for (int i = 0; i < currentLevel->entityArrayLen; i++)
@@ -850,6 +988,41 @@ void level_change(int door)
 		//slog("Level found");
 		newLevel->_inuse = true;
 		newLevel->_current = true;
+	}
+
+	if (door == 1)
+	{
+		if (y == -1 && newLevelPos.x == 0)
+		{
+			slog("top");
+			player->position = vector2d(1440, 160);
+		}
+		else if (y == 1 && newLevelPos.x == 0)
+		{
+			slog("bot");
+			player->position = vector2d(1440, 928);
+		}
+		else
+		{
+			slog("mid");
+			player->position = vector2d(1440, 448);
+		}
+	}
+	else if (door == 3)
+	{
+
+		if (y == -1 && newLevelPos.x == 0)
+		{
+			player->position = vector2d(32, 160);
+		}
+		else if (y == 1 && newLevelPos.x == 0)
+		{
+			player->position = vector2d(32, 928);
+		}
+		else
+		{
+			player->position = vector2d(32, 448);
+		}
 	}
 }
 

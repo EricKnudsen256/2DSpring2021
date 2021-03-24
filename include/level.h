@@ -68,6 +68,10 @@ Level *level_load(const char *filename);
 * @params width of level in tiles, height of level in tiles
 * @return the newly created level
 */
+
+Level *level_hub();
+
+
 Level *level_random(int width, int height, Vector2D levelPos);
 
 /**
@@ -110,7 +114,9 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 
 Bool spawn_platform(Vector2D gridPos, int width, Level *level);
 
-void level_change(int door);
+Bool level_create_doors(Level *level, int y);
+
+void level_change(Entity *player, int door, int y);
 
 /**
 * @brief finds and returns the level with the given gridpos
