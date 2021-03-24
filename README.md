@@ -1,30 +1,67 @@
-# gameframework2d (GF2D)
-a collection of utlitity functions designed to facilitate creating 2D games with SDL2
-This project is specifically intended to function as an educational tool for my students taking 2D Game Programming.
+# 2D Factory Midterm
 
-Currently the project is in a WIP state, however it is functional with sample projects showcasing rudimentary scrolling shooters,
-platformers, and adventure games.
+## Basics
 
-The master branch is kept deliberately minimal to allow students to build out systems as they are learning.
-Other branches have more complete system: Collisions, menus, input abstraction.
+In order to start the game, simply run the 2dGameFramework.exe
 
-# Build Process
+# Specific Deliverables
 
-Before you can build the example code we are providing for you, you will need to obtain the libraries required
-by the source code
- - SDL2
- - SDL2_image
- - SDL2_mixer
- - SDL2_ttf
-There are additional sub modules that are needed for this project to work as well, but they can be pulled right from within the project.
-Performable from the following steps from the root of the cloned git repository within a terminal. 
+## 2D Platforming Factory To Explore
 
-Make sure you fetch submodules: `git submodule update --init --recursive`
-Go into each submodule's src directory and type:
-`make`
-`make static`
+The player spawns in a hub room with 3 doors, 3 the left side of the room, and 3 on the right side of the room. Each door will lead to a different room, and when the player enters a room for the first time, enemies will spawn for them to kill. If the player leaves a room and goes back through the same door, the layout of the room will be the same as before.
 
-Once each submodule has been made you can go into the base project src folder anre simply type:
-`make`
+## Different Factory Puzzles / Features To Configure / Enable
 
-You should now have a `gf2d` binary within the root of your git repository. Executing this will start your game.
+Did not complete.
+
+## 5 Different Enemies
+
+4 of the 5 enemy types were completed
+
+* Walker: simply walks in one direction until it hits a wall, then turns around. Deals contact damage if the player walks into it.
+* Flyer: Will hover a small distance above the ground, otherwise has similar behavior to the walker
+* Archer: Walks around similarly to the walker, if the player stands in front of it for long enough, it will fire a projectile at them that deals damage. Does not deal contact damage.
+* Bouncer: Not affected by gravity, will float in a diagonal pattern and deal damage to the player on contact.
+
+## Randomly Generated Rooms
+
+When a room is first entered, platforms will be randomly placed around the room. Similarly, enemies will also be randomly distributed. 
+
+## 5 Different Player Abilities
+
+The player has 5 different types of abilities to move or fight  the enemies:
+
+- Double Jump: The player can jump a second time when they are in the air
+- Wall Jump: The player can slide down walls, and if they press **Space**, they will preform a jump, even if they do not have a double jump ready
+- Sprint: If the player presses **Shift**, they will run at 1.5 times their normal walking speed
+- Melee Attack: If the player presses **Left Click**, any enemy in the direction the player last moved will take damage. The yellow rectangles on either side of the player shows the hitboxes for the attack
+- Ranged Attack: If the player presses **Right Click**, they will fire a projectile that deals a small amount of damage to the first enemy it hits
+
+# Common Deliverables
+
+## Functioning Entity System
+
+The entity system is very easy to see. All enemies (currently using sprites with E# on them, with # being the enemy type) and the player use entities to function. There is also an entity manager that stores all entities that have been created
+
+## Fully Interactable Environment
+
+Every level is composed of tiles. These tiles can be walked on, walked into, jumped on, wall jumped on, and so forth. Enemies will also collide with these tiles. There are a few bug in the collision system still, but they are being worked on.
+
+## User Interface
+
+There are a few different types of UI in this game
+
+- FPS counter, showing how many frames per second the game is running at
+- An HP counter, showing how much health the player has. If it hits zero, the game ends
+- A total kills counter, used for scoring
+- Every enemy has a health bar above them
+
+## File Read/Write Access
+
+After the player dies, they will be shown the top 3 scores on their system. Scores are equal to the amount of enemies killed before dying. For testing purposes, pressing **P** will give the player 10 kills every frame. This list will be saved even if the game is closed.
+
+## Readme
+
+This file, the Read.me, is located in the game directory. It is also available on the github page at:
+
+https://github.com/EricKnudsen256/2DSpring2021

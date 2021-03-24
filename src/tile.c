@@ -96,6 +96,7 @@ void tile_draw(Tile *tile)
 
 	//test code to draw the hitboxes for an ent that has one
 
+	/*
 	if (&tile->hitbox)
 	{
 
@@ -110,4 +111,5 @@ void tile_draw(Tile *tile)
 
 		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 	}
+	*/
 }

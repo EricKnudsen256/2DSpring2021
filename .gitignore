@@ -59,4 +59,6 @@ gf2d
 
 makefile.dep
 
+high_scores.save
+
 win32/2dGameFramework/2dGameFramework.opensdf
