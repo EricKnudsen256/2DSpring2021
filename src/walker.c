@@ -36,7 +36,7 @@ Entity *walker_spawn(Vector2D position)
 
 	ent->startingHealth = 50;
 	ent->health = 50;
-	ent->contactDamage = 10;
+	ent->contactDamage = 100;
 
 
 	return ent;

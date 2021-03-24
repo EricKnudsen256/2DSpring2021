@@ -3,6 +3,7 @@
 #include "player.h"
 #include "projectile.h"
 #include "camera.h"
+#include "globals.h"
 
 void player_update(Entity *self);
 void player_think(Entity *self);
@@ -145,6 +146,11 @@ void player_think(Entity *self)
 		self->velocity.x = 0;
 	}
 
+	if (keys[SDL_SCANCODE_P])
+	{
+		totalKills += 5;
+	}
+
 	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self))
 	{
 		if (self->onGround == true || self->doubleJumped == false)
@@ -234,7 +240,7 @@ void player_attack(Entity *self)
 
 	if (self->facing == 1)
 	{
-		gfc_rect_set(attackbox, self->hitbox.x + 50, self->hitbox.y, 50, self->hitbox.h);
+		gfc_rect_set(attackbox, self->hitbox.x - 50, self->hitbox.y, 50, self->hitbox.h);
 	}
 	else if (self->facing == 3)
 	{

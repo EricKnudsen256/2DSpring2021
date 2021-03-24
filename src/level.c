@@ -492,25 +492,25 @@ Entity *level_new_enemy(Level * level, Vector2D gridPos, int enemy)
 
 		memset(&level->entityArray[i], 0, sizeof(Entity));
 
-		slog("enemy:%i", enemy);
+		//slog("enemy:%i", enemy);
 
 
 		switch (enemy)
 		{
 		case 0:
-			slog("Spawn walker");
+			//slog("Spawn walker");
 			level->entityArray[i] = walker_spawn(gridPos);
 			return &level->entityArray[i];
 		case 1:
-			slog("Spawn flyer");
+			//slog("Spawn flyer");
 			level->entityArray[i] = flyer_spawn(gridPos);
 			return &level->entityArray[i];
 		case 2:
-			slog("Spawn bouncer");
+			//slog("Spawn bouncer");
 			level->entityArray[i] = bouncer_spawn(gridPos);
 			return &level->entityArray[i];
 		case 3:
-			slog("Spawn archer");
+			//slog("Spawn archer");
 			level->entityArray[i] = archer_spawn(gridPos);
 			return &level->entityArray[i];
 		}
@@ -887,7 +887,7 @@ void level_layout_random_enemies(int minEnemies, int maxEnemies, Level *level)
 
 	while (enemiesToSpawn > 0)
 	{
-		slog("Enemies to spawn: %i", enemiesToSpawn);
+		//slog("Enemies to spawn: %i", enemiesToSpawn);
 
 
 
@@ -901,7 +901,7 @@ void level_layout_random_enemies(int minEnemies, int maxEnemies, Level *level)
 			spawnPos = vector2d(x * 32, (y - 2) * 32);
 
 			enemy = random_int_range(0, 3);
-			slog("Enemy: %i", enemy);
+			//slog("Enemy: %i", enemy);
 
 			if (level_new_enemy(level, spawnPos, enemy))
 			{

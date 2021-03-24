@@ -2,6 +2,7 @@
 
 #include "enemy.h"
 #include "camera.h"
+#include "globals.h"
 
 void enemy_update(Entity *self);
 void enemy_think(Entity *self);
@@ -40,7 +41,6 @@ void enemy_think(Entity *self)
 
 Bool enemy_check_player_collision(Entity *ent)
 {
-	int i;
 	Entity *player;
 	SDL_bool isIntersect;
 
@@ -51,19 +51,19 @@ Bool enemy_check_player_collision(Entity *ent)
 	if (!ent)
 	{
 		slog("No entity provided");
-		return;
+		return NULL;
 	}
 	if (!player)
 	{
 		slog("No player found");
-		return;
+		return NULL;
 	}
 
 	isIntersect = SDL_HasIntersection(&ent->hitbox, &player->hitbox);
 
 	if (!isIntersect)
 	{
-		return;
+		return NULL;
 	}
 
 	if (ent->contactDamage)
@@ -78,7 +78,6 @@ Bool enemy_check_player_collision(Entity *ent)
 
 void enemy_die(Entity *self)
 {
-	int i;
 	if (!self)return;// nothing to do
 
 
@@ -89,6 +88,8 @@ void enemy_die(Entity *self)
 
 	self->_inuse = false;
 	self = NULL;
+
+	totalKills++;
 }
 
 void enemy_damage(Entity *ent, int damage)
@@ -115,7 +116,7 @@ void enemy_draw(Entity *ent)
 		return;// nothing to draw
 	}
 	offset = camera_get_offset();
-	if (!camera_rect_on_screen(gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h)))
+	if (!camera_rect_on_screen(gfc_sdl_rect((Sint32)ent->position.x, (Sint32)ent->position.y, (Sint32)ent->sprite->frame_w, (Sint32)ent->sprite->frame_h)))
 	{
 		//entity is off camera, skip
 		//return;

@@ -13,6 +13,7 @@
 #include "player.h"
 #include "level.h"
 #include "random.h"
+#include "globals.h"
 
 int main(int argc, char * argv[])
 {
@@ -24,7 +25,7 @@ int main(int argc, char * argv[])
 
 	Level *level;
 	Font *font;
-	TextLine fps_text, health_text, game_over_text;
+	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
 
     
@@ -52,6 +53,7 @@ int main(int argc, char * argv[])
 
 	gf2d_sprite_init(1024);
 	font_init(10);
+	globals_init();
 
 	entity_manager_init(100);
 	projectile_manager_init(100);
@@ -119,10 +121,13 @@ int main(int argc, char * argv[])
                 (int)mf);
 
 		gfc_line_sprintf(fps_text, "FPS:%f", gf2d_graphics_get_frames_per_second());
-		font_render(font, fps_text, vector2d(32, 32), gfc_color8(255, 255, 255, 255));
+		font_render(font, fps_text, vector2d(32, 32), gfc_color8(0, 0, 0, 255));
 
 		gfc_line_sprintf(health_text, "Health:%i", player->health);
-		font_render(font, health_text, vector2d(32, 64), gfc_color8(255, 255, 255, 255));
+		font_render(font, health_text, vector2d(32, 64), gfc_color8(0, 0, 0, 255));
+
+		gfc_line_sprintf(kills_text, "Kills:%i", totalKills);
+		font_render(font, kills_text, vector2d(32, 96), gfc_color8(0, 0, 0, 255));
 
 
 		if (entity_manager_get_player_ent()->health <= 0)
@@ -133,7 +138,27 @@ int main(int argc, char * argv[])
 		if (gameOver)
 		{
 			gfc_line_sprintf(game_over_text, "GAME OVER");
-			font_render(font, game_over_text, vector2d(500, 250), gfc_color8(255, 255, 255, 255));
+			font_render(font, game_over_text, vector2d(500, 250), gfc_color8(0, 0, 0, 255));
+
+			if (totalKills >= highScoreList[0])
+			{
+				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", totalKills, highScoreList[0], highScoreList[1]);
+			}
+			else if (totalKills >= highScoreList[1])
+			{
+				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", highScoreList[0], totalKills, highScoreList[1]);
+			}
+			else if (totalKills >= highScoreList[2])
+			{
+				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", highScoreList[0], highScoreList[1], totalKills);
+			}
+			else
+			{
+				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", highScoreList[0], highScoreList[1], highScoreList[2]);
+			}
+
+			
+			font_render(font, hs_text, vector2d(400, 350), gfc_color8(0, 0, 0, 255));
 		}
 
 
