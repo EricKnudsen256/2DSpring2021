@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\game.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gf2d_draw.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,52 +72,55 @@
     <ClCompile Include="..\..\..\gfc\simple_logger\src\simple_logger.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\entity.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\font.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\shape.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\gfc\src\gfc_color.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\player.c">
+    <ClCompile Include="..\..\..\src\e_archer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\camera.c">
+    <ClCompile Include="..\..\..\src\e_bouncer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tile.c">
+    <ClCompile Include="..\..\..\src\e_enemy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\level.c">
+    <ClCompile Include="..\..\..\src\e_entity.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\random.c">
+    <ClCompile Include="..\..\..\src\e_flyer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\enemy.c">
+    <ClCompile Include="..\..\..\src\p_player.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\flyer.c">
+    <ClCompile Include="..\..\..\src\e_walker.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\archer.c">
+    <ClCompile Include="..\..\..\src\g_camera.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\bouncer.c">
+    <ClCompile Include="..\..\..\src\g_font.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\projectile.c">
+    <ClCompile Include="..\..\..\src\g_game.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\walker.c">
+    <ClCompile Include="..\..\..\src\g_random.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\globals.c">
+    <ClCompile Include="..\..\..\src\g_globals.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\w_tile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\w_level.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\g_projectile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,52 +170,46 @@
     <ClInclude Include="..\..\..\include\shape.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\player.h">
+    <ClInclude Include="..\..\..\include\e_archer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\camera.h">
+    <ClInclude Include="..\..\..\include\e_bouncer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\entity.h">
+    <ClInclude Include="..\..\..\include\e_enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\font.h">
+    <ClInclude Include="..\..\..\include\e_flyer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\tile.h">
+    <ClInclude Include="..\..\..\include\e_walker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\level.h">
+    <ClInclude Include="..\..\..\include\e_entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\random.h">
+    <ClInclude Include="..\..\..\include\p_player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\enemy.h">
+    <ClInclude Include="..\..\..\include\g_camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\miniboss.h">
+    <ClInclude Include="..\..\..\include\g_font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\flyer.h">
+    <ClInclude Include="..\..\..\include\g_globals.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\archer.h">
+    <ClInclude Include="..\..\..\include\g_random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\bouncer.h">
+    <ClInclude Include="..\..\..\include\w_tile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\miniboss.h">
+    <ClInclude Include="..\..\..\include\w_level.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\projectile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\walker.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\globals.h">
+    <ClInclude Include="..\..\..\include\g_projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
