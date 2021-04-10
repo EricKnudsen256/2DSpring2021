@@ -150,6 +150,8 @@ void enemy_draw(Entity *ent)
 
 	SDL_RenderFillRect(gf2d_graphics_get_renderer(), &healthBG);
 
+
+	/*
 	if (&ent->hitbox)
 	{
 
@@ -165,7 +167,7 @@ void enemy_draw(Entity *ent)
 		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 
 	}
-
+	*/
 
 	if (&ent->hitbox2)
 	{

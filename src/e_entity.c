@@ -64,6 +64,7 @@ void entity_manager_think_entities()
 void entity_update(Entity *self)
 {
 	if (!self)return;
+
 	// DO ANY GENERIC UPDATE CODE
 
 	//THIS LINE UPDATES POSITION BASED ON VELOCITY V2

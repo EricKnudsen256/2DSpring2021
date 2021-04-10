@@ -34,9 +34,5 @@ void walker_update(Entity *self);
 */
 void walker_think(Entity *self);
 
-/**
-* @brief checks every frame to see if enemy is colliding with the player
-* @param self the enemy
-*/
 
 #endif

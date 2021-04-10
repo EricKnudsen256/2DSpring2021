@@ -227,7 +227,7 @@ Level *level_hub()
 			//string = sj_get_string_value(sj_array_get_nth(array, i));
 			//if (string)
 			//{
-			level->bgImage[i] = gf2d_sprite_load_image("images/backgrounds/layers0.png");
+			level->bgImage[i] = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
 			//}
 		}
 	}
@@ -346,11 +346,8 @@ Level *level_random(int width, int height, Vector2D levelPos)
 		level->bgImage = (Sprite **)gfc_allocate_array(sizeof(Sprite*), count);
 		for (i = 0; i < count; i++)
 		{
-			//string = sj_get_string_value(sj_array_get_nth(array, i));
-			//if (string)
-			//{
-				level->bgImage[i] = gf2d_sprite_load_image("images/backgrounds/layers0.png");
-			//}
+			slog("bg loaded");
+			level->bgImage[i] = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
 		}
 	}
 
@@ -474,7 +471,7 @@ Tile *level_new_tile(Level * level, Vector2D pos)
 
 }
 
-Entity *level_new_enemy(Level * level, Vector2D gridPos, int enemy)
+Entity *level_new_enemy(Level * level, Vector2D spawnPos, int enemy)
 {
 	int i;
 	//for loop checking if is any space in the tileArray
@@ -501,19 +498,19 @@ Entity *level_new_enemy(Level * level, Vector2D gridPos, int enemy)
 		{
 		case 0:
 			//slog("Spawn walker");
-			level->entityArray[i] = walker_spawn(gridPos);
+			level->entityArray[i] = walker_spawn(spawnPos);
 			return &level->entityArray[i];
 		case 1:
 			//slog("Spawn flyer");
-			level->entityArray[i] = flyer_spawn(gridPos);
+			level->entityArray[i] = flyer_spawn(spawnPos);
 			return &level->entityArray[i];
 		case 2:
 			//slog("Spawn bouncer");
-			level->entityArray[i] = bouncer_spawn(gridPos);
+			level->entityArray[i] = bouncer_spawn(spawnPos);
 			return &level->entityArray[i];
 		case 3:
 			//slog("Spawn archer");
-			level->entityArray[i] = archer_spawn(gridPos);
+			level->entityArray[i] = archer_spawn(spawnPos);
 			return &level->entityArray[i];
 		}
 
@@ -547,6 +544,7 @@ void level_update(Level *level)
 	if (!level)return;
 	camera = camera_get_rect();
 	//snap camera to the level bounds
+	/*
 	if ((camera.x + camera.w) > (int)level->levelSize.x)
 	{
 		camera.x = level->levelSize.x - camera.w;
@@ -557,6 +555,7 @@ void level_update(Level *level)
 	}
 	if (camera.x < 0)camera.x = 0;
 	if (camera.y < 0)camera.y = 0;
+	*/
 	camera_set_position(vector2d(camera.x, camera.y));
 }
 
@@ -674,7 +673,7 @@ Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level
 		platLength = random_int_range(minWidth, maxWidth);
 
 		x = random_int_range(4 + (minWidth / 2) + 2, level->levelWidth - 6 - (minWidth / 2));
-		y = random_int_range(4, level->levelHeight);
+		y = random_int_range(4, level->levelHeight - 2);
 
 		tileIndex = level_find_tile_by_pos(level, x, y);
 
