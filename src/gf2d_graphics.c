@@ -27,7 +27,13 @@ typedef struct
     Uint32 gmask;
     Uint32 bmask;
     Uint32 amask;
+    Uint32 renderWidth;
+    Uint32 renderHeight;
+
+    int __DebugMode;
+
 }Graphics;
+
 
 /*local gobals*/
 static Graphics gf2d_graphics;
@@ -42,7 +48,8 @@ void gf2d_graphics_initialize(
     int renderWidth,
     int renderHeight,
     Vector4D bgcolor,
-    Bool fullscreen
+    Bool fullscreen,
+    Bool debug
 )
 {
     Uint32 flags = 0;
@@ -63,6 +70,8 @@ void gf2d_graphics_initialize(
             flags |= SDL_WINDOW_FULLSCREEN;
         }
     }
+    
+    gf2d_graphics.__DebugMode = debug;
     gf2d_graphics.main_window = SDL_CreateWindow(windowName,
                              SDL_WINDOWPOS_UNDEFINED,
                              SDL_WINDOWPOS_UNDEFINED,
@@ -108,7 +117,9 @@ void gf2d_graphics_initialize(
                                     &gf2d_graphics.gmask,
                                     &gf2d_graphics.bmask,
                                     &gf2d_graphics.amask);
-
+    
+    gf2d_graphics.renderWidth = renderWidth;
+    gf2d_graphics.renderHeight = renderHeight;
     
     gf2d_graphics.surface = SDL_CreateRGBSurface(0, renderWidth, renderHeight, gf2d_graphics.bitdepth,
                                         gf2d_graphics.rmask,
@@ -186,6 +197,11 @@ void gf2d_graphics_set_frame_delay(Uint32 frameDelay)
 float gf2d_graphics_get_frames_per_second()
 {
     return gf2d_graphics.fps;
+}
+
+Vector2D gf2d_graphics_get_resolution()
+{
+    return vector2d(gf2d_graphics.renderWidth,gf2d_graphics.renderHeight);
 }
 
 void gf2d_graphics_frame_delay()
@@ -293,6 +309,11 @@ SDL_Surface *gf2d_graphics_screen_convert(SDL_Surface **surface)
     SDL_FreeSurface(*surface);
     *surface = NULL;
     return convert;
+}
+
+Bool gf2d_graphics_debug_mode()
+{
+    return (Bool)gf2d_graphics.__DebugMode;
 }
 
 /*eol@eof*/

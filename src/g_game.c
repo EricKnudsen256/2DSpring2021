@@ -58,6 +58,7 @@ int main(int argc, char * argv[])
 	entity_manager_init(100);
 	projectile_manager_init(100);
 	level_manager_init(64);
+	gf2d_windows_init(10);
 	
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -100,14 +101,19 @@ int main(int argc, char * argv[])
 
 		level_update(level);
 
+		gf2d_windows_update_all();
+
         gf2d_graphics_clear_screen();// clears drawing buffers
         // all drawing should happen betweem clear_screen and next_frame
             //backgrounds drawn first
 
 		level_draw(level);
 
-			entity_manager_draw_entities();
-			projectile_manager_draw_projectiles();
+		entity_manager_draw_entities();
+		projectile_manager_draw_projectiles();
+
+		gf2d_windows_draw_all();
+
 
             //UI elements last
             gf2d_sprite_draw(
