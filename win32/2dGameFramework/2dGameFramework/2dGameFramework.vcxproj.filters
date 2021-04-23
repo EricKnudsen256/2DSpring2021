@@ -177,6 +177,9 @@
     <ClCompile Include="..\..\..\src\gf2d_draw.c">
       <Filter>Source Files\gf2d</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\g_item.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shape.h">
@@ -319,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\gf2d_draw.h">
       <Filter>Header Files\gf2d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\g_item.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,59 @@
 void player_update(Entity *self);
 void player_think(Entity *self);
 
+
+void player_inventory_init(Uint32 max_items)
+{
+	if (max_items == 0)
+	{
+		slog("cannot create player inventory with 0 items");
+		return;
+	}
+	if (inventory.item_list != NULL)
+	{
+		player_inventory_free();
+	}
+	inventory.item_list = (Item *)gfc_allocate_array(sizeof (Item), max_items);
+	if (inventory.item_list == NULL)
+	{
+		slog("failed to allocate inventory!");
+		return;
+	}
+	inventory.max_items = max_items;
+	atexit(player_inventory_free);
+	slog("inventory initialized");
+}
+
+void player_inventory_add_item(Item *item)
+{
+	if (!item)
+	if (inventory.item_list == NULL)
+	{
+		slog("Inventory not created, call player_inventory_init first");
+		return;
+	}
+
+	for (int i = 0; i < inventory.max_items; i++)
+	{
+		if (inventory.item_list[i] != NULL)
+		{
+			inventory.item_list[i] = item;
+		}
+	}
+}
+
+void player_inventory_free()
+{
+	if (inventory.item_list != NULL)
+	{
+		free(inventory.item_list);
+	}
+	memset(&inventory, 0, sizeof(PlayerInventory));
+	slog("inventory deleted");
+}
+
+
+
 Entity *player_spawn(Vector2D position)
 {
 	Entity *ent;

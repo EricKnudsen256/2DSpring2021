@@ -45,7 +45,8 @@ int main(int argc, char * argv[])
 		1920,
 		1080,
         vector4d(0,0,0,255),
-        0);
+        0,
+		false);
     gf2d_graphics_set_frame_delay(16);
 
 	camera_set_dimensions(vector2d(1920, 1080));
@@ -59,6 +60,7 @@ int main(int argc, char * argv[])
 	projectile_manager_init(100);
 	level_manager_init(64);
 	gf2d_windows_init(10);
+	player_inventory_init(36);
 	
     SDL_ShowCursor(SDL_DISABLE);
 

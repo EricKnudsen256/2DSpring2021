@@ -2,6 +2,7 @@
 #define __PLAYER_H__
 
 #include "e_entity.h"
+#include "g_item.h"
 
 
 typedef struct Player_s
@@ -13,6 +14,23 @@ typedef struct Player_s
 	void       *data;
 
 }Player;
+
+typedef struct
+{
+	Item **item_list;
+	Uint32  max_items;
+}PlayerInventory;
+
+static PlayerInventory inventory = { 0 };
+
+
+void player_inventory_init(Uint32 max_items);
+
+void player_inventory_add_item(Item item);
+
+void player_inventory_free();
+
+
 
 /**
 * @brief spawn a player entity
