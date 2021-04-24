@@ -51,6 +51,8 @@ List *gf2d_element_button_update(Element *element,Vector2D offset)
     bounds = gf2d_element_get_absolute_bounds(element,offset);
     if(gf2d_mouse_in_rect(bounds))
     {
+		slog("pressed");
+
         element->state = ES_highlight;
         if (gf2d_mouse_button_state(0))
         {

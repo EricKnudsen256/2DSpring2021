@@ -13,24 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\gf2d">
-      <UniqueIdentifier>{3880801b-d017-4b13-ab39-b3d95e254162}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\json">
-      <UniqueIdentifier>{4ded727d-b402-4c56-85b3-3d527e5248dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\gf2d">
-      <UniqueIdentifier>{917e271b-84a6-4c70-99c7-a366f6416f62}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\json">
-      <UniqueIdentifier>{f6f04e78-e056-4171-89d3-f3610daaa23f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\logger">
-      <UniqueIdentifier>{fdff9da5-79f3-4955-ab6c-07b466a0e5d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\logger">
-      <UniqueIdentifier>{e27194be-9059-47fe-b52d-47f967abea64}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\shape.c">
@@ -81,106 +63,106 @@
     <ClCompile Include="..\..\..\src\g_projectile.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_sprite.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_audio.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_callbacks.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_color.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_input.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_list.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_matrix.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_text.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_types.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\gfc\src\gfc_vector.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_element_actor.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_element_button.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_element_entry.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_element_label.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_element_list.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_elements.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_mouse.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_windows.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_actor.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_font.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_graphics.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_shape.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json_array.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json_error.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json_list.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json_object.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json_parse.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\json\simple_json_string.c">
-      <Filter>Source Files\json</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\logger\simple_logger.c">
-      <Filter>Source Files\logger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_config.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gf2d_draw.c">
-      <Filter>Source Files\gf2d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\g_item.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\g_windows.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_actor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_config.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_draw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_element_actor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_element_button.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_element_entry.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_element_label.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_element_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_elements.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_graphics.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_mouse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_shape.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_sprite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gf2d_windows.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_audio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_callbacks.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_color.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_matrix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_text.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_types.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\gfc\src\gfc_vector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json_array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json_error.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json_list.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json_object.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json_parse.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\json\simple_json_string.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\logger\simple_logger.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -230,106 +212,106 @@
     <ClInclude Include="..\..\..\include\g_projectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_sprite.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_audio.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_callbacks.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_color.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_input.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_list.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_matrix.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_text.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_types.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\gfc\include\gfc_vector.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_element_actor.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_element_button.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_element_entry.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_element_label.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_element_list.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_elements.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_mouse.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_windows.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_actor.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_font.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_graphics.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_shape.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_array.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_error.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_list.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_object.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_parse.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_string.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\json\simple_json_value.h">
-      <Filter>Header Files\json</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\logger\simple_logger.h">
-      <Filter>Header Files\logger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\gf2d_draw.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\g_item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\g_windows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\logger\simple_logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_actor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_draw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_element_actor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_element_button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_element_entry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_element_label.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_element_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_elements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_graphics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gf2d_windows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_callbacks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\gfc\include\gfc_vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_array.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_error.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_parse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\json\simple_json_value.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

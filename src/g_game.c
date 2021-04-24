@@ -90,6 +90,7 @@ int main(int argc, char * argv[])
 	//font_init(10);
 
 	//dj's font system, will move to this
+
 	gf2d_font_init("config/font.cfg");
 
 	gfc_input_init("config/input.cfg");
@@ -145,6 +146,8 @@ int main(int argc, char * argv[])
 
 		projectile_manager_check_collisions();
 		projectile_manager_update_projectiles();
+
+		gf2d_mouse_update();
 		
 		level = level_manager_get_current();
 
