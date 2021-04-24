@@ -86,7 +86,7 @@ SJson *globals_load_scores()
 		
 		sj_get_integer_value(sj_array_get_nth(scores, i), &highScoreList[i]);
 
-		slog("%i", highScoreList[i]);
+		//slog("%i", highScoreList[i]);
 	}
 
 

@@ -6,14 +6,44 @@
 
 #include "gf2d_graphics.h"
 #include "gf2d_sprite.h"
+#include "gf2d_windows.h"
+#include "gf2d_font.h"
+#include "gf2d_actor.h"
+#include "gf2d_windows.h"
 
-#include "g_font.h"
+#include "gfc_input.h"
+
 #include "g_camera.h"
 #include "e_entity.h"
 #include "p_player.h"
 #include "w_level.h"
 #include "g_random.h"
 #include "g_globals.h"
+#include "g_windows.h"
+#include "g_projectile.h"
+
+#include "w_level.h"
+
+
+
+
+static int _done = 0;
+static Window *_quit = NULL;
+
+void onCancel(void *data)
+{
+	slog("Cancel");
+
+	_quit = NULL;
+}
+void onExit(void *data)
+{
+	slog("Quit");
+
+	_done = 1;
+	_quit = NULL;
+}
+
 
 int main(int argc, char * argv[])
 {
@@ -53,11 +83,16 @@ int main(int argc, char * argv[])
 	camera_set_position(vector2d(0, 0));
 
 	gf2d_sprite_init(1024);
+
+	gf2d_action_list_init(128);
+
 	//my font system, going to delete eventually
-	font_init(10);
+	//font_init(10);
 
 	//dj's font system, will move to this
-	gf2d_fonts_load("config/font.cfg");
+	gf2d_font_init("config/font.cfg");
+
+	gfc_input_init("config/input.cfg");
 
 
 	globals_init();
@@ -81,18 +116,18 @@ int main(int argc, char * argv[])
 
 	player = player_spawn(vector2d(32, 448));
 
-	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
+	//font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 	
 	player_inventory_add_item(item_new("testItem", 1));
 
 	player_inventory_slog();
 
-	gf2d_window_load("config/testwindow.cfg");
+	//gf2d_window_load("config/testwindow.cfg");
 
 
     /*main game loop*/
-    while(!done)
+    while(!_done)
     {
 		
         SDL_PumpEvents();   // update SDL's internal event structures
@@ -102,7 +137,7 @@ int main(int argc, char * argv[])
         mf+=0.1;
         if (mf >= 16.0)mf = 0;
 
-
+		gfc_input_update();
 
 		entity_manager_think_entities();
 		entity_manager_check_collions();
@@ -111,10 +146,10 @@ int main(int argc, char * argv[])
 		projectile_manager_check_collisions();
 		projectile_manager_update_projectiles();
 		
-
 		level = level_manager_get_current();
 
 		level_update(level);
+
 
 		gf2d_windows_update_all();
 
@@ -142,50 +177,27 @@ int main(int argc, char * argv[])
                 (int)mf);
 
 		gfc_line_sprintf(fps_text, "FPS:%f", gf2d_graphics_get_frames_per_second());
-		font_render(font, fps_text, vector2d(32, 32), gfc_color8(0, 0, 0, 255));
+		//font_render(font, fps_text, vector2d(32, 32), gfc_color8(0, 0, 0, 255));
 
 		gfc_line_sprintf(health_text, "Health:%i", player->health);
-		font_render(font, health_text, vector2d(32, 64), gfc_color8(0, 0, 0, 255));
+		//font_render(font, health_text, vector2d(32, 64), gfc_color8(0, 0, 0, 255));
 
 		gfc_line_sprintf(kills_text, "Kills:%i", totalKills);
-		font_render(font, kills_text, vector2d(32, 96), gfc_color8(0, 0, 0, 255));
+		//font_render(font, kills_text, vector2d(32, 96), gfc_color8(0, 0, 0, 255));
 
-
-		if (entity_manager_get_player_ent()->health <= 0)
-		{
-			gameOver = true;
-		}
-
-		if (gameOver)
-		{
-			gfc_line_sprintf(game_over_text, "GAME OVER");
-			font_render(font, game_over_text, vector2d(500, 250), gfc_color8(0, 0, 0, 255));
-
-			if (totalKills >= highScoreList[0])
-			{
-				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", totalKills, highScoreList[0], highScoreList[1]);
-			}
-			else if (totalKills >= highScoreList[1])
-			{
-				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", highScoreList[0], totalKills, highScoreList[1]);
-			}
-			else if (totalKills >= highScoreList[2])
-			{
-				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", highScoreList[0], highScoreList[1], totalKills);
-			}
-			else
-			{
-				gfc_line_sprintf(hs_text, "High Scores:1. %i, 2. %i, 3 %i", highScoreList[0], highScoreList[1], highScoreList[2]);
-			}
-
-			
-			font_render(font, hs_text, vector2d(400, 350), gfc_color8(0, 0, 0, 255));
-		}
 
 
         gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
         
-        if (keys[SDL_SCANCODE_ESCAPE])done = 1; // exit condition
+
+
+		if (keys[SDL_SCANCODE_ESCAPE] && (_quit == NULL))
+		{
+			_quit = window_yes_no("Exit?", onExit, onCancel, NULL, NULL);
+
+			slog("Window");
+		}
+			
     }
 
     slog("---==== END ====---");
