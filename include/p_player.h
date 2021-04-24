@@ -26,9 +26,11 @@ static PlayerInventory inventory = { 0 };
 
 void player_inventory_init(Uint32 max_items);
 
-void player_inventory_add_item(Item item);
+void player_inventory_add_item(Item *item);
 
 void player_inventory_free();
+
+void player_inventory_slog();
 
 
 

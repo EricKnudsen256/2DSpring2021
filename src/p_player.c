@@ -45,9 +45,10 @@ void player_inventory_add_item(Item *item)
 
 	for (int i = 0; i < inventory.max_items; i++)
 	{
-		if (inventory.item_list[i] != NULL)
+		if (inventory.item_list[i] == NULL)
 		{
 			inventory.item_list[i] = item;
+			return;
 		}
 	}
 }
@@ -60,6 +61,21 @@ void player_inventory_free()
 	}
 	memset(&inventory, 0, sizeof(PlayerInventory));
 	slog("inventory deleted");
+}
+
+void player_inventory_slog()
+{
+	for (int i = 0; i < inventory.max_items; i++)
+	{
+		if (!inventory.item_list[i])
+		{
+			slog("Slot %i: empty", i);
+		}
+		else
+		{
+			slog("Slot %i: %s:%i", i, inventory.item_list[i]->name, inventory.item_list[i]->stackNum);
+		}
+	}
 }
 
 

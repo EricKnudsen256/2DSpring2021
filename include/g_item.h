@@ -8,6 +8,7 @@ typedef struct Item_s
 	char *name;
 	Sprite sprite;
 	char *description;
+	int stackNum;
 
 }Item;
 
@@ -26,7 +27,7 @@ void item_desc_load_from_file();
 
 void item_desc_list_free();
 
-Item *item_new(char *name);
+Item *item_new(char *name, int stackNum);
 
 void item_delete(Item *item);
 

@@ -53,7 +53,13 @@ int main(int argc, char * argv[])
 	camera_set_position(vector2d(0, 0));
 
 	gf2d_sprite_init(1024);
+	//my font system, going to delete eventually
 	font_init(10);
+
+	//dj's font system, will move to this
+	gf2d_fonts_load("config/font.cfg");
+
+
 	globals_init();
 
 	entity_manager_init(100);
@@ -61,6 +67,7 @@ int main(int argc, char * argv[])
 	level_manager_init(64);
 	gf2d_windows_init(10);
 	player_inventory_init(36);
+
 	
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -77,6 +84,12 @@ int main(int argc, char * argv[])
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 	
+	player_inventory_add_item(item_new("testItem", 1));
+
+	player_inventory_slog();
+
+	gf2d_window_load("config/testwindow.cfg");
+
 
     /*main game loop*/
     while(!done)

@@ -121,6 +121,7 @@
     <ClCompile Include="..\..\..\src\gf2d_sprite.c" />
     <ClCompile Include="..\..\..\src\g_globals.c" />
     <ClCompile Include="..\..\..\src\g_item.c" />
+    <ClCompile Include="..\..\..\src\g_windows.c" />
     <ClCompile Include="..\..\..\src\json\simple_json.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_array.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_error.c" />
@@ -170,6 +171,7 @@
     <ClInclude Include="..\..\..\include\gf2d_sprite.h" />
     <ClInclude Include="..\..\..\include\g_globals.h" />
     <ClInclude Include="..\..\..\include\g_item.h" />
+    <ClInclude Include="..\..\..\include\g_windows.h" />
     <ClInclude Include="..\..\..\include\json\simple_json.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_array.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_error.h" />
