@@ -13,36 +13,22 @@
 
 #include "gfc_input.h"
 
-#include "g_camera.h"
+
 #include "e_entity.h"
-#include "p_player.h"
-#include "w_level.h"
+
+#include "g_menu.h"
+#include "g_camera.h"
 #include "g_random.h"
-#include "g_globals.h"
 #include "g_windows.h"
 #include "g_projectile.h"
 
+#include "m_pause.h"
+
+#include "p_player.h"
+
 #include "w_level.h"
 
-
-
-
 static int _done = 0;
-static Window *_quit = NULL;
-
-void onCancel(void *data)
-{
-	slog("Cancel");
-
-	_quit = NULL;
-}
-void onExit(void *data)
-{
-	slog("Quit");
-
-	_done = 1;
-	_quit = NULL;
-}
 
 
 int main(int argc, char * argv[])
@@ -57,6 +43,7 @@ int main(int argc, char * argv[])
 	Font *font;
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
+	Menu *pauseMenu;
 
     
     int mx,my;
@@ -84,8 +71,6 @@ int main(int argc, char * argv[])
 
 	gf2d_sprite_init(1024);
 
-	gf2d_action_list_init(128);
-
 	//my font system, going to delete eventually
 	//font_init(10);
 
@@ -93,22 +78,21 @@ int main(int argc, char * argv[])
 
 	gf2d_font_init("config/font.cfg");
 
-	gfc_input_init("config/input.cfg");
-
-
-	globals_init();
 
 	entity_manager_init(100);
 	projectile_manager_init(100);
 	level_manager_init(64);
-	gf2d_windows_init(10);
 	player_inventory_init(36);
+	menu_manager_init(32);
+
+
+	//gf2d_windows_init(10);
 
 	
     SDL_ShowCursor(SDL_DISABLE);
 
 
-	init_random();
+	//init_random();
 
     /*demo setup*/
     mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
@@ -127,18 +111,19 @@ int main(int argc, char * argv[])
 	//gf2d_window_load("config/testwindow.cfg");
 
 
+	pauseMenu = pause_menu_new(10);
+
     /*main game loop*/
     while(!_done)
     {
 		
-        SDL_PumpEvents();   // update SDL's internal event structures
-        keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
-        /*update things here*/
-        SDL_GetMouseState(&mx,&my);
-        mf+=0.1;
-        if (mf >= 16.0)mf = 0;
+		SDL_PumpEvents();   // update SDL's internal event structures
+		keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+		/*update things here*/
+		SDL_GetMouseState(&mx, &my);
+		mf += 0.1;
+		if (mf >= 16.0)mf = 0;
 
-		gfc_input_update();
 
 		entity_manager_think_entities();
 		entity_manager_check_collions();
@@ -147,61 +132,50 @@ int main(int argc, char * argv[])
 		projectile_manager_check_collisions();
 		projectile_manager_update_projectiles();
 
-		gf2d_mouse_update();
-		
+		menu_manager_think_menus();
+		menu_manager_check_click();
+		menu_manager_update_menus();
+
 		level = level_manager_get_current();
 
 		level_update(level);
 
+		gf2d_mouse_update();
 
-		gf2d_windows_update_all();
-
-        gf2d_graphics_clear_screen();// clears drawing buffers
-        // all drawing should happen betweem clear_screen and next_frame
-            //backgrounds drawn first
+		gf2d_graphics_clear_screen();// clears drawing buffers
+			// all drawing should happen betweem clear_screen and next_frame
+			//backgrounds drawn first
 
 		level_draw(level);
 
 		entity_manager_draw_entities();
 		projectile_manager_draw_projectiles();
 
-		gf2d_windows_draw_all();
+		menu_manager_draw_menus();
+	
 
 
-            //UI elements last
-            gf2d_sprite_draw(
-                mouse,
-                vector2d(mx,my),
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                &mouseColor,
-                (int)mf);
+		//UI elements last
+		gf2d_sprite_draw(
+			mouse,
+			vector2d(mx, my),
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			&mouseColor,
+			(int)mf);
 
-		gfc_line_sprintf(fps_text, "FPS:%f", gf2d_graphics_get_frames_per_second());
-		//font_render(font, fps_text, vector2d(32, 32), gfc_color8(0, 0, 0, 255));
-
-		gfc_line_sprintf(health_text, "Health:%i", player->health);
-		//font_render(font, health_text, vector2d(32, 64), gfc_color8(0, 0, 0, 255));
-
-		gfc_line_sprintf(kills_text, "Kills:%i", totalKills);
-		//font_render(font, kills_text, vector2d(32, 96), gfc_color8(0, 0, 0, 255));
+		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
 
 
-        gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
-        
-
-
-		if (keys[SDL_SCANCODE_ESCAPE] && (_quit == NULL))
+		if (keys[SDL_SCANCODE_ESCAPE])
 		{
-			_quit = window_yes_no("Exit?", onExit, onCancel, NULL, NULL);
-
-			slog("Window");
+			_done = 1;
 		}
-			
     }
+
 
     slog("---==== END ====---");
     return 0;

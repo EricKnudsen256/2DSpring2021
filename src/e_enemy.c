@@ -89,7 +89,7 @@ void enemy_die(Entity *self)
 	self->_inuse = false;
 	self = NULL;
 
-	totalKills++;
+
 }
 
 void enemy_damage(Entity *ent, int damage)

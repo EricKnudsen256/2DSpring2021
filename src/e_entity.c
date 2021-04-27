@@ -390,6 +390,7 @@ void entity_free(Entity *ent)
 	}
 	gf2d_sprite_free(ent->sprite);
 	ent->sprite = NULL;
+	memset(&ent, 0, sizeof(Entity));
 	ent->_inuse = 0;
 }
 

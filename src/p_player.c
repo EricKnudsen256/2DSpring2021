@@ -218,10 +218,6 @@ void player_think(Entity *self)
 		self->velocity.x = 0;
 	}
 
-	if (keys[SDL_SCANCODE_P])
-	{
-		totalKills += 5;
-	}
 
 	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self))
 	{
@@ -268,6 +264,7 @@ void player_think(Entity *self)
 			self->lastJump = SDL_GetTicks();
 		}
 	}
+	/*
 	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
@@ -284,6 +281,7 @@ void player_think(Entity *self)
 			
 		}
 	}
+	*/
 
 	if (self->position.x <= -60)
 	{

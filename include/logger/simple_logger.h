@@ -46,7 +46,3 @@ void _slog(char *f,int l,char *msg,...);
 
 
 #endif
-
-#ifdef __cplusplus
-}
-#endif

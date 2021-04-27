@@ -4,16 +4,6 @@
 #include "e_enemy.h"
 
 
-typedef struct Archer_s
-{
-	Entity		*ent;
-	void(*update)(struct Archer_s *self);
-	void(*think)(struct Archer_s *self);
-	void(*draw)(struct Archer_s *self);
-	void(*free)(struct Archer_s *self);
-	void       *data;
-
-}Archer;
 
 /**
 * @brief spawn a archer entity

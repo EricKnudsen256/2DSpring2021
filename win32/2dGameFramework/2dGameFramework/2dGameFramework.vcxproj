@@ -121,6 +121,8 @@
     <ClCompile Include="..\..\..\src\gf2d_sprite.c" />
     <ClCompile Include="..\..\..\src\g_globals.c" />
     <ClCompile Include="..\..\..\src\g_item.c" />
+    <ClCompile Include="..\..\..\src\g_menu.c" />
+    <ClCompile Include="..\..\..\src\g_menu_objects.c" />
     <ClCompile Include="..\..\..\src\g_windows.c" />
     <ClCompile Include="..\..\..\src\json\simple_json.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_array.c" />
@@ -130,6 +132,7 @@
     <ClCompile Include="..\..\..\src\json\simple_json_parse.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_string.c" />
     <ClCompile Include="..\..\..\src\logger\simple_logger.c" />
+    <ClCompile Include="..\..\..\src\m_pause.c" />
     <ClCompile Include="..\..\..\src\w_level.c" />
     <ClCompile Include="..\..\..\src\p_player.c" />
     <ClCompile Include="..\..\..\src\g_projectile.c" />
@@ -171,6 +174,8 @@
     <ClInclude Include="..\..\..\include\gf2d_sprite.h" />
     <ClInclude Include="..\..\..\include\g_globals.h" />
     <ClInclude Include="..\..\..\include\g_item.h" />
+    <ClInclude Include="..\..\..\include\g_menu.h" />
+    <ClInclude Include="..\..\..\include\g_menu_objects.h" />
     <ClInclude Include="..\..\..\include\g_windows.h" />
     <ClInclude Include="..\..\..\include\json\simple_json.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_array.h" />
@@ -181,6 +186,7 @@
     <ClInclude Include="..\..\..\include\json\simple_json_string.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_value.h" />
     <ClInclude Include="..\..\..\include\logger\simple_logger.h" />
+    <ClInclude Include="..\..\..\include\m_pause.h" />
     <ClInclude Include="..\..\..\include\w_level.h" />
     <ClInclude Include="..\..\..\include\p_player.h" />
     <ClInclude Include="..\..\..\include\g_projectile.h" />
