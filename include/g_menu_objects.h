@@ -5,13 +5,15 @@
 #include "gfc_vector.h"
 #include "gf2d_sprite.h"
 
+
+
 typedef struct Button_s
 {
 	Bool        _inuse;
 	Bool		_active;
 	Vector2D	position;
 	SDL_Rect	buttonSize;
-	Sprite		sprite;
+	Sprite		*sprite;
 	char		*buttonTag;
 	void(*onPress)(struct Button_s *self);
 

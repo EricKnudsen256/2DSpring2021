@@ -116,7 +116,8 @@ int main(int argc, char * argv[])
     /*main game loop*/
     while(!_done)
     {
-		
+		//slog("Loop");
+
 		SDL_PumpEvents();   // update SDL's internal event structures
 		keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 		/*update things here*/
@@ -170,9 +171,10 @@ int main(int argc, char * argv[])
 
 
 
-		if (keys[SDL_SCANCODE_ESCAPE])
+		if (keys[SDL_SCANCODE_ESCAPE] && pauseMenu->_active == 0)
 		{
-			_done = 1;
+			slog("ACTIVE");
+			pause_menu_set_active(pauseMenu);
 		}
     }
 

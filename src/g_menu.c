@@ -155,7 +155,7 @@ void menu_check_click(Menu *menu)
 				{
 					slog("clicked");
 					
-					//menu_buttons_check_click(menu);
+					menu_buttons_check_click(menu);
 				}
 			}
 		}
@@ -181,7 +181,7 @@ void menu_draw(Menu *menu)
 	Vector2D drawPosition;
 	if (!menu)
 	{
-		slog("cannot draww a NULL menu");
+		slog("cannot draw a NULL menu");
 		return;
 	}
 
@@ -222,18 +222,20 @@ int menu_button_new(Menu *menu)
 		return;
 	}
 
+	
 	button = button_new();
-
+	
 	for (i = 0; i < menu->buttonMax; i++)
 	{
-		if (!menu->buttonList[i]->_inuse)
+		if (!menu->buttonList[i])
 		{
 			menu->buttonList[i] = button;
 			return i;
 		}
 	}
-
+	
 	slog("No free buttons in the menu!");
+	
 	return -1;
 
 }
@@ -277,11 +279,19 @@ void menu_buttons_check_click(Menu *menu)
 	//check buttons for click as well
 	for (i = 0; i < menu->buttonMax; i++)
 	{
+
+		if (!menu->buttonList[i])
+		{
+			continue;
+		}
+
 		buttonRect = gf2d_rect_from_sdl_rect(menu->buttonList[i]->buttonSize);
 
 		if (gf2d_mouse_in_rect(buttonRect) && menu->buttonList[i]->onPress)
 		{
+			slog("pressed");
 			menu->buttonList[i]->onPress(menu);
+			slog("pressed 5");
 		}
 	}
 }
@@ -300,6 +310,6 @@ void menu_buttons_draw(Menu *menu)
 	{
 		if (!menu->buttonList[i])continue;
 
-		button_draw(&menu->buttonList[i]);
+		button_draw(menu->buttonList[i]);
 	}
 }
