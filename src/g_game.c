@@ -114,7 +114,7 @@ int main(int argc, char * argv[])
 	pauseMenu = pause_menu_new(10);
 
     /*main game loop*/
-    while(!_done)
+	while (!pause_menu_check_end_game(pauseMenu))
     {
 		//slog("Loop");
 
@@ -125,21 +125,23 @@ int main(int argc, char * argv[])
 		mf += 0.1;
 		if (mf >= 16.0)mf = 0;
 
+		if (!pauseMenu->_active)
+		{
+			entity_manager_think_entities();
+			entity_manager_check_collions();
+			entity_manager_update_entities();
 
-		entity_manager_think_entities();
-		entity_manager_check_collions();
-		entity_manager_update_entities();
+			projectile_manager_check_collisions();
+			projectile_manager_update_projectiles();
 
-		projectile_manager_check_collisions();
-		projectile_manager_update_projectiles();
+			level = level_manager_get_current();
+
+			level_update(level);
+		}
 
 		menu_manager_think_menus();
 		menu_manager_check_click();
 		menu_manager_update_menus();
-
-		level = level_manager_get_current();
-
-		level_update(level);
 
 		gf2d_mouse_update();
 
@@ -170,12 +172,17 @@ int main(int argc, char * argv[])
 		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
 
 
-
 		if (keys[SDL_SCANCODE_ESCAPE] && pauseMenu->_active == 0)
 		{
 			slog("ACTIVE");
 			pause_menu_set_active(pauseMenu);
 		}
+		/*
+		else if (keys[SDL_SCANCODE_ESCAPE] && pauseMenu->_active == 1)
+		{
+			pause_menu_set_inactive(pauseMenu);
+		}
+		*/
     }
 
 

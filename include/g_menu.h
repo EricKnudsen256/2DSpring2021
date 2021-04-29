@@ -15,6 +15,8 @@ typedef struct Menu_s
 	int			buttonMax;
 	Button		**buttonList;
 
+	void		*data;				//void pointer for whatever I need to put in this. Example, pause menu has a boolean for if the game is active;
+
 
 	void(*update)(struct Menu_s *menu);
 	void(*think)(struct Menu_s *menu);
