@@ -53,6 +53,15 @@ void player_inventory_add_item(Item *item)
 	}
 }
 
+Item *player_inventory_get_item(int slot)
+{
+	if (slot < inventory.max_items)
+	{
+		return inventory.item_list[slot];
+	}
+	return NULL;
+}
+
 void player_inventory_free()
 {
 	if (inventory.item_list != NULL)
@@ -65,8 +74,12 @@ void player_inventory_free()
 
 void player_inventory_slog()
 {
+
+	slog("maxItems: %i", player_inventory_get_max());
 	for (int i = 0; i < inventory.max_items; i++)
 	{
+
+
 		if (!inventory.item_list[i])
 		{
 			slog("Slot %i: empty", i);
@@ -77,6 +90,12 @@ void player_inventory_slog()
 		}
 	}
 }
+
+Uint32 player_inventory_get_max()
+{
+	return inventory.max_items;
+}
+
 
 
 

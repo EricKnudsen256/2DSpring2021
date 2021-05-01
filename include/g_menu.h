@@ -15,6 +15,8 @@ typedef struct Menu_s
 	int			buttonMax;
 	Button		**buttonList;
 
+	char		*tag;
+
 	void		*data;				//void pointer for whatever I need to put in this. Example, pause menu has a boolean for if the game is active;
 
 
@@ -39,15 +41,17 @@ void menu_manager_update_menus();
 
 void menu_manager_think_menus();
 
-void menu_manager_check_click();
+Bool menu_manager_check_click();
 
 void menu_manager_draw_menus();
+
+Menu *menu_manager_get_by_tag(char* tag);
 
 void menu_manager_free();
 
 Menu *menu_new();
 
-void menu_check_click(Menu *menu);
+Bool menu_check_click(Menu *menu);
 
 void menu_free(Menu *menu);
 
@@ -60,5 +64,6 @@ void menu_free_buttons(Menu *menu);
 void menu_buttons_check_click(Menu *menu);
 
 void menu_buttons_draw(Menu *menu);
+
 
 #endif

@@ -23,7 +23,7 @@ Vector2D camera_get_dimensions()
 void camera_set_position(Vector2D position)
 {
 	Camera.x = (int)position.x;
-	Camera.y = (int)position.y;
+	Camera.y = (int)position.y - 25;
 }
 
 void camera_move(Vector2D move)

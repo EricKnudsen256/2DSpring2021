@@ -24,6 +24,7 @@ Menu *pause_menu_new(int buttonMax)
 	exit = pause_menu_new_exit(pauseMenu);
 	back = pause_menu_new_back(pauseMenu);
 
+	pauseMenu->tag = "pause";
 
 	pauseMenu->data = false;
 

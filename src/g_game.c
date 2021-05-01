@@ -21,8 +21,11 @@
 #include "g_random.h"
 #include "g_windows.h"
 #include "g_projectile.h"
+#include "g_input.h"
+#include "g_mouse.h"
 
 #include "m_pause.h"
+#include "m_inventory.h"
 
 #include "p_player.h"
 
@@ -43,13 +46,8 @@ int main(int argc, char * argv[])
 	Font *font;
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
-	Menu *pauseMenu;
+	Menu *pauseMenu, *inventoryMenu;
 
-    
-    int mx,my;
-    float mf = 0;
-    Sprite *mouse;
-    Vector4D mouseColor = {255,100,255,200};
     
 
     /*program initializtion*/
@@ -82,11 +80,12 @@ int main(int argc, char * argv[])
 	entity_manager_init(100);
 	projectile_manager_init(100);
 	level_manager_init(64);
-	player_inventory_init(36);
+	player_inventory_init(32);
 	menu_manager_init(32);
 
-
 	//gf2d_windows_init(10);
+
+	mouse_init();
 
 	
     SDL_ShowCursor(SDL_DISABLE);
@@ -95,7 +94,6 @@ int main(int argc, char * argv[])
 	//init_random();
 
     /*demo setup*/
-    mouse = gf2d_sprite_load_all("images/pointer.png",32,32,16);
 	level = level_hub();
 	//level = level_random(16, 16);
 
@@ -104,7 +102,8 @@ int main(int argc, char * argv[])
 	//font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 	
-	player_inventory_add_item(item_new("testItem", 1));
+	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
+	slog("maxItems: %i", player_inventory_get_max());
 
 	player_inventory_slog();
 
@@ -112,6 +111,8 @@ int main(int argc, char * argv[])
 
 
 	pauseMenu = pause_menu_new(10);
+	inventoryMenu = inventory_new(50);
+
 
     /*main game loop*/
 	while (!pause_menu_check_end_game(pauseMenu))
@@ -121,9 +122,8 @@ int main(int argc, char * argv[])
 		SDL_PumpEvents();   // update SDL's internal event structures
 		keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 		/*update things here*/
-		SDL_GetMouseState(&mx, &my);
-		mf += 0.1;
-		if (mf >= 16.0)mf = 0;
+
+		input_update();
 
 		if (!pauseMenu->_active)
 		{
@@ -139,11 +139,14 @@ int main(int argc, char * argv[])
 			level_update(level);
 		}
 
+
+
 		menu_manager_think_menus();
-		menu_manager_check_click();
 		menu_manager_update_menus();
 
 		gf2d_mouse_update();
+		mouse_update();
+
 
 		gf2d_graphics_clear_screen();// clears drawing buffers
 			// all drawing should happen betweem clear_screen and next_frame
@@ -158,31 +161,13 @@ int main(int argc, char * argv[])
 	
 
 
-		//UI elements last
-		gf2d_sprite_draw(
-			mouse,
-			vector2d(mx, my),
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			&mouseColor,
-			(int)mf);
+		mouse_draw();
+		
 
-		gf2d_grahics_next_frame();// render current draw frame and skip to the next frame
+		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
 
 
-		if (keys[SDL_SCANCODE_ESCAPE] && pauseMenu->_active == 0)
-		{
-			slog("ACTIVE");
-			pause_menu_set_active(pauseMenu);
-		}
-		/*
-		else if (keys[SDL_SCANCODE_ESCAPE] && pauseMenu->_active == 1)
-		{
-			pause_menu_set_inactive(pauseMenu);
-		}
-		*/
+
     }
 
 

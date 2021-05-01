@@ -12,7 +12,7 @@ void item_desc_load_from_file();
 
 void item_desc_list_free();
 
-Item *item_new(char *name, int stackNum)
+Item *item_new(char *name, int stackNum, char* spritePath)
 {
 
 	Item *item;
@@ -26,6 +26,7 @@ Item *item_new(char *name, int stackNum)
 
 	item->name = name;
 	item->stackNum = stackNum;
+	item->sprite = gf2d_sprite_load_image(spritePath);
 
 	return item;
 }

@@ -6,6 +6,9 @@
 #include "g_camera.h"
 #include "g_menu.h"
 
+#include "m_pause.h"
+#include "m_inventory.h"
+
 void menu_manager_init(Uint32 max_menus)
 {
 	if (max_menus == 0)
@@ -41,7 +44,7 @@ void menu_manager_update_menus()
 	{
 		if (menu_manager.menu_list[i]._inuse == 0)continue;
 		if (menu_manager.menu_list[i]._active == 0)continue;
-		if (menu_manager.menu_list[i].think != NULL)
+		if (menu_manager.menu_list[i].update != NULL)
 		{
 			menu_manager.menu_list[i].update(&menu_manager.menu_list[i]);
 		}
@@ -67,7 +70,7 @@ void menu_manager_think_menus()
 	}
 }
 
-void menu_manager_check_click()
+Bool menu_manager_check_click()
 {
 	int i;
 
@@ -81,10 +84,13 @@ void menu_manager_check_click()
 	{
 		if (menu_manager.menu_list[i]._inuse == 0)continue;
 		if (menu_manager.menu_list[i]._active == 0)continue;
-		menu_check_click(&menu_manager.menu_list[i]);
+		if (menu_check_click(&menu_manager.menu_list[i]))
+		{
+			return true;
+		}
 	}
 
-		
+	return false;
 }
 
 void menu_manager_draw_menus()
@@ -103,6 +109,21 @@ void menu_manager_draw_menus()
 		if (menu_manager.menu_list[i]._active == 0)continue;
 		menu_draw(&menu_manager.menu_list[i]);
 	}
+}
+
+Menu *menu_manager_get_by_tag(char* tag)
+{
+	int i;
+	for (i = 0; i < menu_manager.max_menus; i++)
+	{
+		if (menu_manager.menu_list[i]._inuse == 0)continue;
+		if (menu_manager.menu_list[i].tag == tag)
+		{
+			return &menu_manager.menu_list[i];
+		}
+	}
+	slog("cannot find menu with tag");
+	return NULL;
 }
 
 void menu_manager_free()
@@ -134,7 +155,7 @@ Menu *menu_new()
 	return NULL;
 }
 
-void menu_check_click(Menu *menu)
+Bool menu_check_click(Menu *menu)
 {
 	int i;
 	Rect windowRect = gf2d_rect_from_sdl_rect(menu->windowSize);
@@ -142,24 +163,13 @@ void menu_check_click(Menu *menu)
 	SDL_Event e;
 
 	
-
-	while (SDL_PollEvent(&e))
+	if (gf2d_mouse_in_rect(windowRect))
 	{
-		if (e.type == SDL_MOUSEBUTTONDOWN)
-		{
-			if (e.button.button == SDL_BUTTON_LEFT)
-			{
-
-				
-				if (gf2d_mouse_in_rect(windowRect))
-				{
-					slog("clicked");
-					
-					menu_buttons_check_click(menu);
-				}
-			}
-		}
+		menu_buttons_check_click(menu);
+		return true;
 	}
+
+	return false;
 
 }
 
@@ -194,22 +204,28 @@ void menu_draw(Menu *menu)
 	{
 		if (menu->sprite == NULL)
 		{
-			return;// nothing to draw
+			SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 0, 0, 255);
+
+			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &menu->windowSize);
+			return;
 		}
-		//currently not drawing animations, edit this if working on that in the future
-		gf2d_sprite_draw(
-			menu->sprite,
-			menu->position,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			NULL,
-			0);
 	}
+
+	//currently not drawing animations, edit this if working on that in the future
+	gf2d_sprite_draw(
+		menu->sprite,
+		menu->position,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		NULL,
+		0);
+
 
 	menu_buttons_draw(menu);
 }
+
 
 int menu_button_new(Menu *menu)
 {

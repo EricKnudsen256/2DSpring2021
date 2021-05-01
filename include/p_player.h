@@ -23,16 +23,17 @@ typedef struct
 
 static PlayerInventory inventory = { 0 };
 
-
 void player_inventory_init(Uint32 max_items);
 
 void player_inventory_add_item(Item *item);
+
+Item *player_inventory_get_item(int slot);
 
 void player_inventory_free();
 
 void player_inventory_slog();
 
-
+Uint32 player_inventory_get_max();
 
 /**
 * @brief spawn a player entity

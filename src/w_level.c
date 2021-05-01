@@ -586,7 +586,7 @@ void level_draw(Level *level)
 {
 	SDL_Rect camera;
 	Vector2D offset, drawPosition, parallax;
-	int i;
+	int i = 0;
 	if (!level)
 	{
 		slog("cannot draw level, NULL pointer provided");
@@ -596,14 +596,22 @@ void level_draw(Level *level)
 	offset = camera_get_offset();
 	if (level->bgImageCount)
 	{
+		/*
 		camera = camera_get_rect();
 		for (i = 0; i < level->bgImageCount; i++)
 		{
-			parallax.x = (float)(level->bgImage[i]->frame_w - camera.w) / (level->levelSize.x - camera.w);
-			parallax.y = (float)(level->bgImage[i]->frame_h - camera.h) / (level->levelSize.y - camera.h);
+			if (level->bgImage)
+			{
+				parallax.x = (float)(level->bgImage[i]->frame_w - camera.w) / (level->levelSize.x - camera.w);
+				parallax.y = (float)(level->bgImage[i]->frame_h - camera.h) / (level->levelSize.y - camera.h);
 
-			gf2d_sprite_draw_image(level->bgImage[i], vector2d(offset.x * parallax.x, offset.y * parallax.y));
+				gf2d_sprite_draw_image(level->bgImage[i], vector2d(offset.x * parallax.x, offset.y * parallax.y));
+			}
+
 		}
+		*/
+
+		gf2d_sprite_draw_image(level->bgImage[i], vector2d(0,0));
 
 	}
 	//then draw the tiles, this needs to be updated for the new tile system

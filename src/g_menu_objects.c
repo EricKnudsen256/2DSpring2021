@@ -42,7 +42,10 @@ void button_draw(Button *button)
 	{
 		if (button->sprite == NULL)
 		{
-			
+
+			SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 0, 0, 255);
+
+			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &button->buttonSize);
 			return;// nothing to draw
 		}
 		//currently not drawing animations, edit this if working on that in the future
@@ -57,7 +60,24 @@ void button_draw(Button *button)
 			0);
 	}
 
-	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 0, 0, 255);
+	
 
-	SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &button->buttonSize);
+	if (button->sprite2 != NULL)
+	{
+		//slog("Draw Sprite");
+
+		Vector2D drawPos = vector2d(button->position.x + button->sprite2Position.x, button->position.y + button->sprite2Position.y);
+
+		gf2d_sprite_draw(
+			button->sprite2,
+			button->position,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			NULL,
+			0);
+	}
+
+
 }
