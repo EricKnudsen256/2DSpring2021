@@ -17,4 +17,6 @@ void inventory_button_select(Button *slot, Menu *inventoryMenu);
 
 void inventory_deselect_all(Menu *inventoryMenu);
 
+void inventory_draw(Menu *inventoryMenu);
+
 #endif

@@ -195,11 +195,6 @@ void menu_draw(Menu *menu)
 		return;
 	}
 
-	if (menu->draw)
-	{
-		menu->draw(menu);
-	}
-
 	else
 	{
 		if (menu->sprite == NULL)
@@ -224,6 +219,11 @@ void menu_draw(Menu *menu)
 
 
 	menu_buttons_draw(menu);
+
+	if (menu->draw)
+	{
+		menu->draw(menu);
+	}
 }
 
 

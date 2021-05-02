@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "g_item.h"
+#include "g_font.h"
 
 #include "p_player.h"
 
@@ -23,11 +24,17 @@ Menu *inventory_new(int buttonMax)
 	inventoryMenu->buttonMax = buttonMax;
 	inventoryMenu->buttonList = (Button *)gfc_allocate_array(sizeof (Button), inventoryMenu->buttonMax);
 	inventoryMenu->sprite = gf2d_sprite_load_image("assets/sprites/menus/inventoryMenu.png");
+
 	inventoryMenu->think = inventory_think;
+	inventoryMenu->draw = inventory_draw;
+
 
 	inventoryMenu->tag = "inventory";
 
+
 	inventory_create_slots(inventoryMenu);
+
+
 
 	return inventoryMenu;
 }
@@ -159,6 +166,33 @@ void inventory_deselect_all(Menu *inventoryMenu)
 			inventoryMenu->buttonList[i]->sprite = gf2d_sprite_load_image("assets/sprites/menus/inventorySlotSelected.png");
 		}
 		inventoryMenu->buttonList[i]->_selceted = false;
+	}
+}
+
+void inventory_draw(Menu *inventoryMenu)
+{
+	Font *font = font_load("assets/fonts/DotGothic16-Regular.ttf", 18);
+	Color color = gfc_color(255, 255, 255, 255);
+	Vector2D drawPos;
+
+	Item *item;
+
+	TextLine itemNum;
+
+	//slog("Draw");
+
+	for (int i = 0; i < player_inventory_get_max(); i++)
+	{
+		if (player_inventory_get_item(i))
+		{
+			drawPos = vector2d(inventoryMenu->buttonList[i]->position.x + 4, inventoryMenu->buttonList[i]->position.y);
+
+			item = player_inventory_get_item(i);
+
+			gfc_line_sprintf(itemNum, "%i", item->stackNum);
+
+			font_render(font, itemNum, drawPos, color);
+		}
 	}
 }
 

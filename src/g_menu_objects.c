@@ -3,6 +3,7 @@
 #include "g_menu_objects.h"
 
 
+
 Button *button_new()
 {
 	Button *button;
@@ -96,6 +97,8 @@ void button_draw(Button *button)
 				NULL,
 				0);
 		}
+
+
 
 	}
 

@@ -43,7 +43,6 @@ int main(int argc, char * argv[])
 	Bool gameOver = false;
 
 	Level *level;
-	Font *font;
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu;
@@ -70,7 +69,7 @@ int main(int argc, char * argv[])
 	gf2d_sprite_init(1024);
 
 	//my font system, going to delete eventually
-	//font_init(10);
+	font_init(10);
 
 	//dj's font system, will move to this
 
@@ -99,7 +98,7 @@ int main(int argc, char * argv[])
 
 	player = player_spawn(vector2d(32, 448));
 
-	//font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
+	
 
 	
 	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
