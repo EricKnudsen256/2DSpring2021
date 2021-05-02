@@ -91,6 +91,25 @@ void player_inventory_slog()
 	}
 }
 
+void player_inventory_swap(int slot1, int slot2)
+{
+	Item *temp;
+	if (slot1 < inventory.max_items && slot2 < inventory.max_items)
+	{
+		slog("Slot1: %i, Slot2: %i", slot1, slot2);
+
+		temp = inventory.item_list[slot1];
+		inventory.item_list[slot1] = inventory.item_list[slot2];
+		inventory.item_list[slot2] = temp;
+		player_inventory_slog();
+		return;
+	}
+
+	slog("Slots not in possible range. Slot1: %i, Slot2: %i", slot1, slot2);
+	return;
+
+}
+
 Uint32 player_inventory_get_max()
 {
 	return inventory.max_items;

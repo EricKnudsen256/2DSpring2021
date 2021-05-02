@@ -11,6 +11,7 @@ typedef struct Button_s
 {
 	Bool        _inuse;
 	Bool		_active;
+	Bool		_selceted;
 	Vector2D	position;
 	Vector2D	sprite2Position;	//position as offset from main position of button
 	SDL_Rect	buttonSize;

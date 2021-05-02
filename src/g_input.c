@@ -3,9 +3,12 @@
 #include "simple_logger.h"
 
 #include "g_input.h"
-
 #include "g_menu.h"
+
 #include "p_player.h"
+
+#include "m_pause.h"
+#include "m_inventory.h"
 
 void input_update()
 {
@@ -37,21 +40,21 @@ void input_update()
 		{
 			if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 0)
 			{
-				pause_menu_set_active(pauseMenu);
-				inventory_set_inactive(inventoryMenu);
+				pause_menu_set_active(NULL, pauseMenu);
+				inventory_set_inactive(NULL, inventoryMenu);
 			}
 			else if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 1)
 			{
-				pause_menu_set_inactive(pauseMenu);
+				pause_menu_set_inactive(NULL, pauseMenu);
 			}
 
 			if (e.button.button == SDL_SCANCODE_TAB && inventoryMenu->_active == 0)
 			{
-				inventory_set_active(inventoryMenu);
+				inventory_set_active(NULL, inventoryMenu);
 			}
 			else if (e.button.button == SDL_SCANCODE_TAB && inventoryMenu->_active == 1)
 			{
-				inventory_set_inactive(inventoryMenu);
+				inventory_set_inactive(NULL, inventoryMenu);
 			}
 		}
 	}

@@ -13,4 +13,8 @@ void inventory_set_inactive(Menu *inventoryMenu);
 
 void inventory_think(Menu *inventoryMenu);
 
+void inventory_button_select(Button *slot, Menu *inventoryMenu);
+
+void inventory_deselect_all(Menu *inventoryMenu);
+
 #endif

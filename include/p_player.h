@@ -33,6 +33,8 @@ void player_inventory_free();
 
 void player_inventory_slog();
 
+void player_inventory_swap(int slot1, int slot2);
+
 Uint32 player_inventory_get_max();
 
 /**

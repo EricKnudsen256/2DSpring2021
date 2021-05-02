@@ -305,9 +305,7 @@ void menu_buttons_check_click(Menu *menu)
 
 		if (gf2d_mouse_in_rect(buttonRect) && menu->buttonList[i]->onPress)
 		{
-			slog("pressed");
-			menu->buttonList[i]->onPress(menu);
-			slog("pressed 5");
+			menu->buttonList[i]->onPress(menu->buttonList[i], menu);
 		}
 	}
 }
