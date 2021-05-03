@@ -201,6 +201,9 @@
     <ClCompile Include="..\..\..\src\g_mouse.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\m_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shape.h">
@@ -366,6 +369,9 @@
       <Filter>Header Files\gf2d</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\g_mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\m_main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

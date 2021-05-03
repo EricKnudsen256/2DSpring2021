@@ -26,6 +26,7 @@
 
 #include "m_pause.h"
 #include "m_inventory.h"
+#include "m_main.h"
 
 #include "p_player.h"
 
@@ -33,35 +34,22 @@
 
 static int _done = 0;
 
-
-int main(int argc, char * argv[])
+void init_main_menu()
 {
-    /*variable declarations*/
-    int done = 0;
-    const Uint8 * keys;
 
-	Bool gameOver = false;
-
-	Level *level;
-	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
-	Entity *player;
-	Menu *pauseMenu, *inventoryMenu;
-
-    
-
-    /*program initializtion*/
-    init_logger("gf2d.log");
-    slog("---==== BEGIN ====---");
-    gf2d_graphics_initialize(
-        "gf2d",
-        1920,
-        1080,
+	/*program initializtion*/
+	init_logger("gf2d.log");
+	slog("---==== BEGIN ====---");
+	gf2d_graphics_initialize(
+		"gf2d",
 		1920,
 		1080,
-        vector4d(0,0,0,255),
-        0,
+		1920,
+		1080,
+		vector4d(0, 0, 0, 255),
+		0,
 		false);
-    gf2d_graphics_set_frame_delay(16);
+	gf2d_graphics_set_frame_delay(16);
 
 	camera_set_dimensions(vector2d(1920, 1080));
 	camera_set_position(vector2d(0, 0));
@@ -70,37 +58,89 @@ int main(int argc, char * argv[])
 
 	//my font system, going to delete eventually
 	font_init(10);
+	mouse_init();
+	menu_manager_init(32);
+	SDL_ShowCursor(SDL_DISABLE);
 
-	//dj's font system, will move to this
-
-	gf2d_font_init("config/font.cfg");
+	init_random();
 
 
+}
+
+void init_game()
+{
 	entity_manager_init(100);
 	projectile_manager_init(100);
 	level_manager_init(64);
 	player_inventory_init(32);
-	menu_manager_init(32);
+}
 
-	//gf2d_windows_init(10);
+void game_main_menu()
+{
+	Menu *mainMenu;
+	mainMenu = main_new(10);
 
-	mouse_init();
+	while (true)
+	{
 
-	
-    SDL_ShowCursor(SDL_DISABLE);
+		slog("%i", check_start_game(mainMenu));
+
+		
+		if (check_start_game(mainMenu))
+		{
+			mainMenu->_active = false;
+			return;
+		}
+		
+
+		
+		//slog("Loop");
+
+		SDL_PumpEvents();   // update SDL's internal event structures
+		/*update things here*/
+
+		input_update();
+
+		menu_manager_think_menus();
+		menu_manager_update_menus();
+
+		gf2d_mouse_update();
+		mouse_update();
 
 
-	//init_random();
+		gf2d_graphics_clear_screen();// clears drawing buffers
+		// all drawing should happen betweem clear_screen and next_frame
+		//backgrounds drawn first
 
-    /*demo setup*/
+		menu_manager_draw_menus();
+
+		mouse_draw();
+
+		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
+
+	}
+}
+
+void game_main()
+{
+	/*variable declarations*/
+	int done = 0;
+	const Uint8 * keys;
+
+	Bool gameOver = false;
+
+	Level *level;
+	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
+	Entity *player;
+	Menu *pauseMenu, *inventoryMenu;
+
 	level = level_hub();
-	//level = level_random(16, 16);
 
 	player = player_spawn(vector2d(32, 448));
 
-	
 
-	
+
+
 	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
 	slog("maxItems: %i", player_inventory_get_max());
 
@@ -113,9 +153,9 @@ int main(int argc, char * argv[])
 	inventoryMenu = inventory_new(50);
 
 
-    /*main game loop*/
+	/*main game loop*/
 	while (!pause_menu_check_end_game(pauseMenu))
-    {
+	{
 		//slog("Loop");
 
 		SDL_PumpEvents();   // update SDL's internal event structures
@@ -148,8 +188,8 @@ int main(int argc, char * argv[])
 
 
 		gf2d_graphics_clear_screen();// clears drawing buffers
-			// all drawing should happen betweem clear_screen and next_frame
-			//backgrounds drawn first
+		// all drawing should happen betweem clear_screen and next_frame
+		//backgrounds drawn first
 
 		level_draw(level);
 
@@ -157,20 +197,23 @@ int main(int argc, char * argv[])
 		projectile_manager_draw_projectiles();
 
 		menu_manager_draw_menus();
-	
-
 
 		mouse_draw();
-		
 
 		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
+	}
 
 
-
-    }
-
-
-    slog("---==== END ====---");
-    return 0;
+	slog("---==== END ====---");
+	return 0;
 }
+
+int main(int argc, char * argv[])
+{
+	init_main_menu();
+	game_main_menu();
+	init_game();
+	game_main();
+}
+
 /*eol@eof*/

@@ -122,7 +122,7 @@ Menu *menu_manager_get_by_tag(char* tag)
 			return &menu_manager.menu_list[i];
 		}
 	}
-	slog("cannot find menu with tag");
+	//slog("cannot find menu with tag");
 	return NULL;
 }
 

@@ -7,9 +7,9 @@ Menu *inventory_new(int buttonMax);
 
 void inventory_create_slots(Menu *inventoryMenu);
 
-void inventory_set_active(Menu *inventoryMenu);
+void inventory_set_active(Button *button, Menu *inventoryMenu);
 
-void inventory_set_inactive(Menu *inventoryMenu);
+void inventory_set_inactive(Button *button, Menu *inventoryMenu);
 
 void inventory_think(Menu *inventoryMenu);
 
