@@ -51,6 +51,8 @@ Entity *player_spawn(Vector2D position);
 */
 Bool player_is_allowed_jump(Entity *self);
 
+void player_load_sounds();
+
 void player_draw(Entity *self);
 
 void player_attack(Entity *self);
@@ -60,6 +62,7 @@ void player_ranged(Entity *self);
 void player_die(Entity *self);
 
 void player_damage(Entity *player, int damage);
+
 
 
 #endif

@@ -11,9 +11,9 @@ void main_new_game(Menu *mainMenu);
 
 void main_exit(Menu *mainMenu);
 
-void start_game(Menu *mainMenu);
+void start_game(Button* button, Menu *mainMenu);
 
-void close_game(Menu *mainMenu);
+void close_game(Button* button, Menu *mainMenu);
 
 Bool check_start_game(Menu *mainMenu);
 

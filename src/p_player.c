@@ -144,10 +144,23 @@ Entity *player_spawn(Vector2D position)
 	ent->health = 100;
 	ent->attackDamage = 100;
 
+	ent->max_sounds = 16;
+
+	player_load_sounds(ent);
 
 	return ent;
 }
 
+
+void player_load_sounds(Entity *self)
+{
+	self->soundList = (Sound *)gfc_allocate_array(sizeof(Sound), self->max_sounds);
+
+	self->soundList[1] = gfc_sound_load("assets/audio/animal melee sound.wav", 1, 2);
+	self->soundList[2] = gfc_sound_load("assets/audio/melee sound.wav", 1, 2);
+	self->soundList[3] = gfc_sound_load("assets/audio/sword sound.wav", 1, 2);
+	self->soundList[4] = gfc_sound_load("assets/audio/178872__hanbaal__bow.wav", 1, 2);
+}
 
 void player_update(Entity *self)
 {
@@ -387,13 +400,15 @@ void player_attack(Entity *self)
 	}
 	else
 	{
-		slog("attack direction not found");
+		//slog("attack direction not found");
 		gfc_rect_set(attackbox, self->hitbox.x + self->hitbox.w, self->hitbox.y, 50, self->hitbox.h);
 	}
 
 	if (SDL_GetTicks() >= self->lastAttack + 500)
 	{
-		slog("attack attempt");
+		int sound = random_int_range(1, 3);
+		gfc_sound_play(self->soundList[sound], 0, .05, -1, -1);
+
 		for (i = 0; i < entManager.max_entities; i++)
 		{
 
@@ -404,7 +419,6 @@ void player_attack(Entity *self)
 			ent = &entManager.entity_list[i];
 			if (SDL_HasIntersection(&attackbox, &ent->hitbox))
 			{
-				slog("attack hit");
 				ent->health -= self->attackDamage;
 			}
 		}
@@ -430,7 +444,7 @@ void player_ranged(Entity *self)
 
 	if (SDL_GetTicks() >= self->lastAttack + 500)
 	{
-		slog("ranged attempt");
+		gfc_sound_play(self->soundList[4], 0, .05, -1, -1);
 
 		if (self->facing == 1)
 		{
@@ -444,7 +458,7 @@ void player_ranged(Entity *self)
 		}
 		else
 		{
-			slog("ranged direction not found");
+			projectile_spawn(10, 2000, self, position, velocity);
 
 		}
 

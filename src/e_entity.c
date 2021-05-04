@@ -247,7 +247,7 @@ void entity_check_collisions(Entity *ent)
 
 
 		//if below
-		if (entity_check_below_collision(ent->hitbox, tile->hitbox) && ent->velocity.y > 0)
+		if (entity_check_below_collision(ent->hitbox, tile->hitbox))
 		{
 			
 			testMove.y = tile->hitbox.y - testMove.h;
@@ -264,7 +264,7 @@ void entity_check_collisions(Entity *ent)
 
 
 		//if above
-		if (entity_check_above_collision(ent->hitbox, tile->hitbox) && ent->velocity.y < 0)
+		if (entity_check_above_collision(ent->hitbox, tile->hitbox))
 		{
 
 			testMove.y = tile->hitbox.y + tile->hitbox.h;
@@ -289,7 +289,7 @@ void entity_check_collisions(Entity *ent)
 			testMove.y = ent->hitbox.y;
 
 		}
-		if (entity_check_left_collision(ent->hitbox, tile->hitbox) && ent->velocity.x < 0)
+		if (entity_check_left_collision(ent->hitbox, tile->hitbox))
 		{
 
 			testMove.x = tile->hitbox.x + tile->hitbox.w;
@@ -305,7 +305,7 @@ void entity_check_collisions(Entity *ent)
 
 
 		//if on right
-		if (entity_check_right_collision(ent->hitbox, tile->hitbox) && ent->velocity.x > 0)
+		if (entity_check_right_collision(ent->hitbox, tile->hitbox))
 		{
 			
 			testMove.x = tile->hitbox.x - testMove.w;

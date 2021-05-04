@@ -12,6 +12,7 @@
 #include "gf2d_windows.h"
 
 #include "gfc_input.h"
+#include "gfc_audio.h"
 
 
 #include "e_entity.h"
@@ -73,11 +74,13 @@ void init_game()
 	projectile_manager_init(100);
 	level_manager_init(64);
 	player_inventory_init(32);
+	gfc_audio_init(32, 6, 4, 8, true, false);
 }
 
 void game_main_menu()
 {
 	Menu *mainMenu;
+
 	mainMenu = main_new(10);
 
 	while (true)
@@ -133,6 +136,7 @@ void game_main()
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu;
+	Sound *bgMusic;
 
 	level = level_hub();
 
@@ -151,6 +155,11 @@ void game_main()
 
 	pauseMenu = pause_menu_new(10);
 	inventoryMenu = inventory_new(50);
+
+	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
+
+
+	gfc_sound_play(bgMusic, -1, .05, -1, -1);
 
 
 	/*main game loop*/

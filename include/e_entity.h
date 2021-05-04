@@ -3,6 +3,7 @@
 
 #include "gfc_types.h"
 #include "gfc_vector.h"
+#include "gfc_audio.h"
 #include "gf2d_sprite.h"
 
 typedef enum 
@@ -42,6 +43,8 @@ typedef struct Entity_s
 	float       frameRate;
 	int         frameCount;
 	Uint32		lastJump;
+	int			max_sounds;
+	Sound		**soundList;
 	void(*update)(struct Entity_s *self);
 	void(*think)(struct Entity_s *self);
 	void(*draw)(struct Entity_s *self);
