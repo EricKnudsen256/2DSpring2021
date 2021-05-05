@@ -79,7 +79,7 @@ void init_game()
 
 	room_manager_init(8, 8, 64);
 
-	room_test();
+	//room_test();
 }
 
 void game_main_menu()
@@ -137,14 +137,14 @@ void game_main()
 
 	Bool gameOver = false;
 
-	Level *level;
+	Room *room;
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu;
 	Sound *bgMusic;
 	Sprite *bg;
 
-	level = level_hub();
+	room = room_empty();
 
 	player = player_spawn(vector2d(32, 448));
 
@@ -190,9 +190,7 @@ void game_main()
 			projectile_manager_check_collisions();
 			projectile_manager_update_projectiles();
 
-			level = level_manager_get_current();
-
-			level_update(level);
+			room_manager_update();
 		}
 
 
@@ -210,7 +208,7 @@ void game_main()
 
 		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
-		level_draw(level);
+		room_manager_draw();
 
 		entity_manager_draw_entities();
 		projectile_manager_draw_projectiles();

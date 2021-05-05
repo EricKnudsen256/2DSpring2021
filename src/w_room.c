@@ -38,6 +38,44 @@ void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms)
 	slog("room system initialized");
 }
 
+void room_manager_update()
+{
+	int x, y;
+	if (room_manager.room_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (y = 0; y < room_manager.maxRows; y++)
+		{
+			if (room_manager.room_list[x][y]._inuse == 0)continue;
+			
+			room_update(&room_manager.room_list[x][y]);
+		}
+	}
+}
+
+void room_manager_draw()
+{
+	int x, y;
+	if (room_manager.room_list == NULL)
+	{
+		slog("entity system does not exist");
+		return;
+	}
+	for (x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (y = 0; y < room_manager.maxRows; y++)
+		{
+			if (room_manager.room_list[x][y]._inuse == 0)continue;
+
+			room_draw(&room_manager.room_list[x][y]);
+		}
+	}
+}
+
 void room_manager_free()
 {
 	if (room_manager.room_list != NULL)
@@ -46,6 +84,21 @@ void room_manager_free()
 	}
 	memset(&room_manager, 0, sizeof(RoomManager));
 	slog("room system closed");
+}
+
+Room **room_manager_get_room_list()
+{
+	return room_manager.room_list;
+}
+
+int room_manager_get_max_columns()
+{
+	return room_manager.maxColumns;
+}
+
+int room_manager_get_max_rows()
+{
+	return room_manager.maxRows;
 }
 
 Room *room_new(Vector2D gridPos)
@@ -98,6 +151,8 @@ Room *room_empty()
 	{
 		return NULL;
 	}
+
+	slog("creating room");
 
 	room->roomWidth = 32;
 	room->roomHeight = 32;
@@ -225,7 +280,7 @@ void room_draw(Room *room)
 
 	if (!room->tileArray)
 	{
-		slog("not tiles loaded for the level, cannot draw it");
+		//slog("not tiles loaded for the level, cannot draw it");
 		return;
 	}
 
@@ -244,3 +299,4 @@ void room_test()
 
 	Room * testRoom = room_new(pos);
 }
+
