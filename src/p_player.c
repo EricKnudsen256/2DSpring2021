@@ -272,7 +272,8 @@ void player_think(Entity *self)
 
 	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self))
 	{
-		if (self->onGround == true || self->doubleJumped == false)
+		//if (self->onGround == true || self->doubleJumped == false)
+		if (true)
 		{
 			self->velocity.y = -5;
 			self->position.y -= .1;
@@ -315,25 +316,8 @@ void player_think(Entity *self)
 			self->lastJump = SDL_GetTicks();
 		}
 	}
-	/*
-	SDL_Event e;
-	while (SDL_PollEvent(&e))
-	{
-		if (e.type == SDL_MOUSEBUTTONDOWN)
-		{
-			if (e.button.button == SDL_BUTTON_LEFT)
-			{
-				player_attack(self);
-			}
-			if (e.button.button == SDL_BUTTON_RIGHT)
-			{
-				player_ranged(self);
-			}
-			
-		}
-	}
-	*/
 
+	/*
 	if (self->position.x <= -60)
 	{
 		Level *level = level_manager_get_current();
@@ -376,9 +360,8 @@ void player_think(Entity *self)
 			level_change(self, 3, level->levelPos.y);
 			
 		}
-
-		
 	}
+	*/
 }
 
 void player_attack(Entity *self)

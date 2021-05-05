@@ -29,8 +29,11 @@ void input_update()
 			}
 			if (e.button.button == SDL_BUTTON_RIGHT)
 			{
+				if (entity_manager_get_player_ent())
+				{
+					player_ranged(entity_manager_get_player_ent());
+				}
 
-				player_ranged(entity_manager_get_player_ent());
 			
 			}
 		}

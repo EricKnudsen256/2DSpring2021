@@ -142,6 +142,7 @@
     <ClCompile Include="..\..\..\src\g_projectile.c" />
     <ClCompile Include="..\..\..\src\g_random.c" />
     <ClCompile Include="..\..\..\src\shape.c" />
+    <ClCompile Include="..\..\..\src\w_room.c" />
     <ClCompile Include="..\..\..\src\w_tile.c" />
     <ClCompile Include="..\..\..\src\e_walker.c" />
   </ItemGroup>
@@ -200,6 +201,7 @@
     <ClInclude Include="..\..\..\include\g_projectile.h" />
     <ClInclude Include="..\..\..\include\g_random.h" />
     <ClInclude Include="..\..\..\include\shape.h" />
+    <ClInclude Include="..\..\..\include\w_room.h" />
     <ClInclude Include="..\..\..\include\w_tile.h" />
     <ClInclude Include="..\..\..\include\e_walker.h" />
   </ItemGroup>

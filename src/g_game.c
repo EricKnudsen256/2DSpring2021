@@ -32,6 +32,7 @@
 #include "p_player.h"
 
 #include "w_level.h"
+#include "w_room.h"
 
 static int _done = 0;
 
@@ -75,6 +76,10 @@ void init_game()
 	level_manager_init(64);
 	player_inventory_init(32);
 	gfc_audio_init(32, 6, 4, 8, true, false);
+
+	room_manager_init(8, 8, 64);
+
+	room_test();
 }
 
 void game_main_menu()
@@ -86,7 +91,7 @@ void game_main_menu()
 	while (true)
 	{
 
-		slog("%i", check_start_game(mainMenu));
+		//slog("%i", check_start_game(mainMenu));
 
 		
 		if (check_start_game(mainMenu))
@@ -137,6 +142,7 @@ void game_main()
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu;
 	Sound *bgMusic;
+	Sprite *bg;
 
 	level = level_hub();
 
@@ -146,9 +152,9 @@ void game_main()
 
 
 	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
-	slog("maxItems: %i", player_inventory_get_max());
+	//slog("maxItems: %i", player_inventory_get_max());
 
-	player_inventory_slog();
+	//player_inventory_slog();
 
 	//gf2d_window_load("config/testwindow.cfg");
 
@@ -159,7 +165,9 @@ void game_main()
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 
 
-	gfc_sound_play(bgMusic, -1, .05, -1, -1);
+	gfc_sound_play(bgMusic, -1, .01, -1, -1);
+
+	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
 
 
 	/*main game loop*/
@@ -199,6 +207,8 @@ void game_main()
 		gf2d_graphics_clear_screen();// clears drawing buffers
 		// all drawing should happen betweem clear_screen and next_frame
 		//backgrounds drawn first
+
+		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
 		level_draw(level);
 
