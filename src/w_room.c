@@ -135,9 +135,10 @@ Room *room_load(const char *filename)
 
 }
 
-Room *room_empty()
+Room *room_empty(Vector2D gridPos)
 {
 	Vector2D temp;
+	Vector2D tilePos;
 	const char *string;
 	Room *room;
 	int count;
@@ -145,14 +146,15 @@ Room *room_empty()
 	int i;
 	int r, c;
 
-	temp = vector2d(0, 0);
-	room = room_new(temp);
+
+
+	room = room_new(gridPos);
 	if (!room)
 	{
 		return NULL;
 	}
 
-	slog("creating room");
+	//slog("creating room");
 
 	room->roomWidth = 32;
 	room->roomHeight = 32;
@@ -175,6 +177,7 @@ Room *room_empty()
 	room->entityArray = (Entity **)gfc_allocate_array(sizeof(Entity*), room->entityArrayLen);
 
 
+
 	//loop to initialize the tiles in the level
 	for (r = 0; r < room->roomHeight; r++)
 	{
@@ -189,7 +192,9 @@ Room *room_empty()
 				temp.x = c;
 				temp.y = r;
 
-				room_new_tile(room, temp);
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + c * room->tileWidth, (room->tileHeight * room->roomHeight * gridPos.y) + r * room->tileHeight);
+
+				room_new_tile(room, tilePos, temp);
 			}
 
 		} //end of loop 1
@@ -204,13 +209,27 @@ Room *room_empty()
 
 	room->_inuse = 1;
 
-	room->roomPos = vector2d(0, 0);
+	room->roomPos = gridPos;
 
 
 	return room;
 }
 
-Tile *room_new_tile(Room * room, Vector2D pos)
+void room_init_all()
+{
+	for (int x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (int y = 0; y < room_manager.maxRows; y++)
+		{
+			Vector2D pos = vector2d(x, y);
+
+			room_empty(pos);
+			slog("making room at %i, %i", x, y);
+		}
+	}
+}
+
+Tile *room_new_tile(Room * room, Vector2D pos, Vector2D gridPos)
 {
 	int i;
 	//for loop checking if is any space in the tileArray
@@ -220,7 +239,7 @@ Tile *room_new_tile(Room * room, Vector2D pos)
 		if (room->tileArray[i])continue;// someone else is using this one
 
 		memset(&room->tileArray[i], 0, sizeof(Tile));
-		room->tileArray[i] = tile_new(room->tileWidth, room->tileHeight, pos);
+		room->tileArray[i] = tile_new(room->tileWidth, room->tileHeight, pos, gridPos);
 		return room->tileArray[i];
 	}
 
@@ -260,7 +279,7 @@ void room_update(Room *room)
 	if (camera.x < 0)camera.x = 0;
 	if (camera.y < 0)camera.y = 0;
 	*/
-	camera_set_position(vector2d(camera.x, camera.y));
+	//camera_set_position(vector2d(camera.x, camera.y));
 }
 
 void room_draw(Room *room)

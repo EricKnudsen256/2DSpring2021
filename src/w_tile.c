@@ -5,7 +5,7 @@
 #include "w_tile.h"
 
 
-Tile *tile_new(int width, int height, Vector2D position)
+Tile *tile_new(int width, int height, Vector2D position, Vector2D gridPos)
 {
 
 	Tile *tile;
@@ -21,11 +21,14 @@ Tile *tile_new(int width, int height, Vector2D position)
 	tile->tileWidth = width;
 	tile->tileHeight = height;
 
-	tile->gridPos.x = position.x;
-	tile->gridPos.y = position.y;
+	tile->pos.x = position.x;
+	tile->pos.y = position.y;
 
-	tile->hitbox.x = position.x * width;
-	tile->hitbox.y = position.y * height;
+	tile->gridPos.x = gridPos.x;
+	tile->gridPos.y = gridPos.y;
+
+	tile->hitbox.x = position.x;
+	tile->hitbox.y = position.y;
 	tile->hitbox.w = tile->tileWidth;
 	tile->hitbox.h = tile->tileHeight;
 
@@ -76,13 +79,13 @@ void tile_draw(Tile *tile)
 			return;// nothing to draw
 		}
 		offset = camera_get_offset();
-		if (!camera_rect_on_screen(gfc_sdl_rect((tile->gridPos.x * tile->tileWidth), (tile->gridPos.y * tile->tileHeight), tile->sprite->frame_w, tile->sprite->frame_h)))
+		if (!camera_rect_on_screen(gfc_sdl_rect((tile->pos.x * tile->tileWidth), (tile->pos.y * tile->tileHeight), tile->sprite->frame_w, tile->sprite->frame_h)))
 		{
 			//entity is off camera, skip
 			//return;
 		}
-		drawPosition.x = (tile->gridPos.x * 32) + offset.x;
-		drawPosition.y = (tile->gridPos.y * 32) + offset.y;
+		drawPosition.x = tile->pos.x + offset.x;
+		drawPosition.y = tile->pos.y + offset.y;
 
 		gf2d_sprite_draw(
 			tile->sprite,

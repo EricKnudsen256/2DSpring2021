@@ -137,16 +137,17 @@ void game_main()
 
 	Bool gameOver = false;
 
-	Room *room;
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu;
 	Sound *bgMusic;
 	Sprite *bg;
 
-	room = room_empty();
+	Vector2D room1Pos = vector2d(0, 0);
 
-	player = player_spawn(vector2d(32, 448));
+	room_init_all();
+
+	player = player_spawn(vector2d(100, 100));
 
 
 

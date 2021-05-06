@@ -412,7 +412,7 @@ Level *level_random(int width, int height, Vector2D levelPos)
 					if (level->tileArray[i]->_inuse)continue;// someone else is using this one
 
 					memset(&level->tileArray[i], 0, sizeof(Tile));
-					level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, temp);
+					//level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, temp);
 
 					tilePlaced = true;
 
@@ -462,7 +462,7 @@ Tile *level_new_tile(Level * level, Vector2D pos)
 		if (level->tileArray[i])continue;// someone else is using this one
 
 		memset(&level->tileArray[i], 0, sizeof(Tile));
-		level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, pos);
+		//level->tileArray[i] = tile_new(level->tileWidth, level->tileHeight, pos);
 		return level->tileArray[i];
 	}
 

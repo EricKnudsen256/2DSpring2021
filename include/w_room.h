@@ -67,6 +67,11 @@ Room *room_new(Vector2D gridPos);
 */
 Room *room_load(const char *filename);
 
+
+Room *room_empty(Vector2D position);
+
+void room_init_all();
+
 /**
 * @brief creates a new tile in the tile manager
 * @param the position to create the tile

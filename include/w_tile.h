@@ -14,7 +14,8 @@ typedef enum
 typedef struct
 {
 	Bool		_inuse;
-	Vector2D	gridPos;	//position of tile on tilegrid
+	Vector2D	pos;
+	Vector2D	gridPos;
 	Sprite		*sprite;
 	SDL_Rect	hitbox;
 	int			tileWidth;
@@ -33,7 +34,7 @@ typedef struct
 * @params width width of the tile, height height of the tile, position vector2d representation of the tile's grid position
 * @return a reference to a new tile, or null if failed
 */
-Tile *tile_new(int width, int height, Vector2D position);
+Tile *tile_new(int width, int height, Vector2D position, Vector2D gridPos);
 
 /**
 * @brief frees a tile from memeory
