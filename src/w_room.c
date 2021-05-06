@@ -147,7 +147,6 @@ Room *room_empty(Vector2D gridPos)
 	int r, c;
 
 
-
 	room = room_new(gridPos);
 	if (!room)
 	{
@@ -169,14 +168,23 @@ Room *room_empty(Vector2D gridPos)
 
 	//System to initialize random level
 
+	
+
+	room->tileArray = (Tile *)gfc_allocate_array(sizeof(Tile*), room->roomHeight);
+
+	for (int i = 0; i < room->roomWidth; i++)
+	{
+		room->tileArray[i] = (Tile *)gfc_allocate_array(sizeof(Tile*), room->roomWidth);
+	}
+
 	//Initializes tileArray to the size needed if all tiles were used in the level
-	room->tileArrayLen = (room->roomWidth * room->roomHeight);
-	room->tileArray = (Tile **)gfc_allocate_array(sizeof(Tile*), room->tileArrayLen);
+
+	
 
 	room->entityArrayLen = 50;
 	room->entityArray = (Entity **)gfc_allocate_array(sizeof(Entity*), room->entityArrayLen);
 
-
+	
 
 	//loop to initialize the tiles in the level
 	for (r = 0; r < room->roomHeight; r++)
@@ -191,7 +199,7 @@ Room *room_empty(Vector2D gridPos)
 				temp.x = c;
 				temp.y = r;
 
-				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5) + c * room->tileWidth, 
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5) + c * room->tileWidth,
 					(room->tileHeight * room->roomHeight * gridPos.y) + (gridPos.y * room->tileHeight * 5) + r * room->tileHeight);
 
 				room_new_tile(room, tilePos, temp);
@@ -209,7 +217,7 @@ Room *room_empty(Vector2D gridPos)
 
 	room->_inuse = 1;
 
-	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5), 
+	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5),
 		(room->tileHeight * room->roomHeight * gridPos.y) + (gridPos.y * room->tileHeight * 5));
 	room->roomPos = gridPos;
 
@@ -257,27 +265,31 @@ void room_init_all()
 			}
 
 			room_open_door(left, top, right, bot, room);
-			
+
 			slog("making room at %i, %i", x, y);
 		}
 	}
 }
 
-Tile *room_new_tile(Room * room, Vector2D pos, Vector2D gridPos)
+Tile *room_new_tile(Room *room, Vector2D pos, Vector2D gridPos)
 {
-	int i;
-	//for loop checking if is any space in the tileArray
-	for (i = 0; i < room->tileArrayLen; i++)
+	int x, y;
+	
+	x = gridPos.x;
+	y = gridPos.y;
+	
+	if (room->tileArray[x][y])
 	{
-
-		if (room->tileArray[i])continue;// someone else is using this one
-
-		memset(&room->tileArray[i], 0, sizeof(Tile));
-		room->tileArray[i] = tile_new(room->tileWidth, room->tileHeight, pos, gridPos);
-		return room->tileArray[i];
+		tile_free(&room->tileArray[x][y]);
 	}
 
-	slog("no free tiles available");
+	room->tileArray[x][y] = tile_new(room->tileWidth, room->tileHeight, pos, gridPos);
+
+	if (!room->tileArray[x][y])
+	{
+		slog("tile not created properly");
+	}
+
 	return NULL;
 }
 
@@ -320,7 +332,7 @@ void room_draw(Room *room)
 {
 	SDL_Rect camera;
 	Vector2D offset, drawPosition, parallax;
-	int i = 0;
+	int x, y;
 	if (!room)
 	{
 		slog("cannot draw room, NULL pointer provided");
@@ -345,42 +357,18 @@ void room_draw(Room *room)
 		gf2d_sprite_draw(room->bgSprite, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
 	}
 
-	for (i = 0; i < room->tileArrayLen; i++)
+	for (int x = 0; x < room->roomHeight; x++)
 	{
+		for (int y = 0; y < room->roomWidth; y++)
+		{
 
-		if (!room->tileArray[i])continue;
+			if (!room->tileArray[x][y])continue;
 
-		tile_draw(room->tileArray[i]);
+			tile_draw(room->tileArray[x][y]);
+		}
 	}
 }
 
-int room_find_tile_by_pos(Room *room, int x, int y)
-{
-	int i;
-
-	if (!room)
-	{
-		slog("no level given to search");
-		return -1;
-	}
-
-	for (i = 0; i < room->tileArrayLen; i++)
-	{
-		//slog("i: %i\ntileArrayLen: %i", i, level->tileArrayLen);
-
-		if (!room->tileArray[i])
-		{
-			continue;
-		}
-
-		if (room->tileArray[i]->gridPos.x == x && room->tileArray[i]->gridPos.y == y)
-		{
-			return i;
-		}
-	}
-
-	return -1;
-}
 
 void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 {
@@ -389,15 +377,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = 0;
 		int y = room->roomHeight / 2 - 1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		y+=1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		y-=2;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 	}
 
 	if (right)
@@ -405,15 +393,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = room->roomWidth - 1;
 		int y = room->roomHeight / 2 - 1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		y += 1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		y -= 2;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 	}
 
 	if (top)
@@ -421,15 +409,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = room->roomWidth / 2 - 1;;
 		int y = 0;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		x += 1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		x -= 2;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 	}
 
 	if (bot)
@@ -437,15 +425,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = room->roomWidth / 2 - 1;;
 		int y = room->roomHeight - 1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		x += 1;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 
 		x -= 2;
 
-		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+		tile_free(room->tileArray[x][y]);
 	}
 }
 

@@ -202,6 +202,7 @@ void player_think(Entity *self)
 	mx += camera.x;
 	my += camera.y;
 
+	//slog("onGround:%i", self->onGround);
 
 
 	//put loop to check for floor collision on gravity

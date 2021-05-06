@@ -182,7 +182,7 @@ Entity *entity_new()
 
 void entity_check_collisions(Entity *ent)
 {
-	int i;
+	int roomX, roomY, x, y;
 	Room **roomlist;
 	SDL_bool isIntersect;
 	Tile *tile;
@@ -212,188 +212,210 @@ void entity_check_collisions(Entity *ent)
 		slog("Room list not found");
 		return;
 	}
-	for (int x = 0; x < room_manager_get_max_columns(); x++)
+	for (roomX = 0; roomX < room_manager_get_max_columns(); roomX++)
 	{
-		for (int y = 0; y < room_manager_get_max_rows(); y++)
+		for (roomY = 0; roomY < room_manager_get_max_rows(); roomY++)
 		{
-			if (roomlist[x][y]._inuse == 0)continue;
+			if (roomlist[roomX][roomY]._inuse == 0)continue;
 
-			if (!roomlist[x][y].tileArray)
+			if (!roomlist[roomX][roomY].tileArray)
 			{
 				slog("Level does not have a tile array");
 				return;
 			}
 
-			Room *room = &roomlist[x][y];
+			//slog("Room x:%i, y:%i", roomX, roomY);
 
-			for (i = 0; i < room->tileArrayLen; i++)
+			Room *room = &roomlist[roomX][roomY];
+
+			for (x = 0; x < room->roomHeight; x++)
 			{
-
-				if (room->tileArray[i] == NULL)
+				for (y = 0; y < room->roomWidth; y++)
 				{
-					continue;
+
+
+
+					if (room->tileArray[x][y] == NULL)
+					{
+						continue;
+					}
+					if (!room->tileArray[x][y]->_inuse)
+					{
+						continue;
+					}
+
+
+
+					tile = room->tileArray[x][y];
+
+					//if collision found, check which side of the ent it was on and adjust accordingly
+
+
+
+					isIntersect = SDL_HasIntersection(&ent->hitbox, &tile->hitbox);
+
+
+					if (!isIntersect)
+					{
+
+						continue;
+					}
+					else
+					{
+
+						testMove.x = ent->hitbox.x;
+						testMove.y = ent->hitbox.y;
+						testMove.w = ent->hitbox.w;
+						testMove.h = ent->hitbox.h;
+					}
+
+
+
+
+					//if below
+					if (entity_check_below_collision(ent->hitbox, tile->hitbox))
+					{
+
+						testMove.y = tile->hitbox.y - testMove.h;
+						if (!entity_check_below_collision(testMove, tile->hitbox))
+						{
+							//slog("collision on bottom");
+							ent->position.y = testMove.y;
+							ent->hitbox.y = testMove.y;
+							ent->velocity.y = 0;
+							ent->onGround = true;
+						}
+					}
+
+
+
+					//if above
+					if (entity_check_above_collision(ent->hitbox, tile->hitbox))
+					{
+
+						testMove.y = tile->hitbox.y + tile->hitbox.h;
+						if (!entity_check_above_collision(testMove, tile->hitbox) && !(entity_check_right_collision(testMove, tile->hitbox) || entity_check_left_collision(testMove, tile->hitbox)))
+						{
+							//slog("collision on top");
+							ent->position.y = testMove.y;
+							ent->hitbox.y = testMove.y;
+							ent->velocity.y = 0;
+						}
+					}
+
+					//if on left
+					isIntersect = SDL_HasIntersection(&ent->hitbox, &tile->hitbox);
+					if (!isIntersect)
+					{
+						continue;
+					}
+					else
+					{
+						testMove.x = ent->hitbox.x;
+						testMove.y = ent->hitbox.y;
+
+					}
+					if (entity_check_left_collision(ent->hitbox, tile->hitbox))
+					{
+
+						testMove.x = tile->hitbox.x + tile->hitbox.w;
+						if (!entity_check_left_collision(testMove, tile->hitbox) && !entity_check_above_collision(testMove, tile->hitbox))
+						{
+							//slog("collision on left");
+							ent->position.x = testMove.x;
+							ent->hitbox.x = testMove.x;
+							ent->velocity.x = 0;
+							ent->onLeft = true;
+						}
+					}
+
+
+					//if on right
+					if (entity_check_right_collision(ent->hitbox, tile->hitbox))
+					{
+
+						testMove.x = tile->hitbox.x - testMove.w;
+						if (!entity_check_right_collision(testMove, tile->hitbox) && !entity_check_above_collision(testMove, tile->hitbox))
+						{
+							//slog("collision on right");
+							ent->position.x = testMove.x;
+							ent->hitbox.x = testMove.x;
+							ent->velocity.x = 0;
+							ent->onRight = true;
+						}
+					}
 				}
-				if (!room->tileArray[i]->_inuse)
-				{
-					continue;
-				}
-
-				tile = room->tileArray[i];
-
-				//if collision found, check which side of the ent it was on and adjust accordingly
-
-				isIntersect = SDL_HasIntersection(&ent->hitbox, &room->tileArray[i]->hitbox);
-
-				if (!isIntersect)
+			}
+			
+			for (x = 0; x < room->roomHeight; x++)
+			{
+				for (y = 0; y < room->roomWidth; y++)
 				{
 
-					continue;
-				}
-				else
-				{
+					tile = room->tileArray[x][y];
+
+					if (!tile)
+					{
+						continue;
+					}
+
+					if (!tile->_inuse)
+					{
+						continue;
+					}
+
+
+					//check if there are tiles in the way of the player, adjust onX values if none are found
+					//change move values for tolerance
+
 					testMove.x = ent->hitbox.x;
 					testMove.y = ent->hitbox.y;
 					testMove.w = ent->hitbox.w;
 					testMove.h = ent->hitbox.h;
-				}
 
-
-				//if below
-				if (entity_check_below_collision(ent->hitbox, tile->hitbox))
-				{
-
-					testMove.y = tile->hitbox.y - testMove.h;
-					if (!entity_check_below_collision(testMove, tile->hitbox))
+					//check bottom side
+					testMove.y += 1;
+					if (SDL_HasIntersection(&testMove, &tile->hitbox))
 					{
-						//slog("collision on bottom");
-						ent->position.y = testMove.y;
-						ent->hitbox.y = testMove.y;
-						ent->velocity.y = 0;
-						ent->onGround = true;
+						foundBot = true;
 					}
-				}
 
-
-
-				//if above
-				if (entity_check_above_collision(ent->hitbox, tile->hitbox))
-				{
-
-					testMove.y = tile->hitbox.y + tile->hitbox.h;
-					if (!entity_check_above_collision(testMove, tile->hitbox) && !(entity_check_right_collision(testMove, tile->hitbox) || entity_check_left_collision(testMove, tile->hitbox)))
-					{
-						//slog("collision on top");
-						ent->position.y = testMove.y;
-						ent->hitbox.y = testMove.y;
-						ent->velocity.y = 0;
-					}
-				}
-
-				//if on left
-				isIntersect = SDL_HasIntersection(&ent->hitbox, &room->tileArray[i]->hitbox);
-				if (!isIntersect)
-				{
-					continue;
-				}
-				else
-				{
-					testMove.x = ent->hitbox.x;
 					testMove.y = ent->hitbox.y;
 
-				}
-				if (entity_check_left_collision(ent->hitbox, tile->hitbox))
-				{
-
-					testMove.x = tile->hitbox.x + tile->hitbox.w;
-					if (!entity_check_left_collision(testMove, tile->hitbox) && !entity_check_above_collision(testMove, tile->hitbox))
+					//check right side
+					testMove.x += 1;
+					if (SDL_HasIntersection(&testMove, &tile->hitbox))
 					{
-						//slog("collision on left");
-						ent->position.x = testMove.x;
-						ent->hitbox.x = testMove.x;
-						ent->velocity.x = 0;
-						ent->onLeft = true;
+						foundRight = true;
 					}
-				}
 
+					testMove.x = ent->hitbox.x;
 
-				//if on right
-				if (entity_check_right_collision(ent->hitbox, tile->hitbox))
-				{
-
-					testMove.x = tile->hitbox.x - testMove.w;
-					if (!entity_check_right_collision(testMove, tile->hitbox) && !entity_check_above_collision(testMove, tile->hitbox))
+					//check right side
+					testMove.x -= 1;
+					if (SDL_HasIntersection(&testMove, &tile->hitbox))
 					{
-						//slog("collision on right");
-						ent->position.x = testMove.x;
-						ent->hitbox.x = testMove.x;
-						ent->velocity.x = 0;
-						ent->onRight = true;
+						foundLeft = true;
 					}
+
 				}
 			}
-
-			for (i = 0; i < room->tileArrayLen; i++)
-			{
-
-				if (!room->tileArray[i])
-				{
-					continue;
-				}
-
-				tile = room->tileArray[i];
-
-				//check if there are tiles in the way of the player, adjust onX values if none are found
-				//change move values for tolerance
-
-				testMove.x = ent->hitbox.x;
-				testMove.y = ent->hitbox.y;
-				testMove.w = ent->hitbox.w;
-				testMove.h = ent->hitbox.h;
-
-				//check bottom side
-				testMove.y += 1;
-				if (SDL_HasIntersection(&testMove, &tile->hitbox))
-				{
-
-					foundBot = true;
-				}
-
-				testMove.y = ent->hitbox.y;
-
-				//check right side
-				testMove.x += 1;
-				if (SDL_HasIntersection(&testMove, &tile->hitbox))
-				{
-					foundRight = true;
-				}
-
-				testMove.x = ent->hitbox.x;
-
-				//check right side
-				testMove.x -= 1;
-				if (SDL_HasIntersection(&testMove, &tile->hitbox))
-				{
-					foundLeft = true;
-				}
-			}
-
-			if (!foundBot)
-			{
-				ent->onGround = false;
-			}
-			if (!foundLeft)
-			{
-				ent->onLeft = false;
-			}
-			if (!foundRight)
-			{
-				ent->onRight = false;
-			}
-			//slog("foundBot:%i", foundBot);
-
-
 		}
 	}
+
+	if (!foundBot)
+	{
+		ent->onGround = false;
+	}
+	if (!foundLeft)
+	{
+		ent->onLeft = false;
+	}
+	if (!foundRight)
+	{
+		ent->onRight = false;
+	}
+	//slog("foundBot:%i", foundBot);
 }
 
 void entity_free(Entity *ent)

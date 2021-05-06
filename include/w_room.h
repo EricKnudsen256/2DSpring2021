@@ -21,7 +21,7 @@ typedef struct
 
 	Vector2D	position;
 
-	Tile		**tileArray;  // subject to change to accomodate new room structure in the future
+	Tile		**(*tileArray);  // subject to change to accomodate new room structure in the future
 	Entity		**entityArray; //array of all enemies and their spawn positions, again subject to change
 	int			tileArrayLen;
 	int			entityArrayLen;
