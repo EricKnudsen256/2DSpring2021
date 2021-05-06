@@ -207,7 +207,7 @@ void game_main()
 		// all drawing should happen betweem clear_screen and next_frame
 		//backgrounds drawn first
 
-		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
+		//gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
 		room_manager_draw();
 

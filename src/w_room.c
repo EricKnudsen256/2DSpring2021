@@ -187,12 +187,12 @@ Room *room_empty(Vector2D gridPos)
 			//test code to make sure that the tiles are being created properly
 			if (r == 0 || r == room->roomHeight - 1 || c == 0 || c == room->roomWidth - 1)
 			{
-				Bool tilePlaced = false;
 				//slog("creating tile at x:%i, y:%i", c, r);
 				temp.x = c;
 				temp.y = r;
 
-				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + c * room->tileWidth, (room->tileHeight * room->roomHeight * gridPos.y) + r * room->tileHeight);
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5) + c * room->tileWidth, 
+					(room->tileHeight * room->roomHeight * gridPos.y) + (gridPos.y * room->tileHeight * 5) + r * room->tileHeight);
 
 				room_new_tile(room, tilePos, temp);
 			}
@@ -209,7 +209,11 @@ Room *room_empty(Vector2D gridPos)
 
 	room->_inuse = 1;
 
+	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5), 
+		(room->tileHeight * room->roomHeight * gridPos.y) + (gridPos.y * room->tileHeight * 5));
 	room->roomPos = gridPos;
+
+	room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
 
 
 	return room;
@@ -222,8 +226,38 @@ void room_init_all()
 		for (int y = 0; y < room_manager.maxRows; y++)
 		{
 			Vector2D pos = vector2d(x, y);
+			Room *room;
+			Bool left, right, top, bot;
 
-			room_empty(pos);
+			left = true;
+			right = true;
+			bot = true;
+			top = true;
+
+			room = room_empty(pos);
+
+			if (x == 0)
+			{
+				left = false;
+			}
+
+			if (x == room_manager.maxColumns - 1)
+			{
+				right = false;
+			}
+
+			if (y == 0)
+			{
+				top = false;
+			}
+
+			if (y == room_manager.maxRows - 1)
+			{
+				bot = false;
+			}
+
+			room_open_door(left, top, right, bot, room);
+			
 			slog("making room at %i, %i", x, y);
 		}
 	}
@@ -303,6 +337,14 @@ void room_draw(Room *room)
 		return;
 	}
 
+	if (room->bgSprite)
+	{
+		drawPosition.x = room->position.x + offset.x;
+		drawPosition.y = room->position.y + offset.y;
+
+		gf2d_sprite_draw(room->bgSprite, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+	}
+
 	for (i = 0; i < room->tileArrayLen; i++)
 	{
 
@@ -312,10 +354,98 @@ void room_draw(Room *room)
 	}
 }
 
-void room_test()
+int room_find_tile_by_pos(Room *room, int x, int y)
 {
-	Vector2D pos = vector2d(0, 0);
+	int i;
 
-	Room * testRoom = room_new(pos);
+	if (!room)
+	{
+		slog("no level given to search");
+		return -1;
+	}
+
+	for (i = 0; i < room->tileArrayLen; i++)
+	{
+		//slog("i: %i\ntileArrayLen: %i", i, level->tileArrayLen);
+
+		if (!room->tileArray[i])
+		{
+			continue;
+		}
+
+		if (room->tileArray[i]->gridPos.x == x && room->tileArray[i]->gridPos.y == y)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
+{
+	if (left)
+	{
+		int x = 0;
+		int y = room->roomHeight / 2 - 1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		y+=1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		y-=2;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+	}
+
+	if (right)
+	{
+		int x = room->roomWidth - 1;
+		int y = room->roomHeight / 2 - 1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		y += 1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		y -= 2;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+	}
+
+	if (top)
+	{
+		int x = room->roomWidth / 2 - 1;;
+		int y = 0;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		x += 1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		x -= 2;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+	}
+
+	if (bot)
+	{
+		int x = room->roomWidth / 2 - 1;;
+		int y = room->roomHeight - 1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		x += 1;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+
+		x -= 2;
+
+		tile_free(room->tileArray[room_find_tile_by_pos(room, x, y)]);
+	}
 }
 

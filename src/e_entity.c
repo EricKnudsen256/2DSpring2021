@@ -199,7 +199,7 @@ void entity_check_collisions(Entity *ent)
 	roomlist = room_manager_get_room_list();
 
 	//turn off collision lol
-	return;
+	//return;
 
 
 	if (!ent)

@@ -19,11 +19,14 @@ typedef struct
 	Uint32      roomWidth;  /**<how many tiles per row the level has*/
 	Uint32      roomHeight; /**<how many tiles per column the level has*/
 
+	Vector2D	position;
+
 	Tile		**tileArray;  // subject to change to accomodate new room structure in the future
 	Entity		**entityArray; //array of all enemies and their spawn positions, again subject to change
 	int			tileArrayLen;
 	int			entityArrayLen;
 	Sprite     *tileSet;     /**<sprite for the tileset*/
+	Sprite	   *bgSprite;
 	Uint32      tileCount;
 
 	int         tileWidth;   /**<now many pixels wide the tiles are*/
@@ -100,6 +103,12 @@ void room_update(Room *room);
 * @param level the level the draw
 */
 void room_draw(Room *room);
+
+
+int room_find_tile_by_pos(Room *room, int x, int y);
+
+void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room);
+
 
 /**
 * @brief finds and returns the index of a tile in the tile array with the given gridpos
