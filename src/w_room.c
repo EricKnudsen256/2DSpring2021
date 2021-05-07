@@ -533,7 +533,7 @@ void room_build_branches()
 
 				if (room1->leftDoor && !room_manager.room_list[x - 1][y]._inuse) //if has left door, but no room there
 				{
-
+					slog("Left");
 					roomPos = vector2d(x - 1, y);
 					room2 = room_empty(roomPos);
 
@@ -552,7 +552,7 @@ void room_build_branches()
 
 				if (room1->topDoor && !room_manager.room_list[x][y - 1]._inuse) //if has top door, but no room there
 				{
-
+					slog("Top");
 					roomPos = vector2d(x, y - 1);
 					room2 = room_empty(roomPos);
 
@@ -570,7 +570,7 @@ void room_build_branches()
 
 				if (room1->rightDoor && !room_manager.room_list[x + 1][y]._inuse) //if has right door, but no room there
 				{
-
+					slog("Right");
 					roomPos = vector2d(x + 1, y);
 					room2 = room_empty(roomPos);
 
@@ -582,14 +582,13 @@ void room_build_branches()
 				}
 			}
 
-			if (y != room_manager.maxRows - 1) //check to make sure not on bot wall
+			if (y != room_manager.maxRows - 1) //check to make sure not on right wall
 			{
-				slog("");
 				room1 = &room_manager.room_list[x][y];
 
-				if (room1->botDoor && !room_manager.room_list[x][y + 1]._inuse) //if has bot door, but no room there
+				if (room1->botDoor && !room_manager.room_list[x][y + 1]._inuse) //if has right door, but no room there
 				{
-
+					slog("Bottom");
 					roomPos = vector2d(x, y + 1);
 					room2 = room_empty(roomPos);
 
@@ -599,8 +598,7 @@ void room_build_branches()
 
 					//room_build_branch_room(room2);
 				}
-			}
-			
+			}	
 		}
 	}
 }
@@ -832,7 +830,7 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 	{
 		room->topDoor = top;
 	}
-	if (room->leftDoor == false)
+	if (room->botDoor == false)
 	{
 		room->botDoor = bot;
 	}
