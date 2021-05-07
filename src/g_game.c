@@ -143,14 +143,16 @@ void game_main()
 	Sound *bgMusic;
 	Sprite *bg;
 
-	Vector2D room1Pos = vector2d(0, 0);
-
 	room_init_all();
+	room_slog();
 
-	player = player_spawn(vector2d(100, 100));
+	Vector2D spawnRoomPos = room_manager_get_start_pos();
+	Vector2D spawnPos = vector2d(500, 500);
+
+	vector2d_add(spawnPos, spawnPos, spawnRoomPos);
 
 
-
+	player = player_spawn(spawnPos);
 
 	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
 	//slog("maxItems: %i", player_inventory_get_max());
@@ -166,7 +168,7 @@ void game_main()
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 
 
-	gfc_sound_play(bgMusic, -1, .01, -1, -1);
+	//gfc_sound_play(bgMusic, -1, .01, -1, -1);
 
 	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
 

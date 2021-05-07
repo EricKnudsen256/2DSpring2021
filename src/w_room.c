@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "g_camera.h"
+#include "g_random.h"
 
 #include "w_room.h"
 #include "w_tile.h"
@@ -19,6 +20,7 @@ void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms)
 	{
 		room_manager_free();
 	}
+
 	room_manager.room_list = (Room *)gfc_allocate_array(sizeof (Room), maxRows);
 
 	for (int i = 0; i < maxColumns; i++)
@@ -115,7 +117,7 @@ Room *room_new(Vector2D gridPos)
 
 	if (x >= room_manager.maxColumns || y >= room_manager.maxRows)
 	{
-		slog("Room not in range of grid");
+		slog("Room not in range of grid x:%i, y:%i", x, y);
 		return NULL;
 	}
 
@@ -223,52 +225,238 @@ Room *room_empty(Vector2D gridPos)
 
 	room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
 
+	room->roomType = 0;
+
 
 	return room;
 }
 
 void room_init_all()
 {
-	for (int x = 0; x < room_manager.maxColumns; x++)
+	Bool endPlaced = false;
+	Room *room, *lastRoom, *start, *end;
+	Vector2D spawnPos;
+	int rnd;
+	int x, y;
+	int count = 0;
+	int roomTypeToApply, lastRoomTypeToApply;
+
+	x = 0;
+	y = 3;
+
+	spawnPos = vector2d(x, y);
+	start = room_empty(spawnPos);
+	start->roomType = 4;
+
+
+	spawnPos.x++;
+
+	room = room_empty(spawnPos);
+	room->roomType = 3;
+	lastRoom = room;
+
+
+	while (!endPlaced && count < 200) //worry about room types later, get the gen working properly first
 	{
-		for (int y = 0; y < room_manager.maxRows; y++)
+		roomTypeToApply = 1;
+		lastRoomTypeToApply = -1;
+
+		rnd = random_int_range(0, 5);
+
+		if (rnd == 0 || rnd == 1)
 		{
-			Vector2D pos = vector2d(x, y);
-			Room *room;
+
+			roomTypeToApply = 1;
+
+			spawnPos.y--;
+
+			if (spawnPos.y < 0)
+			{
+				spawnPos.y++;
+				spawnPos.x++;
+
+				roomTypeToApply = 3;
+
+				room_manager.room_list[x][y].roomType = 2;
+
+			}
+
+			if (spawnPos.x > room_manager.maxColumns - 1)
+			{
+				//change room type to exit
+
+				spawnPos.x--;
+				endPlaced = true;
+				lastRoomTypeToApply = 5;
+			}
+
+			x = spawnPos.x;
+			y = spawnPos.y;
+
+		}
+		else if (rnd == 2 || rnd == 3)
+		{
+
+			roomTypeToApply = 1;
+
+			spawnPos.y++;
+
+			if (spawnPos.y > room_manager.maxRows - 1)
+			{
+				spawnPos.y--;
+				spawnPos.x++;
+
+				roomTypeToApply = 3;
+
+				room_manager.room_list[x][y].roomType = 2;
+
+			}
+
+			if (spawnPos.x > room_manager.maxColumns - 1)
+			{
+				//change room type to exit
+				spawnPos.x--;
+				endPlaced = true;
+				lastRoomTypeToApply = 5;
+			}
+		}
+		else if (rnd == 4)
+		{
+			if (lastRoom->roomType == 3)
+			{
+				continue;
+			}
+
+			spawnPos.x++;
+
+
+
+			if (spawnPos.x > room_manager.maxColumns - 1)
+			{
+				spawnPos.x--;
+				//change room type to exit
+				endPlaced = true;
+				lastRoomTypeToApply = 5;
+			}
+			else
+			{
+				roomTypeToApply = 3;
+
+				room_manager.room_list[x][y].roomType = 2;
+
+			}
+
+			x = spawnPos.x;
+			y = spawnPos.y;
+
+		}
+		else if (rnd == 5)
+		{
+			continue;
+		}
+
+
+		x = spawnPos.x;
+		y = spawnPos.y;
+
+		if (room_manager.room_list[x][y]._inuse)
+		{
+			if (lastRoomTypeToApply == 5)
+			{
+				room_manager.room_list[x][y].roomType = lastRoomTypeToApply;
+			}
+			continue;
+		}
+
+		room = room_empty(spawnPos);
+
+
+		slog("Roomtype = %i", roomTypeToApply);
+
+		room->roomType = roomTypeToApply;
+
+		if (lastRoom)
+		{
+			if (lastRoom->roomType != 4 && lastRoomTypeToApply != -1)
+			{
+				lastRoom->roomType = lastRoomTypeToApply;
+			}
+		}
+
+		lastRoom = &room_manager.room_list[x][y];
+		count++;
+
+	}
+
+	if (count > 200)
+	{
+		slog("count reached max, room not fully completed");
+		return;
+	}
+
+	//code to open all doors
+
+	for (x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (y = 0; y < room_manager.maxRows; y++)
+		{
+			Room *room, *lastRoom;
 			Bool left, right, top, bot;
 
-			left = true;
-			right = true;
-			bot = true;
-			top = true;
+			left = false;
+			right = false;
+			bot = false;
+			top = false;
 
-			room = room_empty(pos);
+			room = &room_manager.room_list[x][y];
 
-			if (x == 0)
+			if ((room->roomType == 2) && x != 0)
 			{
-				left = false;
+				lastRoom = &room_manager.room_list[x - 1][y];
+
+				if (lastRoom->roomType == 2 || lastRoom->roomType == 5)
+				{
+					left = true;
+				}
+				
 			}
 
-			if (x == room_manager.maxColumns - 1)
+			if ((room->roomType == 3) && x != 0)
 			{
-				right = false;
+				left = true;
 			}
 
-			if (y == 0)
+			if ((room->roomType == 2 || room->roomType == 4) && x != room_manager.maxColumns - 1)
 			{
-				top = false;
+				right = true;
 			}
 
-			if (y == room_manager.maxRows - 1)
+			if ((room->roomType == 1 || room->roomType == 2 || room->roomType == 3) && y != 0)
 			{
-				bot = false;
+				top = true;
+			}
+
+			if ((room->roomType == 1 || room->roomType == 2 || room->roomType == 3) && y != room_manager.maxRows - 1)
+			{
+				bot = true;
+			}
+
+			if (room->roomType == 5)
+			{
+				if (&room_manager.room_list[x][y + 1])
+				{
+					top = true;
+				}
+				else if (&room_manager.room_list[x][y - 1])
+				{
+					bot = true;
+				}
 			}
 
 			room_open_door(left, top, right, bot, room);
-
-			slog("making room at %i, %i", x, y);
 		}
 	}
+
 }
 
 Tile *room_new_tile(Room *room, Vector2D pos, Vector2D gridPos)
@@ -372,6 +560,11 @@ void room_draw(Room *room)
 
 void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 {
+	room->leftDoor = left;
+	room->rightDoor = right;
+	room->topDoor = top;
+	room->botDoor = bot;
+
 	if (left)
 	{
 		int x = 0;
@@ -434,6 +627,36 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		x -= 2;
 
 		tile_free(room->tileArray[x][y]);
+	}
+}
+
+Vector2D room_manager_get_start_pos()
+{
+	for (int x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (int y = 0; y < room_manager.maxRows; y++)
+		{
+			if (room_manager.room_list[x][y].roomType == 4)
+			{
+				slog("Start room: x:%i, y:%i", x, y);
+				return room_manager.room_list[x][y].position;
+			}
+		}
+	}
+}
+
+void room_slog()
+{
+	for (int x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (int y = 0; y < room_manager.maxRows; y++)
+		{
+			if (room_manager.room_list[x][y]._inuse)
+			{
+				slog("Room: x:%i, y:%i, type:%i", x, y, room_manager.room_list[x][y].roomType);
+			}
+			
+		}
 	}
 }
 

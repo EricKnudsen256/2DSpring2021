@@ -15,13 +15,15 @@ typedef struct
 	Bool		_inuse;
 	Vector2D	roomSize;   /**<how large, in pixels, the level is*/
 	Vector2D	roomPos;	// gridPos for where the level is, 0, 0 will be hub room
-	Uint32		roomType;	//0: side room, not solution, 1: room with left + right exit, 2: room with left right bottom exit, 3: room with left right top exit
+	int			roomType;	//0: side room, not solution, 1: room with left + right exit, 2: room with left right bottom exit, 3: room with left right top exit
 	Uint32      roomWidth;  /**<how many tiles per row the level has*/
 	Uint32      roomHeight; /**<how many tiles per column the level has*/
 
+	int			leftDoor, topDoor, rightDoor, botDoor;			//used to check if a room has a specific door open without a connection to an adjacent room
+
 	Vector2D	position;
 
-	Tile		**(*tileArray);  // subject to change to accomodate new room structure in the future
+	Tile		***tileArray;  // subject to change to accomodate new room structure in the future
 	Entity		**entityArray; //array of all enemies and their spawn positions, again subject to change
 	int			tileArrayLen;
 	int			entityArrayLen;
@@ -108,6 +110,10 @@ void room_draw(Room *room);
 int room_find_tile_by_pos(Room *room, int x, int y);
 
 void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room);
+
+Vector2D room_manager_get_start_pos();
+
+void room_slog();
 
 
 /**
