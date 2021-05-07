@@ -168,8 +168,8 @@ Room *room_empty(Vector2D gridPos)
 
 	//slog("creating room");
 
-	room->roomWidth = 32;
-	room->roomHeight = 32;
+	room->roomWidth = 38;
+	room->roomHeight = 38;
 
 
 	//Test tileset, add paramter to function for this
@@ -206,14 +206,20 @@ Room *room_empty(Vector2D gridPos)
 		{
 
 			//test code to make sure that the tiles are being created properly
-			if (r == 0 || r == room->roomHeight - 1 || c == 0 || c == room->roomWidth - 1)
+			if (r == 3 || r == room->roomHeight - 4 || c == 3 || c == room->roomWidth - 4)
 			{
+
+				if (r < 3 || r > room->roomHeight - 4 || c < 3 || c > room->roomWidth - 4)
+				{
+					continue;
+				}
+
 				//slog("creating tile at x:%i, y:%i", c, r);
 				temp.x = c;
 				temp.y = r;
 
-				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5) + c * room->tileWidth,
-					(room->tileHeight * room->roomHeight * gridPos.y) + (gridPos.y * room->tileHeight * 5) + r * room->tileHeight);
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + c * room->tileWidth,
+					(room->tileHeight * room->roomHeight * gridPos.y) + r * room->tileHeight);
 
 				room_new_tile(room, tilePos, temp);
 			}
@@ -230,14 +236,13 @@ Room *room_empty(Vector2D gridPos)
 
 	room->_inuse = 1;
 
-	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + (gridPos.x * room->tileWidth * 5),
-		(room->tileHeight * room->roomHeight * gridPos.y) + (gridPos.y * room->tileHeight * 5));
+	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x),
+		(room->tileHeight * room->roomHeight * gridPos.y));
 	room->roomPos = gridPos;
 
 	room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
 
 	room->roomType = 0;
-
 
 	return room;
 }
@@ -264,6 +269,8 @@ void room_init_all()
 
 	room = room_empty(spawnPos);
 	room->roomType = 3;
+	room_open_door(true, false, false, false, room);
+
 	lastRoom = room;
 
 
@@ -376,6 +383,11 @@ void room_init_all()
 			{
 				room_manager.room_list[x][y].roomType = lastRoomTypeToApply;
 			}
+			if (x == 7)
+			{
+				lastRoom->roomType = 5;
+				endPlaced = true;
+			}
 			continue;
 		}
 
@@ -454,14 +466,7 @@ void room_init_all()
 
 			if (room->roomType == 5)
 			{
-				if (&room_manager.room_list[x][y + 1])
-				{
-					top = true;
-				}
-				else if (&room_manager.room_list[x][y - 1])
-				{
-					bot = true;
-				}
+				lastRoom = room;
 			}
 
 			if (x == 1)
@@ -476,7 +481,241 @@ void room_init_all()
 		}
 	}
 
+	//last room not working well, just manually check if next to anyother room with open door towards it
+	
+	x = lastRoom->roomPos.x;
+	y = lastRoom->roomPos.y;
+
+	if (room_manager.room_list[x][y + 1]._inuse)
+	{
+		if (room_manager.room_list[x][y + 1].topDoor)
+		{
+			room_open_door(false, false, false, true, lastRoom);
+		}
+	}
+
+	if (room_manager.room_list[x][y - 1]._inuse)
+	{
+		if (room_manager.room_list[x][y - 1].botDoor)
+		{
+			room_open_door(false, true, false, false, lastRoom);
+		}
+	}
+
+	if (room_manager.room_list[x - 1][y]._inuse)
+	{
+		if (room_manager.room_list[x - 1][y].rightDoor)
+		{
+			room_open_door(true, false, false, false, lastRoom);
+		}
+	}
+
+	room_build_branches();
+
 }
+
+void room_build_branches()
+{
+	int x, y;
+	Room *room1, *room2;
+	Vector2D roomPos;
+
+
+	for (x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (y = 0; y < room_manager.maxRows; y++)
+		{
+
+			if (x != 0) //check to make sure not on left wall
+			{
+				
+				room1 = &room_manager.room_list[x][y];
+
+				if (room1->leftDoor && !room_manager.room_list[x - 1][y]._inuse) //if has left door, but no room there
+				{
+
+					roomPos = vector2d(x - 1, y);
+					room2 = room_empty(roomPos);
+
+					room2->roomType = 0;
+
+					room_open_door(false, false, true, false, room2);
+
+					//room_build_branch_room(room2);
+				}
+			}
+
+
+			if (y != 0) //check to make sure not on top wall
+			{
+				room1 = &room_manager.room_list[x][y];
+
+				if (room1->topDoor && !room_manager.room_list[x][y - 1]._inuse) //if has top door, but no room there
+				{
+
+					roomPos = vector2d(x, y - 1);
+					room2 = room_empty(roomPos);
+
+					room2->roomType = 0;
+
+					room_open_door(false, false, false, true, room2);
+
+					//room_build_branch_room(room2);
+				}
+			}
+
+			if (x != room_manager.maxColumns - 1) //check to make sure not on right wall
+			{
+				room1 = &room_manager.room_list[x][y];
+
+				if (room1->rightDoor && !room_manager.room_list[x + 1][y]._inuse) //if has right door, but no room there
+				{
+
+					roomPos = vector2d(x + 1, y);
+					room2 = room_empty(roomPos);
+
+					room2->roomType = 0;
+
+					room_open_door(true, false, false, false, room2);
+
+					//room_build_branch_room(room2);
+				}
+			}
+
+			if (y != room_manager.maxRows - 1) //check to make sure not on bot wall
+			{
+				slog("");
+				room1 = &room_manager.room_list[x][y];
+
+				if (room1->botDoor && !room_manager.room_list[x][y + 1]._inuse) //if has bot door, but no room there
+				{
+
+					roomPos = vector2d(x, y + 1);
+					room2 = room_empty(roomPos);
+
+					room2->roomType = 0;
+
+					room_open_door(false, true, false, false, room2);
+
+					//room_build_branch_room(room2);
+				}
+			}
+			
+		}
+	}
+}
+
+void room_build_branch_room(Room *startRoom)
+{
+	int x, y;
+	int rnd;
+	Bool built = false;
+	Bool triedLeft, triedTop, triedRight, triedBot;
+	Vector2D newRoomPos;
+
+	Room *room;
+
+	x = startRoom->roomPos.x;
+	y = startRoom->roomPos.y;
+
+	triedLeft = false;
+	triedTop = false;
+	triedRight = false;
+	triedBot = false;
+
+	while (!built && !(triedLeft && triedTop && triedRight && triedBot))
+	{
+		rnd = random_int_range(0, 3);
+
+		if (rnd == 0) //left
+		{
+			triedLeft = true;
+
+			if (x >= 0)
+			{
+				if (!room_manager.room_list[x - 1][y]._inuse)
+				{
+					built = true;
+					newRoomPos = vector2d(x - 1, y);
+
+					room = room_empty(newRoomPos);
+					room->roomType = 0;
+
+					room_open_door(false, false, true, false, room);
+					room_open_door(true, false, false, false, startRoom);
+
+					room_build_branch_room(room);
+				}
+			}	
+		}
+
+		if (rnd == 1) //top
+		{
+			triedTop = true;
+			if (y >= 0)
+			{
+				if (!room_manager.room_list[x][y - 1]._inuse)
+				{
+					built = true;
+					newRoomPos = vector2d(x, y - 1);
+
+					room = room_empty(newRoomPos);
+					room->roomType = 0;
+
+					room_open_door(false, false, false, true, room);
+					room_open_door(false, true, false, false, startRoom);
+
+					room_build_branch_room(room);
+				}
+			}
+		}
+
+		if (rnd == 2) //right
+		{
+			triedRight = true;
+			if (x <= room_manager.maxColumns - 1)
+			{
+				if (!room_manager.room_list[x + 1][y]._inuse)
+				{
+					built = true;
+					newRoomPos = vector2d(x + 1, y);
+
+					room = room_empty(newRoomPos);
+					room->roomType = 0;
+
+					room_open_door(true, false, false, false, room);
+					room_open_door(false, false, true, false, startRoom);
+
+					room_build_branch_room(room);
+				}
+			}
+		}
+
+		if (rnd == 3) //bot
+		{
+			triedBot = true;
+			if (y <= room_manager.maxRows - 1)
+			{
+				if (!room_manager.room_list[x][y + 1]._inuse)
+				{
+					built = true;
+					newRoomPos = vector2d(x, y + 1);
+
+					room = room_empty(newRoomPos);
+					room->roomType = 0;
+
+					room_open_door(false, true, false, false, room);
+					room_open_door(false, false, false, true, startRoom);
+
+					room_build_branch_room(room);
+				}
+			}
+		}
+	}
+	
+}
+
+
 
 Tile *room_new_tile(Room *room, Vector2D pos, Vector2D gridPos)
 {
@@ -558,8 +797,8 @@ void room_draw(Room *room)
 
 	if (room->bgSprite)
 	{
-		drawPosition.x = room->position.x + offset.x;
-		drawPosition.y = room->position.y + offset.y;
+		drawPosition.x = room->position.x + room->tileWidth * 3 + offset.x;
+		drawPosition.y = room->position.y + room->tileHeight * 3 + offset.y;
 
 		gf2d_sprite_draw(room->bgSprite, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
 	}
@@ -579,14 +818,28 @@ void room_draw(Room *room)
 
 void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 {
-	room->leftDoor = left;
-	room->rightDoor = right;
-	room->topDoor = top;
-	room->botDoor = bot;
+	Vector2D position, gridPos;
+
+	if (room->leftDoor == false)
+	{
+		room->leftDoor = left;
+	}
+	if (room->rightDoor == false)
+	{
+		room->rightDoor = right;
+	}
+	if (room->topDoor == false)
+	{
+		room->topDoor = top;
+	}
+	if (room->leftDoor == false)
+	{
+		room->botDoor = bot;
+	}
 
 	if (left)
 	{
-		int x = 0;
+		int x = 3;
 		int y = room->roomHeight / 2 - 1;
 
 		tile_free(room->tileArray[x][y]);
@@ -598,11 +851,46 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		y-=2;
 
 		tile_free(room->tileArray[x][y]);
+
+		//build hall
+
+		x = 3;
+		y = room->roomHeight / 2 - 1;
+
+		y-=2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			x--;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
+
+		x = 3;
+		y = room->roomHeight / 2 - 1;
+
+		y += 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			x--;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
+		
 	}
 
 	if (right)
 	{
-		int x = room->roomWidth - 1;
+		int x = room->roomWidth - 4;
 		int y = room->roomHeight / 2 - 1;
 
 		tile_free(room->tileArray[x][y]);
@@ -614,12 +902,47 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		y -= 2;
 
 		tile_free(room->tileArray[x][y]);
+
+		//build hall
+
+		x = room->roomWidth - 4;
+		y = room->roomHeight / 2 - 1;
+
+		y -= 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			x++;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
+
+		x = room->roomWidth - 4;
+		y = room->roomHeight / 2 - 1;
+
+		y += 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			x++;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
+
 	}
 
 	if (top)
 	{
-		int x = room->roomWidth / 2 - 1;;
-		int y = 0;
+		int x = room->roomWidth / 2 - 1;
+		int y = 3;
 
 		tile_free(room->tileArray[x][y]);
 
@@ -630,12 +953,46 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		x -= 2;
 
 		tile_free(room->tileArray[x][y]);
+
+		//build hall
+
+		x = room->roomWidth / 2 - 1;
+		y = 3;
+
+		x -= 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			y--;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
+
+		x = room->roomWidth / 2 - 1;
+		y = 3;
+
+		x += 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			y--;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
 	}
 
 	if (bot)
 	{
-		int x = room->roomWidth / 2 - 1;;
-		int y = room->roomHeight - 1;
+		int x = room->roomWidth / 2 - 1;
+		int y = room->roomHeight - 4;
 
 		tile_free(room->tileArray[x][y]);
 
@@ -646,6 +1003,40 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		x -= 2;
 
 		tile_free(room->tileArray[x][y]);
+
+		//build hall
+
+		x = room->roomWidth / 2 - 1;
+		y = room->roomHeight - 4;
+
+		x -= 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			y++;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
+
+		x = room->roomWidth / 2 - 1;
+		y = room->roomHeight - 4;
+
+		x += 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			y++;
+			gridPos = vector2d(x, y);
+
+			position = vector2d((room->tileWidth * room->roomWidth * room->roomPos.x) + x * room->tileWidth,
+				(room->tileHeight * room->roomHeight * room->roomPos.y) + y * room->tileHeight);
+
+			room_new_tile(room, position, gridPos);
+		}
 	}
 }
 

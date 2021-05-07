@@ -57,7 +57,7 @@ void *minimap_draw(Menu *minimap)
 	drawX = player->position.x / 32;
 	drawY = player->position.y / 32;
 
-	tempDraw = gfc_sdl_rect(drawX + minimap->position.x + 16 - 2, drawY + minimap->position.y + 16 - 2, 4, 4);
+	tempDraw = gfc_sdl_rect(drawX + minimap->position.x + 9 - 2, drawY + minimap->position.y + 9 - 2, 4, 4);
 
 	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 40, 175, 40, 255);
 	SDL_RenderFillRect(gf2d_graphics_get_renderer(), &tempDraw);
@@ -84,7 +84,7 @@ void *minimap_draw(Menu *minimap)
 								drawY = tile->pos.y / 32;
 
 								SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 255, 255);
-								SDL_RenderDrawPoint(gf2d_graphics_get_renderer(), drawX + minimap->position.x + 15, drawY + minimap->position.y + 15);
+								SDL_RenderDrawPoint(gf2d_graphics_get_renderer(), drawX + minimap->position.x + 8, drawY + minimap->position.y + 8);
 							}
 						}
 					}

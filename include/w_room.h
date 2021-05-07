@@ -19,7 +19,8 @@ typedef struct
 	Uint32      roomWidth;  /**<how many tiles per row the level has*/
 	Uint32      roomHeight; /**<how many tiles per column the level has*/
 
-	int			leftDoor, topDoor, rightDoor, botDoor;			//used to check if a room has a specific door open without a connection to an adjacent room
+	Bool		leftDoor, topDoor, rightDoor, botDoor;			//true means has door on that side
+	Bool		leftOpen, topOpen, rightOpen, botOpen;			//true if has door on that side with no room on other side
 
 	Vector2D	position;
 
@@ -122,6 +123,10 @@ int room_find_tile_by_pos(Room *room, int x, int y);
 void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room);
 
 Vector2D room_manager_get_start_pos();
+
+void room_build_branches();
+
+void room_build_branch_room(Room *startRoom);
 
 void room_slog();
 
