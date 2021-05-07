@@ -83,7 +83,24 @@ void *minimap_draw(Menu *minimap)
 								drawX = tile->pos.x / 32;
 								drawY = tile->pos.y / 32;
 
-								SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 255, 255);
+								if (room->roomType == 0)
+								{
+									SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 255, 255, 255);
+								}
+								else if (room->roomType == 4)
+								{
+									SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 65, 255, 80, 255);
+								}
+								else if (room->roomType == 5)
+								{
+									SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 165, 50, 50, 255);
+								}
+								else 
+								{
+									SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 55, 220, 225, 255);
+								}
+
+								
 								SDL_RenderDrawPoint(gf2d_graphics_get_renderer(), drawX + minimap->position.x + 8, drawY + minimap->position.y + 8);
 							}
 						}
