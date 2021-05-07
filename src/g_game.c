@@ -139,7 +139,7 @@ void game_main()
 
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
-	Menu *pauseMenu, *inventoryMenu;
+	Menu *pauseMenu, *inventoryMenu, *minimap;
 	Sound *bgMusic;
 	Sprite *bg;
 
@@ -164,6 +164,7 @@ void game_main()
 
 	pauseMenu = pause_menu_new(10);
 	inventoryMenu = inventory_new(50);
+	minimap = minimap_menu_new(1);
 
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 

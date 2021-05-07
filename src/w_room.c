@@ -103,6 +103,17 @@ int room_manager_get_max_rows()
 	return room_manager.maxRows;
 }
 
+
+Room *room_manager_get_room(int x, int y)
+{
+	if (&room_manager.room_list[x][y]._inuse)
+	{
+		return &room_manager.room_list[x][y];
+	}
+	return NULL;
+	
+}
+
 Room *room_new(Vector2D gridPos)
 {
 	if (room_manager.room_list == NULL)
@@ -450,6 +461,14 @@ void room_init_all()
 				else if (&room_manager.room_list[x][y - 1])
 				{
 					bot = true;
+				}
+			}
+
+			if (x == 1)
+			{
+				if (&room_manager.room_list[x - 1][y].roomType == 4)
+				{
+					left = true;
 				}
 			}
 

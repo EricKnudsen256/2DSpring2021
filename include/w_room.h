@@ -57,6 +57,16 @@ void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms);
 
 void room_manager_free();
 
+Room **room_manager_get_room_list();
+
+int room_manager_get_max_columns();
+
+int room_manager_get_max_rows();
+
+Room *room_manager_get_room(int x, int y);
+
+
+
 
 /**
 * @brief allocate and initialize a level

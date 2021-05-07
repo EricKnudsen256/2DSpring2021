@@ -136,6 +136,7 @@
     <ClCompile Include="..\..\..\src\logger\simple_logger.c" />
     <ClCompile Include="..\..\..\src\m_inventory.c" />
     <ClCompile Include="..\..\..\src\m_main.c" />
+    <ClCompile Include="..\..\..\src\m_minimap.c" />
     <ClCompile Include="..\..\..\src\m_pause.c" />
     <ClCompile Include="..\..\..\src\w_level.c" />
     <ClCompile Include="..\..\..\src\p_player.c" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\..\..\include\logger\simple_logger.h" />
     <ClInclude Include="..\..\..\include\m_inventory.h" />
     <ClInclude Include="..\..\..\include\m_main.h" />
+    <ClInclude Include="..\..\..\include\m_minimap.h" />
     <ClInclude Include="..\..\..\include\m_pause.h" />
     <ClInclude Include="..\..\..\include\w_level.h" />
     <ClInclude Include="..\..\..\include\p_player.h" />
