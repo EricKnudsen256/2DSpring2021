@@ -102,7 +102,7 @@ void main_editor(Menu *mainMenu)
 
 
 	button->buttonTag = "main_editor";
-	//button->onPress = close_game;
+	button->onPress = start_editor;
 }
 
 void start_game(Button* button, Menu *mainMenu)

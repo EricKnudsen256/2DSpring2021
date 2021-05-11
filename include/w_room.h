@@ -96,7 +96,7 @@ void room_init_all();
 * @param the position to create the tile
 */
 
-Tile *room_new_tile(Room * room, Vector2D pos);
+Tile *room_new_tile(Room *room, Vector2D pos, Vector2D gridPos);
 
 Entity *room_new_enemy(Room * room, Vector2D gridPos, int enemy);
 

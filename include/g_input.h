@@ -3,6 +3,6 @@
 
 void input_update();
 
-
+Bool input_get_mouse_down();
 
 #endif

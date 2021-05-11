@@ -9,7 +9,7 @@
 #include "gf2d_windows.h"
 #include "gf2d_font.h"
 #include "gf2d_actor.h"
-#include "gf2d_windows.h"
+#include "gf2d_mouse.h"
 
 #include "gfc_input.h"
 #include "gfc_audio.h"
@@ -82,7 +82,6 @@ void init_game()
 	//room_test();
 }
 
-
 void game_main()
 {
 	/*variable declarations*/
@@ -134,7 +133,7 @@ void game_main()
 
 
 	/*main game loop*/
-	while (true)
+	while (!pause_menu_check_end_game(pauseMenu))
 	{
 		//slog("Loop");
 
@@ -181,19 +180,142 @@ void game_main()
 		mouse_draw();
 
 		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
-
-		if (pause_menu_check_end_game(pauseMenu))
-		{
-			menu_free(pauseMenu);
-			menu_free(inventoryMenu);
-			menu_free(minimap);
-
-
-			return;
-		}
 	}
 
 
+	slog("---==== END ====---");
+	return 0;
+}
+
+void editor_main()
+{
+	/*variable declarations*/
+	const Uint8 * keys;
+	int mx, my;
+	int x, y;
+	
+
+	Menu *pauseMenu;
+	Sprite *bg;
+	SDL_Rect drawPos;
+	Vector2D offset;
+	Vector2D mouseGamePos;
+	Vector2D mouseGridPos;
+	Vector2D tilePos;
+
+	Vector2D spawnPos = vector2d(0, 0);
+	Room *room = room_empty(spawnPos);
+
+	room_open_door(true, true, true, true, room);
+
+	Vector2D cameraPos = vector2d(-300, 100);
+	camera_set_position(cameraPos);
+
+	pauseMenu = pause_menu_new(10);
+
+	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
+
+
+	/*main game loop*/
+	while (!pause_menu_check_end_game(pauseMenu))
+	{
+
+		offset = camera_get_offset();
+
+		SDL_PumpEvents();   // update SDL's internal event structures
+		keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
+		SDL_GetMouseState(&mx, &my);
+
+		/*update things here*/
+
+		input_update();
+
+		if (!pauseMenu->_active)
+		{
+			room_manager_update();
+		}
+
+
+
+		menu_manager_think_menus();
+		menu_manager_update_menus();
+
+		mouseGamePos = vector2d(mx - offset.x, my - offset.y);
+		mouseGridPos = vector2d((int)(mx - offset.x) / 32, (int)(my - offset.y) / 32);
+		gf2d_mouse_update();
+		mouse_update();
+
+		//check to see if click in range of tiles, make on if possible
+
+		if (input_get_mouse_down())
+		{
+			if (mouseGridPos.x > 3 && mouseGridPos.x < room->roomWidth - 4 && mouseGridPos.y > 3 && mouseGridPos.y < room->roomHeight - 4)
+			{
+				x = mouseGridPos.x;
+				y = mouseGridPos.y;
+
+				if (room->tileArray[x][y])
+				{
+					room_free_tile(x, y, room);
+				}
+				else
+				{
+					tilePos = vector2d(x * room->tileWidth, y * room->tileHeight);
+
+					room_new_tile(room, tilePos, mouseGridPos);
+
+					slog("new tile at x:%f, y:%f", mouseGridPos.x, mouseGridPos.y);
+				}
+			}
+		}
+	
+
+
+
+		gf2d_graphics_clear_screen();// clears drawing buffers
+		// all drawing should happen betweem clear_screen and next_frame
+		//backgrounds drawn first
+
+		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
+
+		room_manager_draw();
+
+		//draw rectangles to show where to place tile
+
+		for (int x = 0; x < room->roomHeight; x++)
+		{
+			for (int y = 0; y < room->roomWidth; y++)
+			{
+				if (x < 4 || x > room->roomHeight - 5 || y < 4 || y > room->roomWidth - 5)
+				{
+					continue;
+				}
+
+				drawPos.x = 32 * x + offset.x;
+				drawPos.y = 32 * y + offset.y;
+				drawPos.h = room->tileHeight;
+				drawPos.w = room->tileWidth;
+
+				SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 0, 0, 0, 255);
+
+				SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &drawPos);
+			}
+		}
+
+		menu_manager_draw_menus();
+
+		mouse_draw();
+
+		
+
+		
+
+		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
+	}
+
+
+	slog("---==== END ====---");
+	return 0;
 }
 
 void game_main_menu()
@@ -207,32 +329,30 @@ void game_main_menu()
 
 		//slog("%i", check_start_game(mainMenu));
 
-
+		
 		if (main_get_data(mainMenu) != "menu")
 		{
 			mainMenu->_active = false;
-
-			slog("Goto Game");
-
+			
 			if (main_get_data(mainMenu) == "start")
 			{
 				game_main();
-				mainMenu->_active = true;
-
+				exit(0);
 			}
 			else if (main_get_data(mainMenu) == "editor")
 			{
-
+				editor_main();
+				exit(0);
 			}
 			else
 			{
-				slog("Data type for menu not defined, defaulting to main menu");
+				slog("Menu data not found");
 			}
 
 		}
+		
 
-
-
+		
 		//slog("Loop");
 
 		SDL_PumpEvents();   // update SDL's internal event structures
@@ -260,14 +380,14 @@ void game_main_menu()
 	}
 }
 
+
 int main(int argc, char * argv[])
 {
 	init_main_menu();
 	init_game();
+
 	game_main_menu();
 
-	slog("---==== END ====---");
-	return 0;
 }
 
 /*eol@eof*/
