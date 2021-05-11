@@ -43,7 +43,7 @@ void tile_free(Tile *tile)
 	int i;
 	if (!tile)return;// nothing to do
 
-
+	memset(tile, 0, sizeof(Tile));
 
 	gf2d_sprite_free(tile->sprite);
 

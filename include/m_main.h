@@ -11,6 +11,8 @@ void main_new_game(Menu *mainMenu);
 
 void main_exit(Menu *mainMenu);
 
+void main_editor(Menu *mainMenu);
+
 void start_game(Button* button, Menu *mainMenu);
 
 void close_game(Button* button, Menu *mainMenu);

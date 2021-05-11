@@ -18,7 +18,7 @@ Menu *main_new(int buttonMax)
 
 	mainMenu->tag = "main";
 
-	mainMenu->data = false;
+	mainMenu->data = "menu";
 	mainMenu->_active = true;
 
 	main_create_buttons(mainMenu);
@@ -30,6 +30,7 @@ void main_create_buttons(Menu *mainMenu)
 {
 	main_new_game(mainMenu);
 	main_exit(mainMenu);
+	main_editor(mainMenu);
 }
 
 void main_new_game(Menu *mainMenu)
@@ -47,7 +48,7 @@ void main_new_game(Menu *mainMenu)
 	Button *button = mainMenu->buttonList[newIndex];
 
 	button->position.x = 772;
-	button->position.y = 200;
+	button->position.y = 100;
 	gfc_rect_set(button->buttonSize, button->position.x, button->position.y, 376, 192);
 	button->sprite = gf2d_sprite_load_image("assets/sprites/menus/mainNewGame.png");
 
@@ -64,14 +65,14 @@ void main_exit(Menu *mainMenu)
 
 	if (exitIndex == -1)
 	{
-		slog("New Game Button Not Created");
+		slog("Exit Button Not Created");
 	}
 
 
 	Button *button = mainMenu->buttonList[exitIndex];
 
 	button->position.x = 772;
-	button->position.y = 500;
+	button->position.y = 300;
 	gfc_rect_set(button->buttonSize, button->position.x, button->position.y, 376, 192);
 	button->sprite = gf2d_sprite_load_image("assets/sprites/menus/mainMenuExit.png");
 
@@ -80,9 +81,38 @@ void main_exit(Menu *mainMenu)
 	button->onPress = close_game;
 }
 
+void main_editor(Menu *mainMenu)
+{
+	int editorIndex;
+	editorIndex = menu_button_new(mainMenu);
+
+
+	if (editorIndex == -1)
+	{
+		slog("Editor Button not created");
+	}
+
+
+	Button *button = mainMenu->buttonList[editorIndex];
+
+	button->position.x = 772;
+	button->position.y = 500;
+	gfc_rect_set(button->buttonSize, button->position.x, button->position.y, 376, 192);
+	button->sprite = gf2d_sprite_load_image("assets/sprites/menus/mainEditor.png");
+
+
+	button->buttonTag = "main_editor";
+	//button->onPress = close_game;
+}
+
 void start_game(Button* button, Menu *mainMenu)
 {
-	mainMenu->data = true;
+	mainMenu->data = "start";
+}
+
+void start_editor(Button* button, Menu *mainMenu)
+{
+	mainMenu->data = "editor";
 }
 
 void close_game(Button* button, Menu *mainMenu)
@@ -90,7 +120,7 @@ void close_game(Button* button, Menu *mainMenu)
 	exit(0);
 }
 
-Bool check_start_game(Menu *mainMenu)
+char *main_get_data(Menu *mainMenu)
 {
 	return mainMenu->data;
 }

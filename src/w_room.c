@@ -1,5 +1,7 @@
 #include "simple_logger.h"
 
+#include "simple_json.h"
+
 #include "g_camera.h"
 #include "g_random.h"
 
@@ -143,9 +145,283 @@ Room *room_new(Vector2D gridPos)
 	return NULL;
 }
 
-Room *room_load(const char *filename)
+void room_template_save(Room *room)
+{
+	SJson *json, *jRoom, *toInsert;
+	SJson *array1, *array2;
+	char *filename;
+
+	if (!room)
+	{
+		return;
+	}
+
+	filename = "templates/testRoom2.json";
+
+	json = sj_object_new();
+
+	jRoom = sj_object_new();
+
+
+	//Vector2D	roomSize;   
+	toInsert = sj_new_int(room->roomSize.x);
+	sj_object_insert(jRoom, "roomSizeX", toInsert);
+
+	toInsert = sj_new_int(room->roomSize.y);
+	sj_object_insert(jRoom, "roomSizeY", toInsert);
+
+	//Vector2D	roomPos;	
+	toInsert = sj_new_int(room->roomPos.x);
+	sj_object_insert(jRoom, "roomPosX", toInsert);
+
+	toInsert = sj_new_int(room->roomPos.y);
+	sj_object_insert(jRoom, "roomPosY", toInsert);
+
+	//int			roomType;	
+
+	toInsert = sj_new_int(room->roomType);
+	sj_object_insert(jRoom, "roomType", toInsert);
+
+	//Uint32      roomWidth;  
+
+	toInsert = sj_new_int(room->roomWidth);
+	sj_object_insert(jRoom, "roomWidth", toInsert);
+
+	//Uint32      roomHeight; 
+
+	toInsert = sj_new_int(room->roomHeight);
+	sj_object_insert(jRoom, "roomHeight", toInsert);
+
+	//Bool		leftDoor, topDoor, rightDoor, botDoor;	
+
+	toInsert = sj_new_bool(room->leftDoor);
+	sj_object_insert(jRoom, "leftDoor", toInsert);
+
+	toInsert = sj_new_bool(room->topDoor);
+	sj_object_insert(jRoom, "topDoor", toInsert);
+
+	toInsert = sj_new_bool(room->rightDoor);
+	sj_object_insert(jRoom, "rightDoor", toInsert);
+
+	toInsert = sj_new_bool(room->botDoor);
+	sj_object_insert(jRoom, "botDoor", toInsert);		
+
+	//Vector2D	position;
+
+	toInsert = sj_new_int(room->position.x);
+	sj_object_insert(jRoom, "positionX", toInsert);
+
+	toInsert = sj_new_int(room->position.y);
+	sj_object_insert(jRoom, "positionY", toInsert);
+
+	//Tile		***tileArray;  
+
+	array1 = sj_array_new();
+	array2 = sj_array_new();
+
+	for (int y = 0; y < room->roomWidth; y++)
+	{
+		array2 = sj_array_new();
+		for (int x = 0; x < room->roomHeight; x++)
+		{
+			if (room->tileArray[x][y])
+			{
+				toInsert = sj_new_int(1);
+			}
+			else
+			{
+				toInsert = sj_new_int(0);
+			}
+
+			sj_array_append(array2, toInsert);
+		}
+		sj_array_append(array1, array2);
+	}
+	
+	sj_object_insert(jRoom, "tileArray", array1);
+
+	//Entity		**entityArray; 
+
+
+	//int			entityArrayLen;
+
+	toInsert = sj_new_int(room->entityArrayLen);
+	sj_object_insert(jRoom, "entityArrayLen", toInsert);
+
+	//Sprite     *tileSet;   not in use right now, no need to save yet  
+	//Sprite	   *bgSprite;
+
+
+
+	//int         tileWidth;   
+
+	toInsert = sj_new_int(room->tileWidth);
+	sj_object_insert(jRoom, "tileWidth", toInsert);
+
+	//int         tileHeight;  
+
+	toInsert = sj_new_int(room->tileHeight);
+	sj_object_insert(jRoom, "tileHeight", toInsert);
+
+
+	sj_object_insert(json, "room", jRoom);
+	sj_save(json, filename); //use as last line to make sure this shit actually saves
+
+	sj_free(json);
+	sj_free(toInsert);
+	sj_free(array1);
+	sj_free(array2);
+}
+
+Room *room_template_load(Vector2D gridPos, const char *filename)
 {
 
+	Room *room;
+	SJson *json, *toInsert, *roomJS, *array1, *array2, *arrayObj;
+	Vector2D v2dRtn, tilePos, spawnPos;
+
+	int *out;
+	int x, y;
+	int hasTile;
+
+	x = 0;
+	y = 0;
+	out = 0;
+	hasTile = 0;
+
+	if (!filename)
+	{
+		slog("No filename to load found");
+		return NULL;
+	}
+
+	
+
+	json = sj_load(filename);
+	if (!json)return NULL;
+
+	room = room_new(gridPos);
+
+	if (!room)
+	{
+		sj_free(json);
+		return NULL;
+	}
+
+	roomJS = sj_object_get_value(json, "room");
+
+	if (!roomJS)
+	{
+		slog("room json missing level object");
+		room_free(gridPos.x, gridPos.y, room);
+		sj_free(json);
+		return NULL;
+	}
+
+
+
+
+	//Vector2D	roomSize;  
+
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "roomSizeX"), &x);
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "roomSizeY"), &y);
+
+	room->roomSize = vector2d(x, y);
+
+
+
+	//slog("x:%f, y:%f", room->roomSize.x, room->roomSize.y);
+
+	//int			roomType;	
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "roomType"), &room->roomType);
+
+	//Uint32      roomWidth;  
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "roomWidth"), &room->roomWidth);
+
+	//Uint32      roomHeight; 
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "roomHeight"), &room->roomHeight);
+
+
+
+	//Bool		leftDoor, topDoor, rightDoor, botDoor;			
+
+	sj_get_bool_value(sj_object_get_value(roomJS, "leftDoor"), &room->leftDoor);
+	sj_get_bool_value(sj_object_get_value(roomJS, "topDoor"), &room->topDoor);
+	sj_get_bool_value(sj_object_get_value(roomJS, "rightDoor"), &room->rightDoor);
+	sj_get_bool_value(sj_object_get_value(roomJS, "botDoor"), &room->botDoor);
+
+
+
+	//Vector2D	position;
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "positionX"), &x);
+	sj_get_integer_value(sj_object_get_value(roomJS, "positionY"), &y);
+	room->position = vector2d(x, y);
+
+
+	//int         tileWidth;   
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "tileWidth"), &room->tileWidth);
+
+	//int         tileHeight;
+
+	sj_get_integer_value(sj_object_get_value(roomJS, "tileHeight"), &room->tileHeight);
+
+	//Tile		***tileArray;  
+
+	room->tileArray = (Tile *)gfc_allocate_array(sizeof(Tile*), room->roomHeight);
+
+	for (int i = 0; i < room->roomWidth; i++)
+	{
+		room->tileArray[i] = (Tile *)gfc_allocate_array(sizeof(Tile*), room->roomWidth);
+	}
+
+
+	array1 = sj_object_get_value(roomJS, "tileArray");
+
+	for (y = 0; y < room->roomWidth; y++)
+	{
+		array2 = sj_array_get_nth(array1, y);
+		for (x = 0; x < room->roomHeight; x++)
+		{
+			arrayObj = sj_array_get_nth(array2, x);
+			sj_get_integer_value(arrayObj, &hasTile);
+
+			if (hasTile == 1)
+			{
+				spawnPos = vector2d(x, y);
+
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + x * room->tileWidth,
+					(room->tileHeight * room->roomHeight * gridPos.y) + y * room->tileHeight);
+
+				room_new_tile(room, tilePos, spawnPos);
+			}
+			
+		}
+	}
+
+
+	//Entity		**entityArray; 
+	//int			tileArrayLen;
+	//int			entityArrayLen;
+	//Sprite     *tileSet;     
+	//Sprite	   *bgSprite;
+
+
+	room->_inuse = 1;
+
+	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x),
+		(room->tileHeight * room->roomHeight * gridPos.y));
+	room->roomPos = gridPos;
+
+	room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
+
+	return room;
 }
 
 Room *room_empty(Vector2D gridPos)
@@ -261,7 +537,8 @@ void room_init_all()
 	y = 3;
 
 	spawnPos = vector2d(x, y);
-	start = room_empty(spawnPos);
+	//start = room_empty(spawnPos);
+	start = room_template_load(spawnPos, "templates/testRoom.json");
 	start->roomType = 4;
 
 
@@ -279,7 +556,7 @@ void room_init_all()
 		roomTypeToApply = 1;
 		lastRoomTypeToApply = -1;
 
-		rnd = random_int_range(0, 5);
+		rnd = random_int_range(0, 4);
 
 		if (rnd == 0 || rnd == 1)
 		{
@@ -368,10 +645,6 @@ void room_init_all()
 			y = spawnPos.y;
 
 		}
-		else if (rnd == 5)
-		{
-			continue;
-		}
 
 
 		x = spawnPos.x;
@@ -394,7 +667,7 @@ void room_init_all()
 		room = room_empty(spawnPos);
 
 
-		slog("Roomtype = %i", roomTypeToApply);
+		//slog("Roomtype = %i", roomTypeToApply);
 
 		room->roomType = roomTypeToApply;
 
@@ -486,22 +759,26 @@ void room_init_all()
 	x = lastRoom->roomPos.x;
 	y = lastRoom->roomPos.y;
 
-	if (room_manager.room_list[x][y + 1]._inuse)
+	if (y > 0 && y < room_manager.maxRows - 1)
 	{
-		if (room_manager.room_list[x][y + 1].topDoor)
+		if (room_manager.room_list[x][y + 1]._inuse)
 		{
-			room_open_door(false, false, false, true, lastRoom);
+			if (room_manager.room_list[x][y + 1].topDoor)
+			{
+				room_open_door(false, false, false, true, lastRoom);
+			}
+		}
+
+		if (room_manager.room_list[x][y - 1]._inuse)
+		{
+			if (room_manager.room_list[x][y - 1].botDoor)
+			{
+				room_open_door(false, true, false, false, lastRoom);
+			}
 		}
 	}
 
-	if (room_manager.room_list[x][y - 1]._inuse)
-	{
-		if (room_manager.room_list[x][y - 1].botDoor)
-		{
-			room_open_door(false, true, false, false, lastRoom);
-		}
-	}
-
+	
 	if (room_manager.room_list[x - 1][y]._inuse)
 	{
 		if (room_manager.room_list[x - 1][y].rightDoor)
@@ -534,7 +811,7 @@ void room_build_branches()
 				{
 					if (!room_manager.room_list[x - 1][y]._inuse)
 					{
-						slog("Left");
+						//slog("Left");
 						roomPos = vector2d(x - 1, y);
 						room2 = room_empty(roomPos);
 
@@ -556,7 +833,7 @@ void room_build_branches()
 				{
 					if (!room_manager.room_list[x][y - 1]._inuse)
 					{
-						slog("Top");
+						//slog("Top");
 						roomPos = vector2d(x, y - 1);
 						room2 = room_empty(roomPos);
 
@@ -577,7 +854,7 @@ void room_build_branches()
 				{
 					if (!room_manager.room_list[x + 1][y]._inuse)
 					{
-						slog("Right");
+						//slog("Right");
 						roomPos = vector2d(x + 1, y);
 						room2 = room_empty(roomPos);
 
@@ -598,7 +875,7 @@ void room_build_branches()
 				{
 					if (!room_manager.room_list[x][y + 1]._inuse)
 					{
-						slog("Bottom");
+						//slog("Bottom");
 						roomPos = vector2d(x, y + 1);
 						room2 = room_empty(roomPos);
 
@@ -842,13 +1119,33 @@ Entity *room_new_enemy(Room * room, Vector2D gridPos, int enemy)
 
 }
 
-void room_free(Room *room)
+void room_free_tile(int x, int y, Room* room)
+{
+	if (!room->tileArray[x][y])
+	{
+		slog("no tile to free");
+		return;
+	}
+	if (!room)
+	{
+		slog("no room to free tiles in");
+	}
+
+	memset(room->tileArray[x][y], 0, sizeof(Tile));
+
+	room->tileArray[x][y]->sprite = NULL;
+
+	room->tileArray[x][y]->_inuse = false;
+	room->tileArray[x][y] = NULL;
+}
+
+void room_free(int x, int y, Room *room)
 {
 	int i;
 	if (!room)return;// nothing to do
+	memset(&room_manager.room_list[x][y], 0, sizeof(Room));
 
-
-	free(room);
+	room->_inuse = 0;
 }
 
 void room_update(Room *room)
@@ -948,15 +1245,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = 3;
 		int y = room->roomHeight / 2 - 1;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		y+=1;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		y-=2;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		//build hall
 
@@ -999,15 +1296,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = room->roomWidth - 4;
 		int y = room->roomHeight / 2 - 1;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		y += 1;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		y -= 2;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		//build hall
 
@@ -1050,15 +1347,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = room->roomWidth / 2 - 1;
 		int y = 3;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		x += 1;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		x -= 2;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		
 
@@ -1104,15 +1401,15 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 		int x = room->roomWidth / 2 - 1;
 		int y = room->roomHeight - 4;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		x += 1;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 		x -= 2;
 
-		tile_free(room->tileArray[x][y]);
+		room_free_tile(x, y, room);
 
 
 		//build hall
@@ -1164,7 +1461,7 @@ Vector2D room_manager_get_start_pos()
 		{
 			if (room_manager.room_list[x][y].roomType == 4)
 			{
-				slog("Start room: x:%i, y:%i", x, y);
+				//slog("Start room: x:%i, y:%i", x, y);
 				return room_manager.room_list[x][y].position;
 			}
 		}

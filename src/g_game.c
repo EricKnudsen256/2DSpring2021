@@ -82,52 +82,6 @@ void init_game()
 	//room_test();
 }
 
-void game_main_menu()
-{
-	Menu *mainMenu;
-
-	mainMenu = main_new(10);
-
-	while (true)
-	{
-
-		//slog("%i", check_start_game(mainMenu));
-
-		
-		if (check_start_game(mainMenu))
-		{
-			mainMenu->_active = false;
-			return;
-		}
-		
-
-		
-		//slog("Loop");
-
-		SDL_PumpEvents();   // update SDL's internal event structures
-		/*update things here*/
-
-		input_update();
-
-		menu_manager_think_menus();
-		menu_manager_update_menus();
-
-		gf2d_mouse_update();
-		mouse_update();
-
-
-		gf2d_graphics_clear_screen();// clears drawing buffers
-		// all drawing should happen betweem clear_screen and next_frame
-		//backgrounds drawn first
-
-		menu_manager_draw_menus();
-
-		mouse_draw();
-
-		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
-
-	}
-}
 
 void game_main()
 {
@@ -143,8 +97,13 @@ void game_main()
 	Sound *bgMusic;
 	Sprite *bg;
 
+
+	//json test files below
+	//Vector2D roomPos = vector2d(0, 0);
+	//Room *room = room_template_load(roomPos, "templates/testRoom.json");
+
 	room_init_all();
-	room_slog();
+	//room_slog();
 
 	Vector2D spawnRoomPos = room_manager_get_start_pos();
 	Vector2D spawnPos = vector2d(500, 500);
@@ -154,7 +113,7 @@ void game_main()
 
 	player = player_spawn(spawnPos);
 
-	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
+	//player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
 	//slog("maxItems: %i", player_inventory_get_max());
 
 	//player_inventory_slog();
@@ -169,13 +128,13 @@ void game_main()
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 
 
-	//gfc_sound_play(bgMusic, -1, .01, -1, -1);
+	gfc_sound_play(bgMusic, -1, .01, -1, -1);
 
 	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
 
 
 	/*main game loop*/
-	while (!pause_menu_check_end_game(pauseMenu))
+	while (true)
 	{
 		//slog("Loop");
 
@@ -222,19 +181,93 @@ void game_main()
 		mouse_draw();
 
 		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
+
+		if (pause_menu_check_end_game(pauseMenu))
+		{
+			menu_free(pauseMenu);
+			menu_free(inventoryMenu);
+			menu_free(minimap);
+
+
+			return;
+		}
 	}
 
 
-	slog("---==== END ====---");
-	return 0;
+}
+
+void game_main_menu()
+{
+	Menu *mainMenu;
+
+	mainMenu = main_new(10);
+
+	while (true)
+	{
+
+		//slog("%i", check_start_game(mainMenu));
+
+
+		if (main_get_data(mainMenu) != "menu")
+		{
+			mainMenu->_active = false;
+
+			slog("Goto Game");
+
+			if (main_get_data(mainMenu) == "start")
+			{
+				game_main();
+				mainMenu->_active = true;
+
+			}
+			else if (main_get_data(mainMenu) == "editor")
+			{
+
+			}
+			else
+			{
+				slog("Data type for menu not defined, defaulting to main menu");
+			}
+
+		}
+
+
+
+		//slog("Loop");
+
+		SDL_PumpEvents();   // update SDL's internal event structures
+		/*update things here*/
+
+		input_update();
+
+		menu_manager_think_menus();
+		menu_manager_update_menus();
+
+		gf2d_mouse_update();
+		mouse_update();
+
+
+		gf2d_graphics_clear_screen();// clears drawing buffers
+		// all drawing should happen betweem clear_screen and next_frame
+		//backgrounds drawn first
+
+		menu_manager_draw_menus();
+
+		mouse_draw();
+
+		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
+
+	}
 }
 
 int main(int argc, char * argv[])
 {
 	init_main_menu();
-	game_main_menu();
 	init_game();
-	game_main();
+	game_main_menu();
+
+	slog("---==== END ====---");
+	return 0;
 }
 
 /*eol@eof*/

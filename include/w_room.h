@@ -20,7 +20,6 @@ typedef struct
 	Uint32      roomHeight; /**<how many tiles per column the level has*/
 
 	Bool		leftDoor, topDoor, rightDoor, botDoor;			//true means has door on that side
-	Bool		leftOpen, topOpen, rightOpen, botOpen;			//true if has door on that side with no room on other side
 
 	Vector2D	position;
 
@@ -30,7 +29,6 @@ typedef struct
 	int			entityArrayLen;
 	Sprite     *tileSet;     /**<sprite for the tileset*/
 	Sprite	   *bgSprite;
-	Uint32      tileCount;
 
 	int         tileWidth;   /**<now many pixels wide the tiles are*/
 	int         tileHeight;  /**<how many pixels tall each tile is*/
@@ -65,6 +63,11 @@ int room_manager_get_max_columns();
 int room_manager_get_max_rows();
 
 Room *room_manager_get_room(int x, int y);
+
+void room_template_save(Room *room);
+
+Room *room_template_load(Vector2D gridPos, const char *filename);
+
 
 
 
@@ -102,7 +105,9 @@ Entity *room_new_enemy(Room * room, Vector2D gridPos, int enemy);
 * @param level a pointer to the level to free
 */
 
-void room_free(Room *room);
+void room_free_tile(int x, int y, Room* room);
+
+void room_free(int x, int y, Room *room);
 
 /**
 * @brief perform maintenance for the level.  should be called once a frame
