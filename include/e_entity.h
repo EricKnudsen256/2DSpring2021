@@ -18,32 +18,32 @@ typedef enum
 
 typedef struct Entity_s
 {
-	ENEMY_TYPE	enemy_type;		//enum of what type an enemy is
-	Bool        _inuse;
-	Bool		onGround, onLeft, onRight, onRoof;
-	Bool		isPlayer;
-	Bool		doubleJumped;
-	Bool		hasTarget;
-	int			health;
-	int			startingHealth;
-	int			contactDamage;
-	int			attackDamage;
-	int			lastAttack;		//measured in ms
-	int			lastDamaged;
-	int			facing;			//1 = left, 2 = up, 3 = right, 4 = down
-	int			targetingFrames;
-	Vector2D    position;
+	ENEMY_TYPE	enemy_type;								/** enum type for the enemy, defined above */
+	Bool        _inuse;									/** flag for if the entity is currently being used */
+	Bool		onGround, onLeft, onRight, onRoof;		/** flags for if the entity has collided with a certain side */
+	Bool		isPlayer;								/** flag for player enetity */
+	Bool		doubleJumped;			/** flag for if the player has double jumped */
+	Bool		hasTarget;				/** not in use, was for pathfinding? */
+	int			health;					/** current health of entity. if 0, call entity_die */
+	int			startingHealth;			/** health the entity starts with for health bars */
+	int			contactDamage;			/** damage to deal on contact with player */
+	int			attackDamage;			/** damage to deal on enemy specific attack */
+	int			lastAttack;				/** ms since last attack */
+	int			lastDamaged;			/** ms since last damaged */
+	int			facing;					/** 1 = left, 2 = up, 3 = right, 4 = down */
+	int			targetingFrames;		/** I have no fucking idea what this is for */
+	Vector2D    position;				
 	Vector2D    velocity;
-	Vector2D	gridPos;		//girdPos that this entity was spawned at
-	SDL_Rect	hitbox;	
-	SDL_Rect	hitbox2;		//used for secondary purposes. For flyer, box to check distance from the ground. For archer, used for player aim box
-	Vector3D    rotation;		//(x,y) = rotation center, z = degrees of rotation
+	Vector2D	gridPos;				/** girdPos that this entity was spawned at, will be used in rooms */
+	SDL_Rect	hitbox;					/** hurtbox for entity */
+	SDL_Rect	hitbox2;				/**used for secondary purposes. For flyer, box to check distance from the ground. For archer, used for player aim box */
+	Vector3D    rotation;				/**(x,y) = rotation center, z = degrees of rotation, not currently in use */
 	Sprite     *sprite;
-	float       frame;
-	float       frameRate;
-	int         frameCount;
-	Uint32		lastJump;
-	int			max_sounds;
+	float       frame;					/** current animation frame */
+	float       frameRate;				/** frames per second for animations */
+	int         frameCount;				/** total frames */
+	Uint32		lastJump;				/** used for player to determine if can double jump again */
+	int			max_sounds;				/** maximum number of sounds in the entities' sound list */
 	Sound		**soundList;
 	void(*update)(struct Entity_s *self);
 	void(*think)(struct Entity_s *self);
@@ -103,8 +103,18 @@ void entity_manager_free();
 */
 Entity *entity_manager_get_player_ent();
 
+
+/**
+* @brief returns current entitiy manager
+* @return the entity manager
+*/
 EntityManager entity_manager_get_manager();
 
+
+/**
+* @brief returns max entities for the entity list
+* @return max ents
+*/
 int entity_manager_get_max_ents();
 
 

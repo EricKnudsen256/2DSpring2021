@@ -125,7 +125,6 @@
     <ClCompile Include="..\..\..\src\g_menu.c" />
     <ClCompile Include="..\..\..\src\g_menu_objects.c" />
     <ClCompile Include="..\..\..\src\g_mouse.c" />
-    <ClCompile Include="..\..\..\src\g_windows.c" />
     <ClCompile Include="..\..\..\src\json\simple_json.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_array.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_error.c" />
@@ -185,7 +184,6 @@
     <ClInclude Include="..\..\..\include\g_menu.h" />
     <ClInclude Include="..\..\..\include\g_menu_objects.h" />
     <ClInclude Include="..\..\..\include\g_mouse.h" />
-    <ClInclude Include="..\..\..\include\g_windows.h" />
     <ClInclude Include="..\..\..\include\json\simple_json.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_array.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_error.h" />

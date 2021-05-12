@@ -73,7 +73,7 @@ void init_main_menu()
 
 void init_game()
 {
-	entity_manager_init(100);
+	entity_manager_init(300);
 	projectile_manager_init(100);
 	level_manager_init(64);
 	player_inventory_init(32);
@@ -153,7 +153,7 @@ void game_main()
 
 	gfc_sound_play(bgMusic, -1, .01, -1, -1);
 
-	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
+	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/grayBg.png");
 
 
 	/*main game loop*/
@@ -192,7 +192,7 @@ void game_main()
 		// all drawing should happen betweem clear_screen and next_frame
 		//backgrounds drawn first
 
-		//gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
+		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
 		room_manager_draw();
 

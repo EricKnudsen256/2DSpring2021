@@ -38,7 +38,7 @@ void bouncer_think(Entity *self);
 * @brief checks every frame to see if enemy is colliding with the player or walls
 * @param self the enemy
 */
-Bool bouncer_check_player_collision(Entity *self);
+Bool bouncer_check_player_collision(Entity *ent);
 
 
 

@@ -3,7 +3,9 @@
 
 #include "e_enemy.h"
 
-
+/**
+* @brief struct currently not in use
+*/
 typedef struct Flyer_s
 {
 	Entity		*ent;
@@ -38,7 +40,7 @@ void flyer_think(Entity *self);
 * @brief checks if flyer is colliding with any tiles, and if it should be flying up
 * @params the flyer entity
 */
-void flyer_check_flight_collision(Entity *self);
+void flyer_check_flight_collision(Entity *ent);
 
 
 

@@ -5,6 +5,8 @@
 
 #include "simple_json.h"
 
+#include "e_enemy.h"
+
 #include "g_camera.h"
 #include "g_random.h"
 
@@ -532,6 +534,10 @@ Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random temp
 	int rnd;
 	Room *templateRoom, *room;
 	Vector2D tilePos;
+	Vector2D tempVec;
+	Vector2D spawnPos;
+
+	int temp;
 
 	room = room_empty(gridPos);
 
@@ -540,6 +546,11 @@ Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random temp
 		slog("No rooms loaded");
 		return room;
 	}
+	if (room->roomType == 5)
+	{
+		return room;
+	}
+
 	rnd = random_int_range(0, room_manager.loadedRooms - 1);
 
 	if (room_manager.template_list[rnd]._inuse)
@@ -555,7 +566,10 @@ Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random temp
 
 		//Vector2D	roomSize;   /**<how large, in pixels, the level is*/
 
-		room->roomSize = templateRoom->roomSize;
+		tempVec = templateRoom->roomSize;
+
+		room->roomSize = tempVec;
+		
 
 		//Vector2D	roomPos;	// gridPos for where the level is, 0, 0 will be hub room
 
@@ -567,11 +581,13 @@ Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random temp
 
 		//Uint32      roomWidth;  /**<how many tiles per row the level has*/
 
-		room->roomWidth = templateRoom->roomWidth;
+		temp = templateRoom->roomWidth;
+		room->roomWidth = temp;
 
 		//Uint32      roomHeight; /**<how many tiles per column the level has*/
 
-		room->roomHeight = templateRoom->roomHeight;
+		temp = templateRoom->roomHeight;
+		room->roomHeight = temp;
 
 		//Bool		leftDoor, topDoor, rightDoor, botDoor;			//true means has door on that side
 
@@ -589,17 +605,35 @@ Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random temp
 
 		//int         tileWidth;   /**<now many pixels wide the tiles are*/
 
-		room->tileWidth = templateRoom->tileWidth;
+		temp = templateRoom->tileWidth;
+		room->tileWidth = temp;
 
 		//int         tileHeight;  /**<how many pixels tall each tile is*/
 
-		room->tileHeight = templateRoom->tileHeight;
+		temp = templateRoom->tileHeight;
+		room->tileHeight = temp;
 
 		
 
 		//Tile		***tileArray;  // manually set each tile position because can't do it in the template
 
-		room->tileArray = templateRoom->tileArray;
+
+		for (int x = 0; x < room->roomWidth; x++)
+		{
+			for (int y = 0; y < room->roomWidth; y++)
+			{
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + x * room->tileWidth,
+					(room->tileHeight * room->roomHeight * gridPos.y) + y * room->tileHeight);
+
+				if (templateRoom->tileArray[x][y] && x > 3 && x < room->roomWidth - 4 && y > 3 && y < room->roomHeight - 4)
+				{
+					spawnPos = vector2d(x, y);
+
+					room_new_tile(room, tilePos, spawnPos);
+				}
+
+			}
+		}
 
 		for (int x = 0; x < templateRoom->roomWidth; x++)
 		{
@@ -632,13 +666,13 @@ Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random temp
 
 		room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
 
-		templateRoom->_inuse = 0;
+		//templateRoom->_inuse = 0;
 
 		return room;
 	}
 
 
-	slog("Template not found");
+	//slog("Template not found");
 	return room;
 
 }
@@ -759,6 +793,11 @@ void room_init_all()
 	//start = room_empty(spawnPos);
 	start = room_empty(spawnPos);
 	start->roomType = 4;
+
+	Vector2D enemyPos = vector2d(start->position.x + 500, start->position.y + 500);
+
+	//enemy_spawn_random(enemyPos);
+	//enemy_spawn_random(enemyPos);
 
 
 	spawnPos.x++;
@@ -1009,6 +1048,28 @@ void room_init_all()
 
 	room_build_branches();
 
+	//spawn random enemies for demo
+
+
+	for (x = 0; x < room_manager.maxColumns; x++)
+	{
+		for (y = 0; y < room_manager.maxRows; y++)
+		{
+			room = &room_manager.room_list[x][y];
+
+			Vector2D enemyPos = vector2d(room->position.x + 500, room->position.y + 500);
+
+			if (room->roomType != 4)
+			{
+				enemy_spawn_random(enemyPos);
+				enemy_spawn_random(enemyPos);
+				enemy_spawn_random(enemyPos);
+			}
+
+		}
+	}
+	
+
 }
 
 void room_build_branches()
@@ -1216,7 +1277,7 @@ void room_build_branch_room(Room *startRoom)
 					built = true;
 					newRoomPos = vector2d(x - 1, y);
 
-					room = room_empty(newRoomPos);
+					room = room_template_load_random_from_list(newRoomPos);
 					room->roomType = 0;
 
 					room_open_door(false, false, true, false, room);
@@ -1239,7 +1300,7 @@ void room_build_branch_room(Room *startRoom)
 					built = true;
 					newRoomPos = vector2d(x, y - 1);
 
-					room = room_empty(newRoomPos);
+					room = room_template_load_random_from_list(newRoomPos);
 					room->roomType = 0;
 
 					room_open_door(false, false, false, true, room);
@@ -1262,7 +1323,7 @@ void room_build_branch_room(Room *startRoom)
 					built = true;
 					newRoomPos = vector2d(x + 1, y);
 
-					room = room_empty(newRoomPos);
+					room = room_template_load_random_from_list(newRoomPos);
 					room->roomType = 0;
 
 					room_open_door(true, false, false, false, room);
@@ -1286,7 +1347,7 @@ void room_build_branch_room(Room *startRoom)
 					built = true;
 					newRoomPos = vector2d(x, y + 1);
 
-					room = room_empty(newRoomPos);
+					room = room_template_load_random_from_list(newRoomPos);
 					room->roomType = 0;
 
 					room_open_door(false, true, false, false, room);
@@ -1393,6 +1454,7 @@ void room_draw(Room *room)
 {
 	SDL_Rect camera;
 	Vector2D offset, drawPosition, parallax;
+	Sprite *hallFix = gf2d_sprite_load_image("assets/sprites/backgrounds/caveHall.png");
 	int x, y;
 	if (!room)
 	{
@@ -1416,6 +1478,39 @@ void room_draw(Room *room)
 		drawPosition.y = room->position.y + room->tileHeight * 3 + offset.y;
 
 		gf2d_sprite_draw(room->bgSprite, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+	}
+
+	if (room->leftDoor && hallFix)
+	{
+		drawPosition.x = room->position.x + offset.x;
+		drawPosition.y = room->position.y + room->tileHeight * 17 + offset.y;
+
+
+		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+	}
+	if (room->rightDoor && hallFix)
+	{
+		drawPosition.x = room->position.x + room->tileHeight * 35 + offset.x;
+		drawPosition.y = room->position.y + room->tileHeight * 17 + offset.y;
+
+
+		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+	}
+	if (room->topDoor && hallFix)
+	{
+		drawPosition.x = room->position.x + room->tileHeight * 17 + offset.x;
+		drawPosition.y = room->position.y + offset.y;
+
+
+		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+	}
+	if (room->botDoor && hallFix)
+	{
+		drawPosition.x = room->position.x + room->tileHeight * 17 + offset.x;
+		drawPosition.y = room->position.y + room->tileHeight * 35 + offset.y;
+
+
+		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
 	}
 
 	for (int x = 0; x < room->roomHeight; x++)

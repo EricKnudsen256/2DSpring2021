@@ -18,6 +18,9 @@ Entity *enemy_spawn(Vector2D position);
 * @return true if it has been longer than 350 ms, false otherwise
 */
 
+Entity *enemy_spawn_random(Vector2D position);
+
+
 void enemy_draw(Entity *self);
 
 /**
@@ -26,7 +29,17 @@ void enemy_draw(Entity *self);
 */
 Bool enemy_check_player_collision(Entity *ent);
 
+/**
+* @brief called when update sees enemy is out of health, destroys the enemy
+* @param self the enemy to kill
+*/
+
 void enemy_die(Entity *self);
+
+/**
+* @brief special draw function for enemies that also draws the health bar
+* @param ent the enemy to draw
+*/
 
 void enemy_draw(Entity *ent);
 

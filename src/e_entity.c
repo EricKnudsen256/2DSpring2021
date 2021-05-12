@@ -227,6 +227,15 @@ void entity_check_collisions(Entity *ent)
 
 			Room *room = &roomlist[roomX][roomY];
 
+			if (ent->position.x > room->tileWidth * room->roomWidth * (room->roomPos.x + 1) || ent->position.x < room->tileWidth * room->roomWidth * room->roomPos.x)
+			{
+				continue;
+			}
+			if (ent->position.y > room->tileHeight * room->roomHeight * (room->roomPos.y + 1) || ent->position.y < room->tileHeight * room->roomHeight * room->roomPos.y)
+			{
+				continue;
+			}
+
 			for (x = 0; x < room->roomHeight; x++)
 			{
 				for (y = 0; y < room->roomWidth; y++)
@@ -246,6 +255,7 @@ void entity_check_collisions(Entity *ent)
 
 
 					tile = room->tileArray[x][y];
+
 
 					//if collision found, check which side of the ent it was on and adjust accordingly
 

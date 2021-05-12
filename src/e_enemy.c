@@ -1,8 +1,14 @@
 #include "simple_logger.h"
 
 #include "e_enemy.h"
+#include "e_walker.h"
+#include "e_flyer.h"
+#include "e_archer.h"
+#include "e_bouncer.h"
+
 #include "g_camera.h"
 #include "g_globals.h"
+#include "g_random.h"
 
 void enemy_update(Entity *self);
 void enemy_think(Entity *self);
@@ -19,6 +25,41 @@ Entity *enemy_spawn(Vector2D position)
 	//ent->sprite = gf2d_sprite_load_all("assets/sprites/enemy1.png", 64, 64, 1);
 	vector2d_copy(ent->position, position);
 
+	return ent;
+}
+
+Entity *enemy_spawn_random(Vector2D position)
+{
+	Entity *ent;
+
+	int rnd = random_int_range(0, 3);
+
+	if (rnd == 0)
+	{
+		ent = walker_spawn(position);
+	}
+	else if (rnd == 1)
+	{
+		ent = flyer_spawn(position);
+	}
+	else if (rnd == 2)
+	{
+		ent = archer_spawn(position);
+	}
+	else
+	{
+		ent = bouncer_spawn(position);
+	}
+
+	if (!ent)
+	{
+		slog("failed to create entity for selected enemy");
+		return NULL;
+	}
+	//ent->sprite = gf2d_sprite_load_all("assets/sprites/enemy1.png", 64, 64, 1);
+	vector2d_copy(ent->position, position);
+
+	slog("spawn x:%f, spawn y:%f", position.x, position.y);
 	return ent;
 }
 

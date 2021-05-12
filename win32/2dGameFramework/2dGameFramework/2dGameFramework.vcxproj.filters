@@ -84,9 +84,6 @@
     <ClCompile Include="..\..\..\src\g_item.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\g_windows.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gf2d_actor.c">
       <Filter>Source Files\gf2d</Filter>
     </ClCompile>
@@ -263,9 +260,6 @@
     <ClInclude Include="..\..\..\include\g_item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\g_windows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\gf2d_actor.h">
       <Filter>Header Files\gf2d</Filter>
     </ClInclude>
@@ -374,9 +368,6 @@
     <ClInclude Include="..\..\..\include\m_inventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\g_input.h">
-      <Filter>Header Files\gf2d</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\g_mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -390,6 +381,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\m_editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\g_input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

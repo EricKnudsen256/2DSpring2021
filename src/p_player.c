@@ -140,7 +140,7 @@ Entity *player_spawn(Vector2D position)
 	ent->hitbox.h = 64;
 
 	ent->isPlayer = true;
-	ent->health = 100;
+	ent->health = 1000000;
 	ent->attackDamage = 100;
 
 	ent->max_sounds = 16;

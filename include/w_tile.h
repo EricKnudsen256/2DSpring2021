@@ -48,6 +48,11 @@ void tile_free(Tile *tile);
 */
 void tile_draw(Tile *tile);
 
+/**
+* @brief changes position of the tile to fix issues with templates
+* @param tilePos the position to change the tile to
+* @para the tile to change position of
+*/
 void tile_set_tile_pos(Vector2D tilePos, Tile *tile);
 
 

@@ -4,6 +4,10 @@
 #include "simple_json.h"
 
 
+/** THIS FILE IS CURRENTLY NOT IN USE, BROKE LITERALLY EVERYTHING
+
+*/
+
 int totalKills;
 int *highScoreList;
 

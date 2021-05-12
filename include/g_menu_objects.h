@@ -23,13 +23,28 @@ typedef struct Button_s
 
 }Button;
 
-
+/**
+* @brief creates a new button for use in a menu
+* @return pointer to the created button
+*/
 Button *button_new();
 
+/**
+* @brief called by menu to check if button is clicked, calls button's onclick fucntion if clicked
+* @param button the button to check
+*/
 void button_check_click(Button *button);
 
+/**
+* @brief frees the button
+* @param button the button to be freed
+*/
 void button_free(Button *button);
 
+/**
+* @brief draws the button
+* @param button the button to draw
+*/
 void button_draw(Button *button);
 
 #endif

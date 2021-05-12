@@ -16,7 +16,7 @@ Tile *tile_new(int width, int height, Vector2D position, Vector2D gridPos)
 		return NULL;
 	}
 	memset(tile, 0, sizeof(Tile));
-	tile->sprite = gf2d_sprite_load_image("assets/sprites/testTile.png");
+	tile->sprite = gf2d_sprite_load_image("assets/sprites/stoneTile.png");
 
 	tile->tileWidth = width;
 	tile->tileHeight = height;
