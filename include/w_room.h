@@ -38,7 +38,10 @@ typedef struct
 {
 	int		maxRows;
 	int		maxColumns;
+	int		maxTemplates;
+	int		loadedRooms;  //total number of loaded room templates
 	Room	**room_list;
+	Room	*template_list;
 	Uint32  max_rooms;
 }RoomManager;
 
@@ -47,7 +50,7 @@ typedef struct
 * @params the number of level that will be in the level_list
 */
 
-void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms);
+void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates);
 
 
 /**
@@ -64,12 +67,17 @@ int room_manager_get_max_rows();
 
 Room *room_manager_get_room(int x, int y);
 
+void room_manager_load_all_templates();
+
+void room_manager_save_template(Room *room);
+
 void room_template_save(Room *room);
 
-Room *room_template_load(Vector2D gridPos, const char *filename);
+Room *room_template_load(const char *filename);
 
+Room *room_new_template();
 
-
+Room *room_template_load_random_from_list(Vector2D gridPos);
 
 
 /**

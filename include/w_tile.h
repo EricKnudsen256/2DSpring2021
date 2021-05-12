@@ -48,5 +48,7 @@ void tile_free(Tile *tile);
 */
 void tile_draw(Tile *tile);
 
+void tile_set_tile_pos(Vector2D tilePos, Tile *tile);
+
 
 #endif

@@ -134,6 +134,7 @@
     <ClCompile Include="..\..\..\src\json\simple_json_parse.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_string.c" />
     <ClCompile Include="..\..\..\src\logger\simple_logger.c" />
+    <ClCompile Include="..\..\..\src\m_editor.c" />
     <ClCompile Include="..\..\..\src\m_inventory.c" />
     <ClCompile Include="..\..\..\src\m_main.c" />
     <ClCompile Include="..\..\..\src\m_minimap.c" />
@@ -194,6 +195,7 @@
     <ClInclude Include="..\..\..\include\json\simple_json_string.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_value.h" />
     <ClInclude Include="..\..\..\include\logger\simple_logger.h" />
+    <ClInclude Include="..\..\..\include\m_editor.h" />
     <ClInclude Include="..\..\..\include\m_inventory.h" />
     <ClInclude Include="..\..\..\include\m_main.h" />
     <ClInclude Include="..\..\..\include\m_minimap.h" />

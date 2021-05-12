@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <string.h>
+
 #include "simple_logger.h"
 
 #include "simple_json.h"
@@ -11,7 +14,7 @@
 
 static RoomManager room_manager = { 0 };
 
-void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms)
+void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates)
 {
 	if (max_rooms == 0)
 	{
@@ -40,6 +43,11 @@ void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms)
 	room_manager.max_rooms = max_rooms;
 	atexit(room_manager_free);
 	slog("room system initialized");
+
+	room_manager.template_list = (Room *)gfc_allocate_array(sizeof (Room), max_templates);
+	room_manager.maxTemplates = max_templates;
+
+	room_manager_load_all_templates();
 }
 
 void room_manager_update()
@@ -116,6 +124,50 @@ Room *room_manager_get_room(int x, int y)
 	
 }
 
+void room_manager_load_all_templates()
+{
+	
+	Room *roomTemplate;
+	Bool foundTemplate = true;
+	int i ;
+	char filename[50];
+	char filestart[] = "templates/room_template_";
+	char filenum[5];
+	char fileend[] = ".json";
+
+	room_manager.loadedRooms = 0;
+
+
+	for (i = 0; i < room_manager.maxTemplates; i++)
+	{
+		strcpy(filename, "");
+
+		itoa(i, filenum, 10);
+
+		
+		strcat(filename, filestart);
+		strcat(filename, filenum);
+		strcat(filename, fileend);
+
+		//slog("%s", filename);
+
+		if (!room_template_load(&filename))
+		{
+			slog("last room = %i", i);
+			break;
+		}
+
+		room_manager.loadedRooms++;
+
+	}
+
+}
+
+void room_manager_save_template(Room *room)
+{
+
+}
+
 Room *room_new(Vector2D gridPos)
 {
 	if (room_manager.room_list == NULL)
@@ -142,6 +194,28 @@ Room *room_new(Vector2D gridPos)
 	}
 
 	slog("room already exists in that spot");
+	return NULL;
+}
+
+Room *room_new_template()
+{
+	if (room_manager.template_list == NULL)
+	{
+		slog("room system does not exist");
+		return NULL;
+	}
+
+	for (int i = 0; i < room_manager.maxTemplates; i++)
+	{
+		if (!room_manager.template_list[i]._inuse)
+		{
+			memset(&room_manager.template_list[i], 0, sizeof(Room));
+			room_manager.template_list[i]._inuse = 1;
+			return &room_manager.template_list[i];
+		}
+	}
+
+	slog("template list full");
 	return NULL;
 }
 
@@ -273,7 +347,7 @@ void room_template_save(Room *room)
 	sj_free(array2);
 }
 
-Room *room_template_load(Vector2D gridPos, const char *filename)
+Room *room_template_load(const char *filename) //loads template from file
 {
 
 	Room *room;
@@ -300,7 +374,7 @@ Room *room_template_load(Vector2D gridPos, const char *filename)
 	json = sj_load(filename);
 	if (!json)return NULL;
 
-	room = room_new(gridPos);
+	room = room_new_template();
 
 	if (!room)
 	{
@@ -313,7 +387,6 @@ Room *room_template_load(Vector2D gridPos, const char *filename)
 	if (!roomJS)
 	{
 		slog("room json missing level object");
-		room_free(gridPos.x, gridPos.y, room);
 		sj_free(json);
 		return NULL;
 	}
@@ -396,10 +469,7 @@ Room *room_template_load(Vector2D gridPos, const char *filename)
 			{
 				spawnPos = vector2d(x, y);
 
-				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + x * room->tileWidth,
-					(room->tileHeight * room->roomHeight * gridPos.y) + y * room->tileHeight);
-
-				room_new_tile(room, tilePos, spawnPos);
+				room_new_tile(room, spawnPos, spawnPos);
 			}
 			
 		}
@@ -415,13 +485,126 @@ Room *room_template_load(Vector2D gridPos, const char *filename)
 
 	room->_inuse = 1;
 
-	room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x),
-		(room->tileHeight * room->roomHeight * gridPos.y));
-	room->roomPos = gridPos;
 
 	room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
 
 	return room;
+}
+
+Room *room_template_load_random_from_list(Vector2D gridPos)  //loads random template from template list
+{
+	int rnd;
+	Room *templateRoom, *room;
+	Vector2D tilePos;
+
+	room = room_empty(gridPos);
+
+	if (room_manager.loadedRooms == 0)
+	{
+		slog("No rooms loaded");
+		return room;
+	}
+	rnd = random_int_range(0, room_manager.loadedRooms - 1);
+
+	if (room_manager.template_list[rnd]._inuse)
+	{
+		
+		templateRoom = &room_manager.template_list[rnd];
+
+		//Bool		_inuse;
+
+		room->_inuse = 1;
+
+		
+
+		//Vector2D	roomSize;   /**<how large, in pixels, the level is*/
+
+		room->roomSize = templateRoom->roomSize;
+
+		//Vector2D	roomPos;	// gridPos for where the level is, 0, 0 will be hub room
+
+		room->roomPos = gridPos;
+
+		//int			roomType;	//0: side room, not solution, 1: room with left + right exit, 2: room with left right bottom exit, 3: room with left right top exit
+
+		room->roomType = 0;
+
+		//Uint32      roomWidth;  /**<how many tiles per row the level has*/
+
+		room->roomWidth = templateRoom->roomWidth;
+
+		//Uint32      roomHeight; /**<how many tiles per column the level has*/
+
+		room->roomHeight = templateRoom->roomHeight;
+
+		//Bool		leftDoor, topDoor, rightDoor, botDoor;			//true means has door on that side
+
+		room->leftDoor = false;
+		room->topDoor = false;
+		room->rightDoor = false;
+		room->botDoor = false;
+
+		
+
+		//Vector2D	position;
+
+		room->position = vector2d((room->tileWidth * room->roomWidth * gridPos.x),
+			(room->tileHeight * room->roomHeight * gridPos.y));
+
+		//int         tileWidth;   /**<now many pixels wide the tiles are*/
+
+		room->tileWidth = templateRoom->tileWidth;
+
+		//int         tileHeight;  /**<how many pixels tall each tile is*/
+
+		room->tileHeight = templateRoom->tileHeight;
+
+		
+
+		//Tile		***tileArray;  // manually set each tile position because can't do it in the template
+
+		room->tileArray = templateRoom->tileArray;
+
+		for (int x = 0; x < templateRoom->roomWidth; x++)
+		{
+			for (int y = 0; y < templateRoom->roomWidth; y++)
+			{
+				tilePos = vector2d((room->tileWidth * room->roomWidth * gridPos.x) + x * room->tileWidth,
+					(room->tileHeight * room->roomHeight * gridPos.y) + y * room->tileHeight);
+
+				if (room->tileArray[x][y])
+				{
+					room->tileArray[x][y]->pos = tilePos;
+					room->tileArray[x][y]->hitbox.x = tilePos.x;
+					room->tileArray[x][y]->hitbox.y = tilePos.y;
+				}
+
+			}
+		}
+
+
+		//Entity		**entityArray; //array of all enemies and their spawn positions, again subject to change
+
+
+		room->entityArrayLen = 50;
+		room->entityArray = (Entity **)gfc_allocate_array(sizeof(Entity*), room->entityArrayLen);
+
+
+
+		//Sprite     *tileSet;     /**<sprite for the tileset*/
+		//Sprite	   *bgSprite;
+
+		room->bgSprite = gf2d_sprite_load_image("assets/sprites/backgrounds/cave.png");
+
+		templateRoom->_inuse = 0;
+
+		return room;
+	}
+
+
+	slog("Template not found");
+	return room;
+
 }
 
 Room *room_empty(Vector2D gridPos)
@@ -538,7 +721,7 @@ void room_init_all()
 
 	spawnPos = vector2d(x, y);
 	//start = room_empty(spawnPos);
-	start = room_template_load(spawnPos, "templates/testRoom.json");
+	start = room_empty(spawnPos);
 	start->roomType = 4;
 
 
@@ -664,7 +847,8 @@ void room_init_all()
 			continue;
 		}
 
-		room = room_empty(spawnPos);
+		room = room_template_load_random_from_list(spawnPos);
+
 
 
 		//slog("Roomtype = %i", roomTypeToApply);
@@ -1466,6 +1650,8 @@ Vector2D room_manager_get_start_pos()
 			}
 		}
 	}
+	slog("Could not find start room");
+	return vector2d(0, 0);
 }
 
 void room_slog()

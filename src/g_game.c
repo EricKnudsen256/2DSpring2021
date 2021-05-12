@@ -28,6 +28,7 @@
 #include "m_pause.h"
 #include "m_inventory.h"
 #include "m_main.h"
+#include "m_editor.h"
 
 #include "p_player.h"
 
@@ -77,7 +78,7 @@ void init_game()
 	player_inventory_init(32);
 	gfc_audio_init(32, 6, 4, 8, true, false);
 
-	room_manager_init(8, 8, 64);
+	room_manager_init(8, 8, 64, 100);
 
 	//room_test();
 }
@@ -109,8 +110,9 @@ void game_main()
 
 	vector2d_add(spawnPos, spawnPos, spawnRoomPos);
 
-
 	player = player_spawn(spawnPos);
+
+	slog("Spawning player at x:%f, y:%f", spawnPos.x, spawnPos.y);
 
 	//player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
 	//slog("maxItems: %i", player_inventory_get_max());
@@ -195,7 +197,7 @@ void editor_main()
 	int x, y;
 	
 
-	Menu *pauseMenu;
+	Menu *pauseMenu, *editorMenu;
 	Sprite *bg;
 	SDL_Rect drawPos;
 	Vector2D offset;
@@ -212,6 +214,7 @@ void editor_main()
 	camera_set_position(cameraPos);
 
 	pauseMenu = pause_menu_new(10);
+	editorMenu = editor_new(5);
 
 	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/bg.png");
 

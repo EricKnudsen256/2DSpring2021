@@ -117,3 +117,9 @@ void tile_draw(Tile *tile)
 	}
 	*/
 }
+
+void tile_set_tile_pos(Vector2D tilePos, Tile *tile)
+{
+	tile->pos.x = tilePos.x;
+	tile->pos.y = tilePos.y;
+}
