@@ -41,7 +41,6 @@ void room_manager_init(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max
 	room_manager.maxRows = maxRows;
 	room_manager.maxColumns = maxColumns;
 	room_manager.max_rooms = max_rooms;
-	atexit(room_manager_free);
 	slog("room system initialized");
 
 	room_manager.template_list = (Room *)gfc_allocate_array(sizeof (Room), max_templates);

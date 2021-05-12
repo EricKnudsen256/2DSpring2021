@@ -85,7 +85,6 @@ void projectile_manager_init(Uint32 max_projectiles)
 		return;
 	}
 	projectile_manager.max_projectiles = max_projectiles;
-	atexit(projectile_manager_free);
 	slog("projectile system initialized");
 }
 

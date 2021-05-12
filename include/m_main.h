@@ -19,6 +19,8 @@ void start_editor(Button* button, Menu *mainMenu);
 
 void close_game(Button* button, Menu *mainMenu);
 
+void back_to_main(Menu *mainMenu);
+
 Bool check_start_game(Menu *mainMenu);
 
 

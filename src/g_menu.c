@@ -149,6 +149,7 @@ Menu *menu_new()
 		if (menu_manager.menu_list[i]._inuse)continue;// someone else is using this one
 		memset(&menu_manager.menu_list[i], 0, sizeof(Menu));
 		menu_manager.menu_list[i]._inuse = 1;
+		menu_manager.menu_list[i].managerIndex = i;
 		return &menu_manager.menu_list[i];
 	}
 	slog("no free menus available");
@@ -175,14 +176,16 @@ Bool menu_check_click(Menu *menu)
 
 void menu_free(Menu *menu)
 {
+	
+
 	if (!menu)
 	{
 		slog("cannot free a NULL sprite");
 		return;
 	}
-	gf2d_sprite_free(menu->sprite);
-	menu->sprite = NULL;
-	memset(&menu, 0, sizeof(Menu));
+	//gf2d_sprite_free(menu->sprite);
+	//menu->sprite = NULL;
+	memset(&menu_manager.menu_list[menu->managerIndex], 0, sizeof(Menu));
 	menu->_inuse = 0;
 }
 

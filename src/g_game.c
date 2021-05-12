@@ -63,6 +63,7 @@ void init_main_menu()
 	font_init(10);
 	mouse_init();
 	menu_manager_init(32);
+	gfc_audio_init(32, 6, 4, 8, true, false);
 	SDL_ShowCursor(SDL_DISABLE);
 
 	init_random();
@@ -76,11 +77,30 @@ void init_game()
 	projectile_manager_init(100);
 	level_manager_init(64);
 	player_inventory_init(32);
-	gfc_audio_init(32, 6, 4, 8, true, false);
 
 	room_manager_init(8, 8, 64, 100);
 
 	//room_test();
+}
+
+void close_main_game()
+{
+	entity_manager_free();
+	projectile_manager_free();
+	level_manager_free();
+	player_inventory_free();
+
+	room_manager_free();
+}
+
+void init_editor()
+{
+	room_manager_init(8, 8, 64, 100);
+}
+
+void close_editor()
+{
+	room_manager_free();
 }
 
 void game_main()
@@ -89,13 +109,15 @@ void game_main()
 	int done = 0;
 	const Uint8 * keys;
 
-	Bool gameOver = false;
-
 	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu, *minimap;
 	Sound *bgMusic;
 	Sprite *bg;
+
+	Font *font;
+
+	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 
 	//json test files below
@@ -177,12 +199,22 @@ void game_main()
 		entity_manager_draw_entities();
 		projectile_manager_draw_projectiles();
 
+		gfc_line_sprintf(fps_text, "FPS:%i", (int)gf2d_graphics_get_frames_per_second());
+		font_render(font, fps_text, vector2d(32, 32), gfc_color8(255, 255, 255, 255));
+
+
 		menu_manager_draw_menus();
 
 		mouse_draw();
 
 		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
 	}
+
+	menu_free(pauseMenu);
+	menu_free(inventoryMenu);
+	menu_free(minimap);
+
+	gfc_sound_clear_all();
 
 
 	slog("---==== END ====---");
@@ -328,6 +360,9 @@ void editor_main()
 	}
 
 
+	menu_free(pauseMenu);
+	menu_free(editorMenu);
+
 	slog("---==== END ====---");
 	return 0;
 }
@@ -350,13 +385,21 @@ void game_main_menu()
 			
 			if (main_get_data(mainMenu) == "start")
 			{
+				init_game();
 				game_main();
-				exit(0);
+				close_main_game();
+
+				mainMenu->_active = true;
+				back_to_main(mainMenu);
 			}
 			else if (main_get_data(mainMenu) == "editor")
 			{
+				init_editor();
 				editor_main();
-				exit(0);
+				close_editor();
+
+				mainMenu->_active = true;
+				back_to_main(mainMenu);
 			}
 			else
 			{
@@ -398,7 +441,6 @@ void game_main_menu()
 int main(int argc, char * argv[])
 {
 	init_main_menu();
-	init_game();
 
 	game_main_menu();
 

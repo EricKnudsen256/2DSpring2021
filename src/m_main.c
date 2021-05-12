@@ -72,7 +72,7 @@ void main_exit(Menu *mainMenu)
 	Button *button = mainMenu->buttonList[exitIndex];
 
 	button->position.x = 772;
-	button->position.y = 300;
+	button->position.y = 600;
 	gfc_rect_set(button->buttonSize, button->position.x, button->position.y, 376, 192);
 	button->sprite = gf2d_sprite_load_image("assets/sprites/menus/mainMenuExit.png");
 
@@ -96,7 +96,7 @@ void main_editor(Menu *mainMenu)
 	Button *button = mainMenu->buttonList[editorIndex];
 
 	button->position.x = 772;
-	button->position.y = 500;
+	button->position.y = 350;
 	gfc_rect_set(button->buttonSize, button->position.x, button->position.y, 376, 192);
 	button->sprite = gf2d_sprite_load_image("assets/sprites/menus/mainEditor.png");
 
@@ -114,6 +114,12 @@ void start_editor(Button* button, Menu *mainMenu)
 {
 	mainMenu->data = "editor";
 }
+
+void back_to_main(Menu *mainMenu)
+{
+	mainMenu->data = "menu";
+}
+
 
 void close_game(Button* button, Menu *mainMenu)
 {

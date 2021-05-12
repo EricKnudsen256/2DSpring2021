@@ -28,7 +28,6 @@ void entity_manager_init(Uint32 max_entities)
 		return;
 	}
 	entity_manager.max_entities = max_entities;
-	atexit(entity_manager_free);
 	slog("entity system initialized");
 }
 

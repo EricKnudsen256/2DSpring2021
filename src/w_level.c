@@ -40,7 +40,6 @@ void level_manager_init(Uint32 max_levels)
 		return;
 	}
 	level_manager.max_levels = max_levels;
-	atexit(level_manager_free);
 	slog("level system initialized");
 }
 

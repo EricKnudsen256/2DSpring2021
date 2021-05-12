@@ -30,7 +30,6 @@ void player_inventory_init(Uint32 max_items)
 		return;
 	}
 	inventory.max_items = max_items;
-	atexit(player_inventory_free);
 	slog("inventory initialized");
 }
 
