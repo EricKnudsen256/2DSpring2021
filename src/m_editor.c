@@ -1,6 +1,9 @@
 #include "simple_logger.h"
 
+#include "w_room.h"
+
 #include "m_editor.h"
+
 
 Menu *editor_new(int buttonMax)
 {
@@ -54,7 +57,7 @@ void editor_save_button(Menu *editorMenu)
 
 
 	button->buttonTag = "editor_save";
-	//button->onPress = close_game;
+	button->onPress = editor_save;
 }
 
 void editor_clear_button(Menu *editorMenu)
@@ -78,20 +81,21 @@ void editor_clear_button(Menu *editorMenu)
 
 
 	button->buttonTag = "editor_clear";
-	//button->onPress = close_game;
+	button->onPress = editor_clear;
 }
 
-void editor_save(Menu *editorMenu)
+void editor_save(Button* button, Menu *editorMenu)
 {
-	//code to save current room at 0,0;
+
+	room_manager_save_template(room_manager_get_room(0, 0));
 }
 
-void editor_clear(Menu *editorMenu)
+void editor_clear(Button* button, Menu *editorMenu)
 {
 	editorMenu->data = "clear";
 }
 
-void editor_clear_done(Menu *editorMenu)
+void editor_clear_done(Button* button, Menu *editorMenu)
 {
 	editorMenu->data = "none";
 }

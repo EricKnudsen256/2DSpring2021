@@ -225,11 +225,22 @@ void editor_main()
 
 		offset = camera_get_offset();
 
+
 		SDL_PumpEvents();   // update SDL's internal event structures
 		keys = SDL_GetKeyboardState(NULL); // get the keyboard state for this frame
 		SDL_GetMouseState(&mx, &my);
 
 		/*update things here*/
+
+		if (!strcmp(editor_get_data(editorMenu), "clear"))
+		{
+			room_free(0, 0, room);
+
+			room = room_empty(spawnPos);
+			room_open_door(true, true, true, true, room);
+
+			editor_clear_done(NULL, editorMenu);
+		}
 
 		input_update();
 
@@ -267,7 +278,7 @@ void editor_main()
 
 					room_new_tile(room, tilePos, mouseGridPos);
 
-					slog("new tile at x:%f, y:%f", mouseGridPos.x, mouseGridPos.y);
+					//slog("new tile at x:%f, y:%f", mouseGridPos.x, mouseGridPos.y);
 				}
 			}
 		}

@@ -71,7 +71,7 @@ void room_manager_load_all_templates();
 
 void room_manager_save_template(Room *room);
 
-void room_template_save(Room *room);
+void room_template_save(const char *filename, Room *room);
 
 Room *room_template_load(const char *filename);
 

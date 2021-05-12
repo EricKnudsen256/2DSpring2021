@@ -128,7 +128,6 @@ void room_manager_load_all_templates()
 {
 	
 	Room *roomTemplate;
-	Bool foundTemplate = true;
 	int i ;
 	char filename[50];
 	char filestart[] = "templates/room_template_";
@@ -153,7 +152,7 @@ void room_manager_load_all_templates()
 
 		if (!room_template_load(&filename))
 		{
-			slog("last room = %i", i);
+			//slog("last room = %i", i);
 			break;
 		}
 
@@ -165,7 +164,40 @@ void room_manager_load_all_templates()
 
 void room_manager_save_template(Room *room)
 {
+	
+	SJson *json;
+	int i = 0;
+	char filename[50];
+	char filestart[] = "templates/room_template_";
+	char filenum[5];
+	char fileend[] = ".json";
 
+	strcpy(filename, "");
+
+	itoa(i, filenum, 10);
+
+	strcat(filename, filestart);
+	strcat(filename, filenum);
+	strcat(filename, fileend);
+
+	
+
+	while (sj_load(&filename))
+	{
+		strcpy(filename, "");
+
+		itoa(i, filenum, 10);
+
+
+		strcat(filename, filestart);
+		strcat(filename, filenum);
+		strcat(filename, fileend);
+		i++;
+	}
+
+	room_template_save(&filename, room);
+
+	slog("File saved as: %s", filename);
 }
 
 Room *room_new(Vector2D gridPos)
@@ -219,23 +251,19 @@ Room *room_new_template()
 	return NULL;
 }
 
-void room_template_save(Room *room)
+void room_template_save(const char *filename, Room *room)
 {
 	SJson *json, *jRoom, *toInsert;
 	SJson *array1, *array2;
-	char *filename;
 
 	if (!room)
 	{
 		return;
 	}
 
-	filename = "templates/testRoom2.json";
-
 	json = sj_object_new();
 
 	jRoom = sj_object_new();
-
 
 	//Vector2D	roomSize;   
 	toInsert = sj_new_int(room->roomSize.x);
@@ -268,16 +296,16 @@ void room_template_save(Room *room)
 
 	//Bool		leftDoor, topDoor, rightDoor, botDoor;	
 
-	toInsert = sj_new_bool(room->leftDoor);
+	toInsert = sj_new_bool(false);
 	sj_object_insert(jRoom, "leftDoor", toInsert);
 
-	toInsert = sj_new_bool(room->topDoor);
+	toInsert = sj_new_bool(false);
 	sj_object_insert(jRoom, "topDoor", toInsert);
 
-	toInsert = sj_new_bool(room->rightDoor);
+	toInsert = sj_new_bool(false);
 	sj_object_insert(jRoom, "rightDoor", toInsert);
 
-	toInsert = sj_new_bool(room->botDoor);
+	toInsert = sj_new_bool(false);
 	sj_object_insert(jRoom, "botDoor", toInsert);		
 
 	//Vector2D	position;
@@ -298,7 +326,16 @@ void room_template_save(Room *room)
 		array2 = sj_array_new();
 		for (int x = 0; x < room->roomHeight; x++)
 		{
-			if (room->tileArray[x][y])
+
+			if (x < 3 || x > room->roomWidth - 4 || y < 3 || y > room->roomWidth - 4)
+			{
+				toInsert = sj_new_int(0);
+			}
+			else if (x == 3 || x == room->roomWidth - 4 || y == 3 || y == room->roomHeight - 4)
+			{
+				toInsert = sj_new_int(1);
+			}
+			else if (room->tileArray[x][y])
 			{
 				toInsert = sj_new_int(1);
 			}
@@ -341,10 +378,10 @@ void room_template_save(Room *room)
 	sj_object_insert(json, "room", jRoom);
 	sj_save(json, filename); //use as last line to make sure this shit actually saves
 
-	sj_free(json);
-	sj_free(toInsert);
-	sj_free(array1);
-	sj_free(array2);
+	//sj_free(json);
+	//sj_free(toInsert);
+	//sj_free(array1);
+	//sj_free(array2);
 }
 
 Room *room_template_load(const char *filename) //loads template from file
@@ -997,7 +1034,7 @@ void room_build_branches()
 					{
 						//slog("Left");
 						roomPos = vector2d(x - 1, y);
-						room2 = room_empty(roomPos);
+						room2 = room_template_load_random_from_list(roomPos);
 
 						room2->roomType = 0;
 
@@ -1019,7 +1056,7 @@ void room_build_branches()
 					{
 						//slog("Top");
 						roomPos = vector2d(x, y - 1);
-						room2 = room_empty(roomPos);
+						room2 = room_template_load_random_from_list(roomPos);
 
 						room2->roomType = 0;
 
@@ -1040,7 +1077,7 @@ void room_build_branches()
 					{
 						//slog("Right");
 						roomPos = vector2d(x + 1, y);
-						room2 = room_empty(roomPos);
+						room2 = room_template_load_random_from_list(roomPos);
 
 						room2->roomType = 0;
 
@@ -1061,7 +1098,7 @@ void room_build_branches()
 					{
 						//slog("Bottom");
 						roomPos = vector2d(x, y + 1);
-						room2 = room_empty(roomPos);
+						room2 = room_template_load_random_from_list(roomPos);
 
 						room2->roomType = 0;
 

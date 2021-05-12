@@ -11,6 +11,14 @@ void editor_save_button(Menu *editorMenu);
 
 void editor_clear_button(Menu *editorMenu);
 
+void editor_save(Button* button, Menu *editorMenu);
+
+void editor_clear(Button* button, Menu *editorMenu);
+
+void editor_clear_done(Button* button, Menu *editorMenu);
+
+char *editor_get_data(Menu *editorMenu);
+
 
 
 
