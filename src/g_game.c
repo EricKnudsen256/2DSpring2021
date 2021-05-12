@@ -136,7 +136,7 @@ void game_main()
 
 	slog("Spawning player at x:%f, y:%f", spawnPos.x, spawnPos.y);
 
-	//player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
+	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
 	//slog("maxItems: %i", player_inventory_get_max());
 
 	//player_inventory_slog();
