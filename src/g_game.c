@@ -107,7 +107,7 @@ void game_main()
 	int done = 0;
 	const Uint8 * keys;
 
-	TextLine fps_text, health_text, game_over_text, kills_text, hs_text;
+	TextLine fps_text, zoom_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu, *minimap;
 	Sound *bgMusic;
@@ -175,9 +175,6 @@ void game_main()
 			projectile_manager_update_projectiles();
 
 			room_manager_update();
-
-			slog("Camera pos: x:%f, y:%f", camera_get_position().x, camera_get_position().y);
-			slog("Player pos: x:%f, y:%f", player->position.x, player->position.y);
 		}
 
 
@@ -201,6 +198,9 @@ void game_main()
 
 		gfc_line_sprintf(fps_text, "FPS:%i", (int)gf2d_graphics_get_frames_per_second());
 		font_render(font, fps_text, vector2d(32, 32), gfc_color8(255, 255, 255, 255));
+
+		gfc_line_sprintf(zoom_text, "Zoom: x:%f, y:%f", camera_get_scale().x, camera_get_scale().y);
+		font_render(font, zoom_text, vector2d(32, 64), gfc_color8(255, 255, 255, 255));
 
 
 		menu_manager_draw_menus();

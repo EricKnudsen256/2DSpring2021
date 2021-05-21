@@ -8,7 +8,7 @@ static Vector2D CameraScale = { 0 };
 
 void camera_set_dimensions(Vector2D size)
 {
-	CameraScale = vector2d(1, 1);
+	CameraScale = vector2d(.75, .75);		//default zoom value
 
 	Camera.w = size.x;
 	Camera.h = size.y;
