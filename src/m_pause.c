@@ -85,22 +85,22 @@ Button *pause_menu_new_back(Menu *pauseMenu)
 	return button;
 }
 
-void *pause_menu_set_active(Button* button, Menu *pause)
+void pause_menu_set_active(Button* button, Menu *pause)
 {
 	pause->_active = 1;
 }
 
-void *pause_menu_set_inactive(Button* button, Menu *pause)
+void pause_menu_set_inactive(Button* button, Menu *pause)
 {
 	pause->_active = 0;
 }
 
-void *pause_menu_end_game(Button* button, Menu *pause)
+void pause_menu_end_game(Button* button, Menu *pause)
 {
 	pause->data = true;
 }
 
-Bool *pause_menu_check_end_game(Menu *pause)
+Bool pause_menu_check_end_game(Menu *pause)
 {
 	return pause->data;
 }

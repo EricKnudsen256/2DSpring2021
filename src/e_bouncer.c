@@ -107,12 +107,12 @@ Bool bouncer_check_player_collision(Entity *ent)
 	if (!ent)
 	{
 		slog("No entity provided");
-		return;
+		return false;
 	}
 	if (!roomlist)
 	{
 		slog("Room list not found");
-		return;
+		return false;
 	}
 	for (roomX = 0; roomX < room_manager_get_max_columns(); roomX++)
 	{
@@ -123,7 +123,7 @@ Bool bouncer_check_player_collision(Entity *ent)
 			if (!roomlist[roomX][roomY].tileArray)
 			{
 				slog("Level does not have a tile array");
-				return;
+				return false;
 			}
 
 			//slog("Room x:%i, y:%i", roomX, roomY);

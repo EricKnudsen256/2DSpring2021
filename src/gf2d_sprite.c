@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include <SDL_image.h>
 #include <stdlib.h>
 
@@ -260,8 +262,8 @@ void gf2d_sprite_draw(
         sprite->frame_h);
     gfc_rect_set(
         target,
-        position.x - (scaleFactor.x * scaleOffset.x),
-        position.y - (scaleFactor.y * scaleOffset.y),
+        position.x * scaleFactor.x,
+		position.y * scaleFactor.y,
         sprite->frame_w * scaleFactor.x,
         sprite->frame_h * scaleFactor.y);
     SDL_RenderCopyEx(gf2d_graphics_get_renderer(),

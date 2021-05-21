@@ -15,19 +15,19 @@ Menu *minimap_menu_new(int buttonMax);
 * @param button the button that was pressed
 * @param minimap the minimap menu
 */
-void *minimap_menu_set_active(Button* button, Menu *minimap);
+void minimap_menu_set_active(Button* button, Menu *minimap);
 
 /**
 * @brief sets the menu as inactive
 * @param button the button that was pressed
 * @param minimap the minimap menu
 */
-void *minimap_menu_set_inactive(Button* button, Menu *minimap);
+void minimap_menu_set_inactive(Button* button, Menu *minimap);
 
 /**
 * @brief special draw function for the minimap
 * @param minimap the minimap menu
 */
-void *minimap_draw(Menu *minimap);
+void minimap_draw(Menu *minimap);
 
 #endif

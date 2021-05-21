@@ -126,17 +126,17 @@ Entity *player_spawn(Vector2D position)
 		slog("failed to create entity for the player");
 		return NULL;
 	}
-	ent->sprite = gf2d_sprite_load_all("assets/sprites/newPlayer.png", 64, 64, 1);
+	ent->sprite = gf2d_sprite_load_all("assets/sprites/testPlayer2.png", 48, 64, 1);
 	vector2d_copy(ent->position, position);
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;
 	ent->update = player_update;
 	ent->think = player_think;
-	ent->rotation.x = 64;
-	ent->rotation.y = 64;
+	ent->rotation.x = 0;
+	ent->rotation.y = 0;
 	ent->hitbox.x = 0;
 	ent->hitbox.y = 0;
-	ent->hitbox.w = 64;
+	ent->hitbox.w = 48;
 	ent->hitbox.h = 64;
 
 	ent->isPlayer = true;
@@ -165,15 +165,17 @@ void player_update(Entity *self)
 {
 	Vector2D camera;
 	Vector2D cameraSize;
+	Vector2D cameraScale;
 
 	if (!self)return;
 
 	//slog("Player: x:%f, y:%f", self->position.x, self->position.y);
 
 	cameraSize = camera_get_dimensions();
-	camera.x = (self->position.x + 64) - (cameraSize.x * 0.5);
-	camera.y = (self->position.y + 64) - (cameraSize.y * 0.5);
-	camera_set_position(camera);
+	cameraScale = camera_get_scale();
+	camera.x = self->position.x + 32;
+	camera.y = self->position.y + 32;
+	camera_center_on_position(camera);
 
 	if (self->health <= 0)
 	{

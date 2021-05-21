@@ -71,8 +71,6 @@ void walker_think(Entity *self)
 	//return;
 
 	enemy_think(self);
-	Vector2D gravity;
-	float angle;
 	int mx, my;
 	if (!self)return;
 	SDL_GetMouseState(&mx, &my);

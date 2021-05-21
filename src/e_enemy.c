@@ -149,6 +149,8 @@ void enemy_draw(Entity *ent)
 {
 	Vector2D offset, drawPosition;
 
+	Vector2D drawScale = camera_get_scale();
+
 	SDL_Rect healthBG, health;
 
 
@@ -169,7 +171,7 @@ void enemy_draw(Entity *ent)
 	gf2d_sprite_draw(
 		ent->sprite,
 		drawPosition,
-		NULL,
+		&drawScale,
 		NULL,
 		&ent->rotation,
 		NULL,
@@ -177,6 +179,8 @@ void enemy_draw(Entity *ent)
 		(Uint32)ent->frame);
 
 	//drawing health bars
+
+	/*
 
 	gfc_rect_set(healthBG, ent->position.x + offset.x, ent->position.y - 20 + offset.y, ent->hitbox.w, 15);
 
@@ -190,6 +194,8 @@ void enemy_draw(Entity *ent)
 	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 232, 67, 67, 255);
 
 	SDL_RenderFillRect(gf2d_graphics_get_renderer(), &healthBG);
+
+	*/
 
 
 	/*

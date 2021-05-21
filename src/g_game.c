@@ -79,8 +79,6 @@ void init_game()
 	player_inventory_init(32);
 
 	room_manager_init(8, 8, 64, 100);
-
-	//room_test();
 }
 
 void close_main_game()
@@ -151,7 +149,7 @@ void game_main()
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 
 
-	gfc_sound_play(bgMusic, -1, .01, -1, -1);
+	//gfc_sound_play(bgMusic, -1, .01, -1, -1);
 
 	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/grayBg.png");
 
@@ -177,8 +175,10 @@ void game_main()
 			projectile_manager_update_projectiles();
 
 			room_manager_update();
-		}
 
+			slog("Camera pos: x:%f, y:%f", camera_get_position().x, camera_get_position().y);
+			slog("Player pos: x:%f, y:%f", player->position.x, player->position.y);
+		}
 
 
 		menu_manager_think_menus();

@@ -1395,10 +1395,6 @@ Tile *room_new_tile(Room *room, Vector2D pos, Vector2D gridPos)
 	return NULL;
 }
 
-Entity *room_new_enemy(Room * room, Vector2D gridPos, int enemy)
-{
-
-}
 
 void room_free_tile(int x, int y, Room* room)
 {
@@ -1454,6 +1450,7 @@ void room_draw(Room *room)
 {
 	SDL_Rect camera;
 	Vector2D offset, drawPosition, parallax;
+	Vector2D drawScale = camera_get_scale();
 	Sprite *hallFix = gf2d_sprite_load_image("assets/sprites/backgrounds/caveHall.png");
 	int x, y;
 	if (!room)
@@ -1477,7 +1474,7 @@ void room_draw(Room *room)
 		drawPosition.x = room->position.x + room->tileWidth * 3 + offset.x;
 		drawPosition.y = room->position.y + room->tileHeight * 3 + offset.y;
 
-		gf2d_sprite_draw(room->bgSprite, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+		gf2d_sprite_draw(room->bgSprite, drawPosition, &drawScale, NULL, NULL, NULL, NULL, NULL);
 	}
 
 	if (room->leftDoor && hallFix)
@@ -1486,7 +1483,7 @@ void room_draw(Room *room)
 		drawPosition.y = room->position.y + room->tileHeight * 17 + offset.y;
 
 
-		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+		gf2d_sprite_draw(hallFix, drawPosition, &drawScale, NULL, NULL, NULL, NULL, NULL);
 	}
 	if (room->rightDoor && hallFix)
 	{
@@ -1494,7 +1491,7 @@ void room_draw(Room *room)
 		drawPosition.y = room->position.y + room->tileHeight * 17 + offset.y;
 
 
-		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+		gf2d_sprite_draw(hallFix, drawPosition, &drawScale, NULL, NULL, NULL, NULL, NULL);
 	}
 	if (room->topDoor && hallFix)
 	{
@@ -1502,7 +1499,7 @@ void room_draw(Room *room)
 		drawPosition.y = room->position.y + offset.y;
 
 
-		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+		gf2d_sprite_draw(hallFix, drawPosition, &drawScale, NULL, NULL, NULL, NULL, NULL);
 	}
 	if (room->botDoor && hallFix)
 	{
@@ -1510,7 +1507,7 @@ void room_draw(Room *room)
 		drawPosition.y = room->position.y + room->tileHeight * 35 + offset.y;
 
 
-		gf2d_sprite_draw(hallFix, drawPosition, NULL, NULL, NULL, NULL, NULL, NULL);
+		gf2d_sprite_draw(hallFix, drawPosition, &drawScale, NULL, NULL, NULL, NULL, NULL);
 	}
 
 	for (int x = 0; x < room->roomHeight; x++)

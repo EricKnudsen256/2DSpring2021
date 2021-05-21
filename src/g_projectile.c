@@ -302,6 +302,8 @@ void projectile_draw(Projectile *proj)
 {
 
 	Vector2D drawPosition, offset;
+	Vector2D drawScale = camera_get_scale();
+
 	if (!proj)
 	{
 		slog("cannot draww a NULL entity");
@@ -326,7 +328,7 @@ void projectile_draw(Projectile *proj)
 		gf2d_sprite_draw(
 			proj->sprite,
 			drawPosition,
-			NULL,
+			&drawScale,
 			NULL,
 			NULL,
 			NULL,

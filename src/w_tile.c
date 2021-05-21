@@ -40,7 +40,6 @@ Tile *tile_new(int width, int height, Vector2D position, Vector2D gridPos)
 
 void tile_free(Tile *tile)
 {
-	int i;
 	if (!tile)return;// nothing to do
 
 	memset(tile, 0, sizeof(Tile));
@@ -58,6 +57,8 @@ void tile_free(Tile *tile)
 void tile_draw(Tile *tile)
 {
 	Vector2D drawPosition, offset;
+	Vector2D drawScale = camera_get_scale();
+
 	if (!tile)
 	{
 		slog("cannot draww a NULL tile");
@@ -87,15 +88,17 @@ void tile_draw(Tile *tile)
 		drawPosition.x = tile->pos.x + offset.x;
 		drawPosition.y = tile->pos.y + offset.y;
 
+		
+
 		gf2d_sprite_draw(
 			tile->sprite,
 			drawPosition,
+			&drawScale,
 			NULL,
 			NULL,
 			NULL,
 			NULL,
-			NULL,
-			NULL);
+			0);
 	}
 
 	//test code to draw the hitboxes for an ent that has one

@@ -6,6 +6,7 @@
 
 #include "g_input.h"
 #include "g_menu.h"
+#include "g_camera.h"
 
 #include "p_player.h"
 
@@ -21,6 +22,7 @@ void input_update()
 	SDL_Event e;
 	Menu *pauseMenu, *inventoryMenu, *mainMenu;
 
+	//check mouse input
 	mainMenu = menu_manager_get_by_tag("main");
 
 	if (!mainMenu) return;
@@ -85,6 +87,18 @@ void input_update()
 					}
 				}
 			}
+			else if (e.type == SDL_MOUSEWHEEL)
+			{
+				if (e.wheel.y > 0)
+				{
+					camera_zoom_in();
+				}
+				if (e.wheel.y < 0)
+				{
+					camera_zoom_out();
+				}
+			}
+
 		}
 	}
 	else if (main_get_data(mainMenu) == "editor")
@@ -158,10 +172,6 @@ void input_update()
 
 
 				}
-			}
-			else if (e.type == SDL_KEYDOWN)
-			{
-
 			}
 		}
 	}

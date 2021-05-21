@@ -1,4 +1,3 @@
-
 #ifndef __CAMERA_H__
 #define __CAMERA_H__
 
@@ -35,6 +34,8 @@ Bool camera_rect_on_screen(SDL_Rect rect);
 */
 void camera_set_position(Vector2D position);
 
+void camera_center_on_position(Vector2D position);
+
 /**
 * @brief move the camera relative to its current position
 * @param move the ammount to move the camera by
@@ -59,5 +60,11 @@ SDL_Rect camera_get_rect();
 * @return the inverse of the camera coordinates
 */
 Vector2D camera_get_offset();
+
+
+Vector2D camera_get_scale();
+
+
+Vector2D camera_set_scale(Vector2D scale);
 
 #endif

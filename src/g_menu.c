@@ -77,7 +77,7 @@ Bool menu_manager_check_click()
 	if (menu_manager.menu_list == NULL)
 	{
 		slog("menu system does not exist");
-		return;
+		return false;
 	}
 
 	for (i = 0; i < menu_manager.max_menus; i++)
@@ -238,7 +238,7 @@ int menu_button_new(Menu *menu)
 	if (!menu)
 	{
 		slog("no menu provided");
-		return;
+		return -1;
 	}
 
 	

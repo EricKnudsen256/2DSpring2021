@@ -29,27 +29,27 @@ Button *pause_menu_new_back(Menu *pauseMenu);
 * @param button the button that was pressed
 * @param pause the pause menu
 */
-void *pause_menu_set_active(Button* button, Menu *pause);
+void pause_menu_set_active(Button* button, Menu *pause);
 
 /**
 * @brief sets the menu as inactive
 * @param button the button that was pressed
 * @param pause the pause menu
 */
-void *pause_menu_set_inactive(Button* button, Menu *pause);
+void pause_menu_set_inactive(Button* button, Menu *pause);
 
 /**
 * @brief sets the menu data to true to signal to go back to main menu
 * @param button the button that was pressed
 * @param pause the pause menu
 */
-void *pause_menu_end_game(Button* button, Menu *pause);
+void pause_menu_end_game(Button* button, Menu *pause);
 
 /**
 * @brief gets data value of the menu
 * @param pause the menu
 * @returns the value of the data field
 */
-Bool *pause_menu_check_end_game(Menu *pause);
+Bool pause_menu_check_end_game(Menu *pause);
 
 #endif

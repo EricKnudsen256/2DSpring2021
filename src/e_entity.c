@@ -443,6 +443,9 @@ void entity_free(Entity *ent)
 void entity_draw(Entity *ent)
 {
 	Vector2D drawPosition, offset;
+	Vector2D drawScale = camera_get_scale();
+	Vector2D scalePos = vector2d(0, 0);
+
 	if (!ent)
 	{
 		slog("cannot draww a NULL entity");
@@ -471,7 +474,7 @@ void entity_draw(Entity *ent)
 		gf2d_sprite_draw(
 			ent->sprite,
 			drawPosition,
-			NULL,
+			&drawScale,
 			NULL,
 			&ent->rotation,
 			NULL,
@@ -479,6 +482,8 @@ void entity_draw(Entity *ent)
 			(Uint32)ent->frame);
 
 		//test code to draw the hitboxes for an ent that has one
+
+		/*
 
 		if (&ent->hitbox)
 		{
@@ -495,6 +500,8 @@ void entity_draw(Entity *ent)
 			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 
 		}
+
+		
 
 		if (ent->isPlayer)
 		{
@@ -527,6 +534,7 @@ void entity_draw(Entity *ent)
 
 			SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 		}
+		*/
 
 	}
 }
