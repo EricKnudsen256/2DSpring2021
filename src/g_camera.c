@@ -31,8 +31,8 @@ void camera_set_position(Vector2D position)
 
 void camera_center_on_position(Vector2D position)
 {
-	Camera.x = ((int)position.x - Camera.w * .5 / CameraScale.x);
-	Camera.y = ((int)position.y - Camera.h * .5 / CameraScale.y);
+	Camera.x = ((int)position.x - (int)(Camera.w * .5 / CameraScale.x));
+	Camera.y = ((int)position.y - (int)(Camera.h * .5 / CameraScale.y));
 }
 
 void camera_move(Vector2D move)
