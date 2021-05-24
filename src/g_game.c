@@ -78,7 +78,8 @@ void init_game()
 	level_manager_init(64);
 	player_inventory_init(32);
 
-	room_manager_init(8, 8, 64, 100);
+	//room_manager_init(8, 8, 64, 100);
+	level_manager_init(10);
 }
 
 void close_main_game()
@@ -93,12 +94,14 @@ void close_main_game()
 
 void init_editor()
 {
-	room_manager_init(8, 8, 64, 100);
+	//room_manager_init(8, 8, 64, 100);
+	level_manager_init(10);
 }
 
 void close_editor()
 {
-	room_manager_free();
+	//room_manager_free();
+	level_manager_free();
 }
 
 void game_main()
@@ -115,6 +118,8 @@ void game_main()
 
 	Font *font;
 
+	Level *testLevel;
+
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 
@@ -122,7 +127,9 @@ void game_main()
 	//Vector2D roomPos = vector2d(0, 0);
 	//Room *room = room_template_load(roomPos, "templates/testRoom.json");
 
-	room_init_all();
+	testLevel = level_new(8, 8, 64, 100);
+
+	//room_init_all();
 	//room_slog();
 
 	Vector2D spawnRoomPos = room_manager_get_start_pos();

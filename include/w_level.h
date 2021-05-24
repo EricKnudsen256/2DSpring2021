@@ -6,55 +6,63 @@
 #include "gf2d_sprite.h"
 
 #include "w_tile.h"
+#include "w_room.h"
 
 #include "e_entity.h"
 
 
 typedef struct
 {
-	Bool		_current; /**<set to true for the level that is currently in use*/
-	Bool		_inuse;
-	Sprite     **bgImage;    /**<the background image for the level*/
-	int         bgImageCount;/**<how many we have*/
-	Vector2D    levelSize;   /**<how large, in pixels, the level is*/
-	Vector2D	levelPos;	// gridPos for where the level is, 0, 0 will be hub room
-	Vector2D	door1, door2, door3, door4;  //door1 on left, door2 on top, door3 on right, door4 on bottom
-	Tile		**tileArray;  // array of all tiles that are in the level
-	Entity		**entityArray; //array of all enemies and their spawn positions
-	int			tileArrayLen;
-	int			entityArrayLen;
-	Sprite     *tileSet;     /**<sprite for the tileset*/
-	TileTypes  *tileMap;     /**<the tiles for the level*/
-	Uint32      tileCount;
-	Uint32      levelWidth;  /**<how many tiles per row the level has*/
-	Uint32      levelHeight; /**<how many tiles per column the level has*/
-	int         tileWidth;   /**<now many pixels wide the tiles are*/
-	int         tileHeight;  /**<how many pixels tall each tile is*/
-	int         tileFPL;
+	Bool _inuse;
+	Bool _current;
 
 
+
+	int		maxRows;
+	int		maxColumns;
+	int		maxTemplates;
+	int		loadedRooms;  //total number of loaded room templates
+	Room	***room_list;
+	Room	*template_list;
+	Uint32  max_rooms;
 }Level;
 
-/**
-* @brief starts the level_manager and allocates the memory for it to run
-* @params the number of level that will be in the level_list
-*/
+typedef struct
+{
+	int max_levels;
+	Level *level_list;
+
+}LevelManager;
 
 void level_manager_init(Uint32 max_levels);
 
 
-/**
-* @brief frees all resources used by the level manager
-*/
+void level_manager_update();
+
+
+void level_manager_draw();
+
 
 void level_manager_free();
 
 
-/**
-* @brief allocate and initialize a level
-* @return NULL on error, else a pointer to a new level
-*/
-Level *level_new();
+Level *level_manager_get_level_list();
+
+
+Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates);
+
+
+void level_update(Level *level);
+
+
+void level_draw(Level *level);
+
+
+void level_free(Level *level);
+
+
+void level_init_all();
+
 
 
 /**
