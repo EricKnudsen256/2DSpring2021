@@ -5,6 +5,7 @@
 #include "m_minimap.h"
 
 #include "w_room.h"
+#include "w_level.h"
 
 Menu *minimap_menu_new(int buttonMax)
 {
@@ -45,7 +46,7 @@ void minimap_menu_set_inactive(Button* button, Menu *minimap)
 
 void minimap_draw(Menu *minimap)
 {
-	Room **roomList = room_manager_get_room_list();
+	Room ***roomList = level_manager_get_current()->room_list;
 	Room *room;
 	Tile *tile;
 	SDL_Rect tempDraw;
@@ -62,11 +63,11 @@ void minimap_draw(Menu *minimap)
 	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 40, 175, 40, 255);
 	SDL_RenderFillRect(gf2d_graphics_get_renderer(), &tempDraw);
 
-	for (int x = 0; x < room_manager_get_max_columns(); x++)
+	for (int x = 0; x < level_manager_get_current()->maxColumns; x++)
 	{
-		for (int y = 0; y < room_manager_get_max_rows(); y++)
+		for (int y = 0; y < level_manager_get_current()->maxRows; y++)
 		{
-			room = room_manager_get_room(x, y);
+			room = roomList[x][y];
 
 			if (room)
 			{

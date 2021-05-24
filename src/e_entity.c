@@ -6,6 +6,7 @@
 #include "g_camera.h"
 
 #include "w_room.h"
+#include "w_level.h"
 
 void entity_check_collisions(Entity *ent);
 
@@ -195,7 +196,7 @@ void entity_check_collisions(Entity *ent)
 	foundLeft = false;
 	foundRight = false;
 
-	roomlist = room_manager_get_room_list();
+	roomlist = level_manager_get_current()->room_list;
 
 	//turn off collision lol
 	//return;
@@ -211,9 +212,9 @@ void entity_check_collisions(Entity *ent)
 		slog("Room list not found");
 		return;
 	}
-	for (roomX = 0; roomX < room_manager_get_max_columns(); roomX++)
+	for (roomX = 0; roomX < level_manager_get_current()->maxColumns; roomX++)
 	{
-		for (roomY = 0; roomY < room_manager_get_max_rows(); roomY++)
+		for (roomY = 0; roomY < level_manager_get_current()->maxRows; roomY++)
 		{
 			if (roomlist[roomX][roomY]._inuse == 0)continue;
 

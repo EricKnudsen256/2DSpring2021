@@ -204,6 +204,7 @@ void projectile_manager_draw_projectiles()
 
 void projectile_check_collisions(Projectile *proj)
 {
+	/*
 	int i;
 	Level *level;
 	SDL_bool isIntersect;
@@ -282,6 +283,8 @@ void projectile_check_collisions(Projectile *proj)
 		enemy_damage(ent, proj->damage);
 		projectile_free(proj);
 	}
+
+	*/
 
 }
 

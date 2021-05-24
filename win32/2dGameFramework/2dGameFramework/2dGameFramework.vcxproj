@@ -143,6 +143,7 @@
     <ClCompile Include="..\..\..\src\g_projectile.c" />
     <ClCompile Include="..\..\..\src\g_random.c" />
     <ClCompile Include="..\..\..\src\shape.c" />
+    <ClCompile Include="..\..\..\src\w_ore_node.c" />
     <ClCompile Include="..\..\..\src\w_room.c" />
     <ClCompile Include="..\..\..\src\w_tile.c" />
     <ClCompile Include="..\..\..\src\e_walker.c" />
@@ -178,12 +179,12 @@
     <ClInclude Include="..\..\..\include\e_flyer.h" />
     <ClInclude Include="..\..\..\include\g_font.h" />
     <ClInclude Include="..\..\..\include\gf2d_sprite.h" />
-    <ClInclude Include="..\..\..\include\g_globals.h" />
     <ClInclude Include="..\..\..\include\g_input.h" />
     <ClInclude Include="..\..\..\include\g_item.h" />
     <ClInclude Include="..\..\..\include\g_menu.h" />
     <ClInclude Include="..\..\..\include\g_menu_objects.h" />
     <ClInclude Include="..\..\..\include\g_mouse.h" />
+    <ClInclude Include="..\..\..\include\w_ore_node.h" />
     <ClInclude Include="..\..\..\include\json\simple_json.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_array.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_error.h" />

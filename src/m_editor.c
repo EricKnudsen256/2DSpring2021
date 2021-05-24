@@ -1,6 +1,7 @@
 #include "simple_logger.h"
 
 #include "w_room.h"
+#include "w_level.h"
 
 #include "m_editor.h"
 
@@ -87,7 +88,7 @@ void editor_clear_button(Menu *editorMenu)
 void editor_save(Button* button, Menu *editorMenu)
 {
 
-	room_manager_save_template(room_manager_get_room(0, 0));
+	level_manager_save_template(level_manager_get_current()->room_list[0, 0]);
 }
 
 void editor_clear(Button* button, Menu *editorMenu)

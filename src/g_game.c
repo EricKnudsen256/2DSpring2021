@@ -89,7 +89,7 @@ void close_main_game()
 	level_manager_free();
 	player_inventory_free();
 
-	room_manager_free();
+	//room_manager_free();
 }
 
 void init_editor()
@@ -129,10 +129,14 @@ void game_main()
 
 	testLevel = level_new(8, 8, 64, 100);
 
+	testLevel->_current = 1;
+
+	level_init_all(testLevel);
+
 	//room_init_all();
 	//room_slog();
 
-	Vector2D spawnRoomPos = room_manager_get_start_pos();
+	Vector2D spawnRoomPos = level_get_start_pos(testLevel);
 	Vector2D spawnPos = vector2d(500, 500);
 
 	vector2d_add(spawnPos, spawnPos, spawnRoomPos);
@@ -181,7 +185,8 @@ void game_main()
 			projectile_manager_check_collisions();
 			projectile_manager_update_projectiles();
 
-			room_manager_update();
+			level_manager_update();
+			//room_manager_update();
 		}
 
 
@@ -198,7 +203,8 @@ void game_main()
 
 		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
-		room_manager_draw();
+		//room_manager_draw();
+		level_manager_draw();
 
 		entity_manager_draw_entities();
 		projectile_manager_draw_projectiles();
@@ -244,8 +250,14 @@ void editor_main()
 	Vector2D mouseGridPos;
 	Vector2D tilePos;
 
+	Level *testLevel;
+
+	testLevel = level_new(8, 8, 64, 100);
+
+	testLevel->_current = 1;
+
 	Vector2D spawnPos = vector2d(0, 0);
-	Room *room = room_empty(spawnPos);
+	Room *room = level_room_empty(spawnPos, testLevel);
 
 	room_open_door(true, true, true, true, room);
 
@@ -273,9 +285,9 @@ void editor_main()
 
 		if (!strcmp(editor_get_data(editorMenu), "clear"))
 		{
-			room_free(0, 0, room);
+			level_room_free(0, 0, testLevel);
 
-			room = room_empty(spawnPos);
+			level_room_empty(spawnPos, testLevel);
 			room_open_door(true, true, true, true, room);
 
 			editor_clear_done(NULL, editorMenu);
@@ -285,7 +297,8 @@ void editor_main()
 
 		if (!pauseMenu->_active)
 		{
-			room_manager_update();
+			level_manager_update();
+			//room_manager_update();
 		}
 
 
@@ -331,7 +344,9 @@ void editor_main()
 
 		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
-		room_manager_draw();
+		//room_manager_draw();
+
+		level_manager_draw();
 
 		//draw rectangles to show where to place tile
 

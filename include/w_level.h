@@ -23,7 +23,7 @@ typedef struct
 	int		maxTemplates;
 	int		loadedRooms;  //total number of loaded room templates
 	Room	***room_list;
-	Room	*template_list;
+	Room	**template_list;
 	Uint32  max_rooms;
 }Level;
 
@@ -49,91 +49,51 @@ void level_manager_free();
 Level *level_manager_get_level_list();
 
 
+void level_manager_load_all_templates(Level *level);
+
+
+void level_manager_save_template(Room *room);
+
+
+Level *level_manager_get_current();
+
+
+Room *level_template_load_random_from_list(Vector2D gridPos, Level *level);
+
+
+Room *level_room_new(Vector2D gridPos, Level *level);
+
+
+Room *level_room_empty(Vector2D gridPos, Level *level);
+
+
+Room *level_room_new_template(Level *level);
+
+
 Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates);
 
 
 void level_update(Level *level);
 
-
+  
 void level_draw(Level *level);
 
 
 void level_free(Level *level);
 
 
-void level_init_all();
+void level_init_all(Level *level);
 
 
-
-/**
-* @brief load a level from a json file
-* @param filename the file to load
-* @return NULL on error (See the logs) a loaded level otherwise
-*/
-Level *level_load(const char *filename);
-
-/**
-* @brief create a new random level
-* @params width of level in tiles, height of level in tiles
-* @return the newly created level
-*/
-
-Level *level_hub();
+void level_build_branches(Level *level);
 
 
-Level *level_random(int width, int height, Vector2D levelPos);
-
-/**
-* @brief creates a new tile in the tile manager
-* @param the position to create the tile
-*/
-
-Tile *level_new_tile(Level * level, Vector2D pos);
-
-Entity *level_new_enemy(Level * level, Vector2D gridPos, int enemy);
-
-/**
-* @brief free up a previously loaded level
-* @param level a pointer to the level to free
-*/
-
-void level_free(Level *level);
-
-/**
-* @brief perform maintenance for the level.  should be called once a frame
-* @param level the level to update
-*/
-void level_update(Level *level);
+void level_build_branch_room(Room *startRoom, Level *level);
 
 
-/**
-* @brief draw a level
-* @param level the level the draw
-*/
-void level_draw(Level *level);
+Vector2D level_get_start_pos(Level *level);
 
-/**
-* @brief finds and returns the index of a tile in the tile array with the given gridpos
-* @param x and y of the tile to find, the level to search
-* @return the index of the tile in tileArray, -1 if no tile found
-*/
-int level_find_tile_by_pos(Level *level, int x, int y);
 
-Bool create_random_platform(int number, int minWidth, int maxWidth, Level *level);
+void room_slog(Level *level);
 
-Bool spawn_platform(Vector2D gridPos, int width, Level *level);
-
-Bool level_create_doors(Level *level, int y);
-
-void level_change(Entity *player, int door, int y);
-
-/**
-* @brief finds and returns the level with the given gridpos
-* @param x and y of the level to find
-* @return the level in level_manager, NULL if no level found
-*/
-
-Level *level_find_level_by_pos(Vector2D position);
-
-void level_layout_random_enemies(int minEnemies, int maxEnemies, Level *level);
 #endif
