@@ -50,10 +50,27 @@ void minimap_draw(Menu *minimap)
 	Room *room;
 	Tile *tile;
 	SDL_Rect tempDraw;
-	Entity *player;
+	Entity *player, *enemy;
 	int drawX, drawY;
 
 	player = entity_manager_get_player_ent();
+
+	for (int i = 0; i < entity_manager_get_manager().max_entities; i++)
+	{
+		enemy = &entity_manager_get_manager().entity_list[i];
+		if (!enemy->_inuse)
+		{
+			continue;
+		}
+
+		drawX = enemy->position.x / 32;
+		drawY = enemy->position.y / 32;
+
+		tempDraw = gfc_sdl_rect(drawX + minimap->position.x + 9 - 2, drawY + minimap->position.y + 9 - 2, 4, 4);
+
+		SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 255, 40, 40, 255);
+		SDL_RenderFillRect(gf2d_graphics_get_renderer(), &tempDraw);
+	}
 
 	drawX = player->position.x / 32;
 	drawY = player->position.y / 32;

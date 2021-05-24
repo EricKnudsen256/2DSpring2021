@@ -85,7 +85,7 @@ void bouncer_think(Entity *self)
 Bool bouncer_check_player_collision(Entity *ent)
 {
 	int roomX, roomY, x, y;
-	Room **roomlist;
+	Room ***roomlist;
 	SDL_bool isIntersect;
 	Tile *tile;
 	SDL_Rect testMove;
@@ -119,17 +119,11 @@ Bool bouncer_check_player_collision(Entity *ent)
 	{
 		for (roomY = 0; roomY < level_manager_get_current()->maxRows; roomY++)
 		{
-			if (roomlist[roomX][roomY]._inuse == 0)continue;
-
-			if (!roomlist[roomX][roomY].tileArray)
-			{
-				slog("Level does not have a tile array");
-				return false;
-			}
+			if (!roomlist[roomX][roomY])continue;
 
 			//slog("Room x:%i, y:%i", roomX, roomY);
 
-			Room *room = &roomlist[roomX][roomY];
+			Room *room = roomlist[roomX][roomY];
 
 			if (ent->position.x > room->tileWidth * room->roomWidth * (room->roomPos.x + 1) || ent->position.x < room->tileWidth * room->roomWidth * room->roomPos.x)
 			{

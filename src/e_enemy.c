@@ -214,7 +214,7 @@ void enemy_draw(Entity *ent)
 		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 
 	}
-	*/
+	
 
 	if (&ent->hitbox2)
 	{
@@ -232,6 +232,8 @@ void enemy_draw(Entity *ent)
 
 		SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 	}
+
+	*/
 
 }
 

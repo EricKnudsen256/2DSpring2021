@@ -569,6 +569,7 @@ void room_draw(Room *room)
 
 void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 {
+
 	if (!room)
 	{
 		slog("Room is null");
@@ -806,5 +807,4 @@ void room_open_door(Bool left, Bool top, Bool right, Bool bot, Room *room)
 			room_new_tile(room, position, gridPos);
 		}
 	}
-
 }

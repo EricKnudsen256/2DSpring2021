@@ -183,7 +183,7 @@ Entity *entity_new()
 void entity_check_collisions(Entity *ent)
 {
 	int roomX, roomY, x, y;
-	Room **roomlist;
+	Room ***roomlist;
 	SDL_bool isIntersect;
 	Tile *tile;
 	SDL_Rect testMove;
@@ -216,17 +216,16 @@ void entity_check_collisions(Entity *ent)
 	{
 		for (roomY = 0; roomY < level_manager_get_current()->maxRows; roomY++)
 		{
-			if (roomlist[roomX][roomY]._inuse == 0)continue;
-
-			if (!roomlist[roomX][roomY].tileArray)
+			if (!roomlist[roomX][roomY])
 			{
-				slog("Level does not have a tile array");
-				return;
+				continue;
 			}
+				
 
 			//slog("Room x:%i, y:%i", roomX, roomY);
 
-			Room *room = &roomlist[roomX][roomY];
+			Room *room = roomlist[roomX][roomY];
+			
 
 			if (ent->position.x > room->tileWidth * room->roomWidth * (room->roomPos.x + 1) || ent->position.x < room->tileWidth * room->roomWidth * room->roomPos.x)
 			{
@@ -237,12 +236,13 @@ void entity_check_collisions(Entity *ent)
 				continue;
 			}
 
+
 			for (x = 0; x < room->roomHeight; x++)
 			{
 				for (y = 0; y < room->roomWidth; y++)
 				{
 
-
+					
 
 					if (room->tileArray[x][y] == NULL)
 					{
@@ -356,6 +356,7 @@ void entity_check_collisions(Entity *ent)
 					}
 				}
 			}
+			
 			
 			for (x = 0; x < room->roomHeight; x++)
 			{

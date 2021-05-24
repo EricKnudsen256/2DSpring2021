@@ -123,18 +123,12 @@ void game_main()
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 
-	//json test files below
-	//Vector2D roomPos = vector2d(0, 0);
-	//Room *room = room_template_load(roomPos, "templates/testRoom.json");
 
 	testLevel = level_new(8, 8, 64, 100);
 
 	testLevel->_current = 1;
 
 	level_init_all(testLevel);
-
-	//room_init_all();
-	//room_slog();
 
 	Vector2D spawnRoomPos = level_get_start_pos(testLevel);
 	Vector2D spawnPos = vector2d(500, 500);
@@ -164,6 +158,7 @@ void game_main()
 
 	bg = gf2d_sprite_load_image("assets/sprites/backgrounds/grayBg.png");
 
+	
 
 	/*main game loop*/
 	while (!pause_menu_check_end_game(pauseMenu))
@@ -175,6 +170,7 @@ void game_main()
 		/*update things here*/
 
 		input_update();
+
 
 		if (!pauseMenu->_active)
 		{
@@ -188,6 +184,8 @@ void game_main()
 			level_manager_update();
 			//room_manager_update();
 		}
+
+		
 
 
 		menu_manager_think_menus();
@@ -221,6 +219,7 @@ void game_main()
 		mouse_draw();
 
 		gf2d_grahics_next_frame();	// render current draw frame and skip to the next frame
+
 	}
 
 	menu_free(pauseMenu);
@@ -297,7 +296,7 @@ void editor_main()
 
 		if (!pauseMenu->_active)
 		{
-			level_manager_update();
+			//level_manager_update();
 			//room_manager_update();
 		}
 
@@ -346,7 +345,7 @@ void editor_main()
 
 		//room_manager_draw();
 
-		level_manager_draw();
+		//level_manager_draw();
 
 		//draw rectangles to show where to place tile
 

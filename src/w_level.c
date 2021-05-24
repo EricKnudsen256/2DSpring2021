@@ -181,6 +181,8 @@ Room *level_template_load_random_from_list(Vector2D gridPos, Level *level)  //lo
 
 	room = level_room_empty(gridPos, level);
 
+	return room;
+
 	if (level->loadedRooms == 0)
 	{
 		slog("No rooms loaded");
@@ -338,6 +340,8 @@ Room *level_room_new(Vector2D gridPos, Level *level)
 	if (!level->room_list[x][y])
 	{
 		level->room_list[x][y] = room_new();
+		level->room_list[x][y]->_inuse = 1;
+		level->loadedRooms++;
 		return level->room_list[x][y];
 	}
 
@@ -543,7 +547,7 @@ void level_update(Level *level)
 	int x, y;
 	if (level->room_list == NULL)
 	{
-		slog("level does not exist");
+		//slog("level does not exist");
 		return;
 	}
 	for (x = 0; x < level->maxColumns; x++)
@@ -562,7 +566,6 @@ void level_draw(Level *level)
 	int x, y;
 	if (level->room_list == NULL)
 	{
-		slog("level does not exist");
 		return;
 	}
 	for (x = 0; x < level->maxColumns; x++)
@@ -600,7 +603,7 @@ void level_init_all(Level *level)
 
 	spawnPos = vector2d(x, y);
 	//start = room_empty(spawnPos);
-	start = room_empty(spawnPos);
+	start = level_room_empty(spawnPos, level);
 	start->roomType = 4;
 
 	Vector2D enemyPos = vector2d(start->position.x + 500, start->position.y + 500);
@@ -608,15 +611,15 @@ void level_init_all(Level *level)
 	//enemy_spawn_random(enemyPos);
 	//enemy_spawn_random(enemyPos);
 
+	
 
 	spawnPos.x++;
 
-	room = room_empty(spawnPos);
+	room = level_room_empty(spawnPos, level);
 	room->roomType = 3;
 	room_open_door(true, false, false, false, room);
 
 	lastRoom = room;
-
 
 	while (!endPlaced && count < 200) //worry about room types later, get the gen working properly first
 	{
@@ -731,6 +734,8 @@ void level_init_all(Level *level)
 			continue;
 		}
 
+		
+
 		room = level_template_load_random_from_list(spawnPos, level);
 
 
@@ -752,6 +757,8 @@ void level_init_all(Level *level)
 
 	}
 
+	
+
 	if (count > 200)
 	{
 		slog("count reached max, level not fully completed");
@@ -759,6 +766,7 @@ void level_init_all(Level *level)
 	}
 
 	//code to open all doors
+
 
 	for (x = 0; x < level->maxColumns; x++)
 	{
@@ -774,11 +782,17 @@ void level_init_all(Level *level)
 
 			room = level->room_list[x][y];
 
+			if (!room)
+			{
+				continue;
+			}
+			
 			if ((room->roomType == 2) && x != 0)
 			{
+				
 				lastRoom = level->room_list[x - 1][y];
 
-				if (lastRoom->roomType == 2 || lastRoom->roomType == 5)
+				if (lastRoom && (lastRoom->roomType == 2 || lastRoom->roomType == 5))
 				{
 					left = true;
 				}
@@ -812,7 +826,7 @@ void level_init_all(Level *level)
 
 			if (x == 1)
 			{
-				if (level->room_list[x - 1][y]->roomType == 4)
+				if (level->room_list[x - 1][y] && level->room_list[x - 1][y]->roomType == 4)
 				{
 					left = true;
 				}
@@ -821,6 +835,9 @@ void level_init_all(Level *level)
 			room_open_door(left, top, right, bot, room);
 		}
 	}
+
+
+	
 
 	//last room not working well, just manually check if next to anyother room with open door towards it
 
@@ -831,13 +848,13 @@ void level_init_all(Level *level)
 	{
 		if (level->room_list[x][y])
 		{
-			if (level->room_list[x][y + 1]->topDoor)
+			if (level->room_list[x][y + 1] && level->room_list[x][y + 1]->topDoor)
 			{
 				room_open_door(false, false, false, true, lastRoom);
 			}
 		}
 
-		if (level->room_list[x][y - 1])
+		if (level->room_list[x][y - 1] && level->room_list[x][y - 1])
 		{
 			if (level->room_list[x][y - 1]->botDoor)
 			{
@@ -847,7 +864,7 @@ void level_init_all(Level *level)
 	}
 
 
-	if (level->room_list[x - 1][y])
+	if (level->room_list[x - 1][y] && level->room_list[x - 1][y])
 	{
 		if (level->room_list[x - 1][y]->rightDoor)
 		{
@@ -865,6 +882,11 @@ void level_init_all(Level *level)
 		for (y = 0; y < level->maxRows; y++)
 		{
 			room = level->room_list[x][y];
+
+			if (!room)
+			{
+				continue;
+			}
 
 			Vector2D enemyPos = vector2d(room->position.x + 500, room->position.y + 500);
 
@@ -895,6 +917,11 @@ void level_build_branches(Level *level)
 			{
 				room1 = level->room_list[x][y];
 
+				if (!room1)
+				{
+					continue;
+				}
+
 				if (room1->leftDoor) //if has left door, but no room there
 				{
 					if (!level->room_list[x - 1][y])
@@ -917,6 +944,11 @@ void level_build_branches(Level *level)
 			{
 				room1 = level->room_list[x][y];
 
+				if (!room1)
+				{
+					continue;
+				}
+
 				if (room1->topDoor) //if has top door, but no room there
 				{
 					if (!level->room_list[x][y - 1])
@@ -938,6 +970,11 @@ void level_build_branches(Level *level)
 			{
 				room1 = level->room_list[x][y];
 
+				if (!room1)
+				{
+					continue;
+				}
+
 				if (room1->rightDoor) //if has right door, but no room there
 				{
 					if (!level->room_list[x + 1][y])
@@ -958,6 +995,11 @@ void level_build_branches(Level *level)
 			if (y != level->maxRows - 1) //check to make sure not on right wall
 			{
 				room1 = level->room_list[x][y];
+
+				if (!room1)
+				{
+					continue;
+				}
 
 				if (room1->botDoor) //if has right door, but no room there
 				{
@@ -987,6 +1029,11 @@ void level_build_branches(Level *level)
 			{
 				room1 = level->room_list[x][y];
 
+				if (!room1)
+				{
+					continue;
+				}
+
 				if (room1->leftDoor) //if has left door, but no room there
 				{
 					if (level->room_list[x - 1][y] && !level->room_list[x - 1][y]->rightDoor)
@@ -1002,6 +1049,11 @@ void level_build_branches(Level *level)
 			if (y != 0) //check to make sure not on top wall
 			{
 				room1 = level->room_list[x][y];
+
+				if (!room1)
+				{
+					continue;
+				}
 
 				if (room1->topDoor) //if has top door, but no room there
 				{
@@ -1020,6 +1072,11 @@ void level_build_branches(Level *level)
 			{
 				room1 = level->room_list[x][y];
 
+				if (!room1)
+				{
+					continue;
+				}
+
 				if (room1->rightDoor) //if has right door, but no room there
 				{
 					if (level->room_list[x + 1][y] && !level->room_list[x + 1][y]->leftDoor)
@@ -1034,6 +1091,11 @@ void level_build_branches(Level *level)
 			if (y != level->maxRows - 1) //check to make sure not on bot wall
 			{
 				room1 = level->room_list[x][y];
+
+				if (!room1)
+				{
+					continue;
+				}
 
 				if (room1->botDoor) //if has bot door, but no room there
 				{
@@ -1171,11 +1233,16 @@ void level_build_branch_room(Room *startRoom, Level *level)
 
 Vector2D level_get_start_pos(Level *level)
 {
+	if (!level)
+	{
+		slog("No room given");
+		return vector2d(0, 0);
+	}
 	for (int x = 0; x < level->maxColumns; x++)
 	{
 		for (int y = 0; y < level->maxRows; y++)
 		{
-			if (level && level->room_list[x][y]->roomType == 4)
+			if (level && level->room_list[x][y] && level->room_list[x][y]->roomType == 4)
 			{
 				//slog("Start room: x:%i, y:%i", x, y);
 				return level->room_list[x][y]->position;
