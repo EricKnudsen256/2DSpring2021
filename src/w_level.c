@@ -3,8 +3,10 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 
+#include "p_player.h"
 
 #include "w_level.h"
+#include "w_building.h"
 
 static LevelManager level_manager = { 0 };
 
@@ -491,7 +493,7 @@ Room *level_room_new_template(Level *level)
 	return NULL;
 }
 
-Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates)
+Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates, Uint32 max_buildings, Uint32 max_interactables)
 {
 	Level *level;
 	int i;
@@ -534,8 +536,16 @@ Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templ
 	level->maxColumns = maxColumns;
 	level->max_rooms = max_rooms;
 
+	level->gridSize = vector2d(32, 32);
+
 	level->template_list = (Room *)gfc_allocate_array(sizeof (Room), max_templates);
 	level->maxTemplates = max_templates;
+
+	level->interactable_list = (Interactable *)gfc_allocate_array(sizeof(Interactable), 100);
+	level->max_interactables = max_interactables;
+
+	level->building_list = (Building *)gfc_allocate_array(sizeof (Building), max_buildings);
+	level->max_buildings = max_buildings;
 
 	level_load_all_templates(level);
 
@@ -563,7 +573,7 @@ void level_update(Level *level)
 
 void level_draw(Level *level)
 {
-	int x, y;
+	int x, y, i;
 	if (level->room_list == NULL)
 	{
 		return;
@@ -577,6 +587,15 @@ void level_draw(Level *level)
 			room_draw(level->room_list[x][y]);
 		}
 	}
+
+	for (i = 0; i < level->max_buildings; i++)
+	{
+
+		if (!level->building_list[i])continue;
+
+		building_draw(level->building_list[i]);
+	}
+
 }
 
 void level_free(Level *level)
@@ -1223,12 +1242,71 @@ void level_build_branch_room(Room *startRoom, Level *level)
 
 					level_build_branch_room(room, level);
 
-
 				}
 			}
 		}
 	}
+}
 
+Building *level_building_new(Vector2D gridPos, Vector2D size, Level *level)
+{
+	Building *building;
+
+	int i;
+	if (level->building_list == NULL)
+	{
+		slog("level does not have a room list!");
+		return NULL;
+	}
+	for (i = 0; i < level->max_buildings; i++)
+	{
+		if (level->building_list[i])continue;// someone else is using this one
+		level->building_list[i] = building_new(gridPos, size);
+		level->building_list[i]->_inuse = 1;
+		level->building_list[i]->id = i;
+
+		return level->building_list[i];
+	}
+	slog("no building slots available");
+	return NULL;
+}
+
+void level_building_free(Building *building, Level *level)
+{
+	if (!building)
+	{
+		slog("no building given");
+		return;
+	}
+	if (!level)
+	{
+		slog("no level given");
+		return;
+	}
+
+	if (!building->id)
+	{
+		slog("no building has no id, cannot free. How was this created?");
+		return;
+	}
+
+	level->building_list[building->id];
+
+	memset(level->building_list[building->id], 0, sizeof(Building));
+
+	level->building_list[building->id]->_inuse = false;
+	level->building_list[building->id] = NULL;
+}
+
+void level_test_building(Level *level)
+{
+	Building *building;
+	Vector2D playerPos;
+
+	playerPos = entity_manager_get_player_ent()->position;
+
+	building = level_building_new(vector2d((int)(playerPos.x / 32), (int)(playerPos.y / 32)), vector2d(2, 2), level);
+	building->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
 }
 
 Vector2D level_get_start_pos(Level *level)

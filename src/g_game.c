@@ -124,7 +124,7 @@ void game_main()
 
 
 
-	testLevel = level_new(8, 8, 64, 100);
+	testLevel = level_new(8, 8, 64, 100, 1000, 1000);
 
 	testLevel->_current = 1;
 
@@ -251,7 +251,7 @@ void editor_main()
 
 	Level *testLevel;
 
-	testLevel = level_new(8, 8, 64, 100);
+	testLevel = level_new(8, 8, 64, 100, 1000, 1000);
 
 	testLevel->_current = 1;
 

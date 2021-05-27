@@ -138,6 +138,8 @@
     <ClCompile Include="..\..\..\src\m_main.c" />
     <ClCompile Include="..\..\..\src\m_minimap.c" />
     <ClCompile Include="..\..\..\src\m_pause.c" />
+    <ClCompile Include="..\..\..\src\w_building.c" />
+    <ClCompile Include="..\..\..\src\w_interactable.c" />
     <ClCompile Include="..\..\..\src\w_level.c" />
     <ClCompile Include="..\..\..\src\p_player.c" />
     <ClCompile Include="..\..\..\src\g_projectile.c" />
@@ -184,6 +186,8 @@
     <ClInclude Include="..\..\..\include\g_menu.h" />
     <ClInclude Include="..\..\..\include\g_menu_objects.h" />
     <ClInclude Include="..\..\..\include\g_mouse.h" />
+    <ClInclude Include="..\..\..\include\w_building.h" />
+    <ClInclude Include="..\..\..\include\w_interactable.h" />
     <ClInclude Include="..\..\..\include\w_ore_node.h" />
     <ClInclude Include="..\..\..\include\json\simple_json.h" />
     <ClInclude Include="..\..\..\include\json\simple_json_array.h" />
