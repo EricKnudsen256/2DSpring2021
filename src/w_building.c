@@ -1,9 +1,115 @@
 #include "simple_logger.h"
 
 #include "g_camera.h"
+#include "g_mouse.h"
 
 #include "w_building.h"
 #include "w_level.h"
+
+Building_List building_list = { 0 };
+
+void building_list_init(Uint32 total_buildings)
+{
+	if (total_buildings == 0)
+	{
+		slog("cannot allocate 0 entities!");
+		return;
+	}
+	if (building_list.building_list != NULL)
+	{
+		building_list_free();
+	}
+	building_list.building_list = (Building_List_Item *)gfc_allocate_array(sizeof (Building_List_Item), total_buildings);
+	if (building_list.building_list == NULL)
+	{
+		slog("failed to allocate building list!");
+		return;
+	}
+
+	building_list.total_buildings = total_buildings;
+	building_list.currentBuild = malloc(sizeof(Building_List_Item));
+	building_list.currentBuild->sprite = NULL;
+
+
+}
+
+void building_list_set_current_build(const char *buildingName)
+{
+
+	//for testing purposes
+	memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
+
+	building_list.currentBuild->buildingName = "testBuilding";
+	building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
+
+	return;
+
+	for (int i = 0; i < building_list.total_buildings; i++)
+	{
+		if (strcmp(building_list.building_list[i]->buildingName, buildingName))
+		{
+			memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
+
+			building_list.currentBuild->buildingName = building_list.building_list[i]->buildingName;
+			building_list.currentBuild->sprite = building_list.building_list[i]->sprite;
+			return;
+		}
+	}
+
+	building_list.currentBuild = NULL;
+}
+
+
+void building_list_remove_current_build()
+{
+	memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
+
+	building_list.currentBuild = NULL;
+}
+
+void building_list_load_buildings()
+{
+
+}
+
+void building_list_update_current()
+{
+}
+
+void building_list_draw_current()
+{
+	Vector2D drawPos, offset, mousePos;
+	Vector2D drawScale = camera_get_scale();
+
+	offset = camera_get_offset();
+	mousePos = mouse_get_position();
+
+	if (building_list.currentBuild->sprite)
+	{
+		drawPos = vector2d((int)(mousePos.x - ((int)mousePos.x % 32)), (int)(mouse_get_position().y - (int)mousePos.y % 32));
+
+		gf2d_sprite_draw(building_list.currentBuild->sprite, drawPos, &drawScale, NULL, NULL, NULL, NULL, 0);
+	}
+
+
+}
+
+
+void building_list_place_current()
+{
+
+}
+
+void building_list_free()
+{
+	if (building_list.building_list != NULL)
+	{
+		free(building_list.building_list);
+	}
+	memset(&building_list, 0, sizeof(Building_List));
+	slog("building list closed");
+}
+
 
 Building *building_new(Vector2D gridPos, Vector2D size)
 {

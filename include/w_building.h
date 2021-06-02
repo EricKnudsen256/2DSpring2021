@@ -29,6 +29,43 @@ typedef struct Building_s
 
 }Building;
 
+typedef struct Building_List_Item_s
+{
+	Sprite *sprite;
+	char *buildingName;
+
+}Building_List_Item;
+
+typedef struct Building_List_s
+{
+	Building_List_Item **building_list;
+	Building_List_Item *currentBuild;
+	Uint32  total_buildings;
+
+
+}Building_List;
+
+
+
+void building_list_init(Uint32 total_buildings);
+
+/**
+* @brief free all entities in the system and destroy entity manager
+*/
+
+void building_list_load_buildings();
+
+void building_list_set_current_build(const char *buildingName);
+
+void building_list_update_current();
+
+void building_list_draw_current();
+
+void building_list_place_current();
+
+void building_list_free();
+
+
 Building *building_new(Vector2D gridPos, Vector2D size);
 
 /**

@@ -183,7 +183,7 @@ void player_update(Entity *self)
 	}
 	if (self->facing < 0 || self->facing > 5)
 	{
-		slog("player cannot face this direction, defualting to right");
+		//slog("player cannot face this direction, defualting to right");
 		self->facing = 3;
 	}
 

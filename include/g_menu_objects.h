@@ -20,6 +20,7 @@ typedef struct Button_s
 	TextLine	text;
 	char		*buttonTag;
 	void(*onPress)(struct Button_s *self);
+	void		*data;
 
 }Button;
 

@@ -133,6 +133,7 @@
     <ClCompile Include="..\..\..\src\json\simple_json_parse.c" />
     <ClCompile Include="..\..\..\src\json\simple_json_string.c" />
     <ClCompile Include="..\..\..\src\logger\simple_logger.c" />
+    <ClCompile Include="..\..\..\src\m_build.c" />
     <ClCompile Include="..\..\..\src\m_editor.c" />
     <ClCompile Include="..\..\..\src\m_inventory.c" />
     <ClCompile Include="..\..\..\src\m_main.c" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\..\..\include\g_menu.h" />
     <ClInclude Include="..\..\..\include\g_menu_objects.h" />
     <ClInclude Include="..\..\..\include\g_mouse.h" />
+    <ClInclude Include="..\..\..\include\m_build.h" />
     <ClInclude Include="..\..\..\include\w_building.h" />
     <ClInclude Include="..\..\..\include\w_interactable.h" />
     <ClInclude Include="..\..\..\include\w_ore_node.h" />

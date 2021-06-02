@@ -41,8 +41,6 @@ Menu *inventory_new(int buttonMax)
 
 void inventory_create_slots(Menu *inventoryMenu)
 {
-	//32 is current inventory size, dont like hard coding it but accessing it isn't working properly
-
 	for (int i = 0; i < player_inventory_get_max(); i++)
 	{
 		int testIndex;

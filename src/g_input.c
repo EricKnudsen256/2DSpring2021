@@ -23,7 +23,7 @@ void input_game()
 	input_mosue_down = false;
 
 	SDL_Event e;
-	Menu *pauseMenu, *inventoryMenu, *mainMenu;
+	Menu *pauseMenu, *inventoryMenu, *mainMenu, *buildMenu;
 
 	while (SDL_PollEvent(&e))
 	{
@@ -53,12 +53,13 @@ void input_game()
 		{
 			pauseMenu = menu_manager_get_by_tag("pause");
 			inventoryMenu = menu_manager_get_by_tag("inventory");
+			buildMenu = menu_manager_get_by_tag("build");
 
 			if (pauseMenu)
 			{
 				if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 0)
 				{
-
+					build_set_inactive(NULL, buildMenu);
 					pause_menu_set_active(NULL, pauseMenu);
 					inventory_set_inactive(NULL, inventoryMenu);
 
@@ -69,9 +70,13 @@ void input_game()
 					pause_menu_set_inactive(NULL, pauseMenu);
 
 				}
-				else if (e.button.button == SDL_SCANCODE_E)
+				else if (e.button.button == SDL_SCANCODE_E && buildMenu->_active == 0)
 				{
-					level_test_building(level_manager_get_current());
+					build_set_active(NULL, buildMenu);
+				}
+				else if (e.button.button == SDL_SCANCODE_E && buildMenu->_active == 1)
+				{
+					build_set_inactive(NULL, buildMenu);
 				}
 			}
 

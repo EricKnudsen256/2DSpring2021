@@ -7,6 +7,7 @@ typedef struct Mouse_s
 {
 	Vector2D mousePos;
 	Sprite *sprite;
+	Sprite *sprite2;
 
 }Mouse;
 
@@ -33,12 +34,12 @@ void mouse_update();
 /**
 * @brief sets mouse sprite back to default sprite
 */
-void mouse_set_default_sprite();
+void mouse_set_default_sprite2();
 
 /**
 * @brief not in use, but sets sprite of the mouse
 */
-void mouse_set_sprite();
+void mouse_set_sprite2();
 
 /**
 * @brief returns the mouse object
@@ -51,6 +52,8 @@ Mouse mouse_get_mouse();
 * @return the poision of the mouse
 */
 Vector2D mouse_get_position();
+
+Vector2D mouse_get_world_position();
 
 
 #endif

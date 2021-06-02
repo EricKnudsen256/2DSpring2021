@@ -29,6 +29,7 @@
 #include "m_inventory.h"
 #include "m_main.h"
 #include "m_editor.h"
+#include "m_build.h"
 
 #include "p_player.h"
 
@@ -79,6 +80,7 @@ void init_game()
 	player_inventory_init(32);
 
 	//room_manager_init(8, 8, 64, 100);
+	building_list_init(50);
 	level_manager_init(10);
 }
 
@@ -88,6 +90,8 @@ void close_main_game()
 	projectile_manager_free();
 	level_manager_free();
 	player_inventory_free();
+
+	building_list_free();
 
 	//room_manager_free();
 }
@@ -112,7 +116,7 @@ void game_main()
 
 	TextLine fps_text, zoom_text;
 	Entity *player;
-	Menu *pauseMenu, *inventoryMenu, *minimap;
+	Menu *pauseMenu, *inventoryMenu, *minimap, *buildMenu;
 	Sound *bgMusic;
 	Sprite *bg;
 
@@ -150,6 +154,7 @@ void game_main()
 	pauseMenu = pause_menu_new(10);
 	inventoryMenu = inventory_new(50);
 	minimap = minimap_menu_new(1);
+	buildMenu = build_new(100);
 
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 
@@ -181,8 +186,9 @@ void game_main()
 			projectile_manager_check_collisions();
 			projectile_manager_update_projectiles();
 
+			//building_list_update_current();
+
 			level_manager_update();
-			//room_manager_update();
 		}
 
 		
@@ -201,8 +207,9 @@ void game_main()
 
 		gf2d_sprite_draw(bg, vector2d(0, 0), NULL, NULL, NULL, NULL, NULL, 0);
 
-		//room_manager_draw();
 		level_manager_draw();
+
+		building_list_draw_current();
 
 		entity_manager_draw_entities();
 		projectile_manager_draw_projectiles();
