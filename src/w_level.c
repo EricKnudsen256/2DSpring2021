@@ -1298,14 +1298,11 @@ void level_building_free(Building *building, Level *level)
 	level->building_list[building->id] = NULL;
 }
 
-void level_test_building(Level *level)
+void level_test_building(Vector2D buildPos, Level *level)
 {
 	Building *building;
-	Vector2D playerPos;
 
-	playerPos = entity_manager_get_player_ent()->position;
-
-	building = level_building_new(vector2d((int)(playerPos.x / 32), (int)(playerPos.y / 32)), vector2d(2, 2), level);
+	building = level_building_new(vector2d((int)(buildPos.x / 32), (int)(buildPos.y / 32)), vector2d(2, 2), level);
 	building->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
 }
 

@@ -24,6 +24,7 @@ void input_game()
 
 	SDL_Event e;
 	Menu *pauseMenu, *inventoryMenu, *mainMenu, *buildMenu;
+	Level *level = level_manager_get_current();
 
 	while (SDL_PollEvent(&e))
 	{
@@ -36,14 +37,29 @@ void input_game()
 
 				if (!menu_manager_check_click())
 				{
-					player_attack(entity_manager_get_player_ent());
+					if (building_list_is_current())
+					{
+						building_list_place_current();
+					}
+					else
+					{
+						player_attack(entity_manager_get_player_ent());
+					}
 				}
 			}
 			if (e.button.button == SDL_BUTTON_RIGHT)
 			{
 				if (entity_manager_get_player_ent())
 				{
-					player_ranged(entity_manager_get_player_ent());
+					if (building_list_is_current())
+					{
+						building_list_remove_current_build();
+					}
+					else
+					{
+						player_ranged(entity_manager_get_player_ent());
+					}
+
 				}
 
 

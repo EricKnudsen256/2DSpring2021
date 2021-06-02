@@ -99,7 +99,7 @@ void camera_zoom_in()
 		return;
 	}
 
-	newScale = vector2d(currentScale.x + 0.03125, currentScale.y + 0.03125);
+	newScale = vector2d(currentScale.x + 0.0625, currentScale.y + 0.0625);
 	camera_set_scale(newScale);
 }
 
@@ -117,7 +117,7 @@ void camera_zoom_out()
 		return;
 	}
 
-	newScale = vector2d(currentScale.x - 0.03125, currentScale.y - 0.03125);
+	newScale = vector2d(currentScale.x - 0.0625, currentScale.y - 0.0625);
 	camera_set_scale(newScale);
 }
 

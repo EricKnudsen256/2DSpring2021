@@ -37,6 +37,7 @@ void building_list_set_current_build(const char *buildingName)
 {
 
 	//for testing purposes
+
 	memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
 
 	building_list.currentBuild->buildingName = "testBuilding";
@@ -63,8 +64,6 @@ void building_list_set_current_build(const char *buildingName)
 void building_list_remove_current_build()
 {
 	memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
-
-	building_list.currentBuild = NULL;
 }
 
 void building_list_load_buildings()
@@ -82,22 +81,40 @@ void building_list_draw_current()
 	Vector2D drawScale = camera_get_scale();
 
 	offset = camera_get_offset();
-	mousePos = mouse_get_position();
+	mousePos = mouse_get_world_position();
 
-	if (building_list.currentBuild->sprite)
+	if (building_list.currentBuild && building_list.currentBuild->sprite)
 	{
-		drawPos = vector2d((int)(mousePos.x - ((int)mousePos.x % 32)), (int)(mouse_get_position().y - (int)mousePos.y % 32));
+		drawPos.x = (int)mousePos.x - ((int)mousePos.x % 32) + offset.x;
+		drawPos.y = (int)mousePos.y - ((int)mousePos.y % 32) + offset.y;
 
-		gf2d_sprite_draw(building_list.currentBuild->sprite, drawPos, &drawScale, NULL, NULL, NULL, NULL, 0);
+		Vector4D colorShift = vector4d(255, 255, 255, 125);
+
+		gf2d_sprite_draw(building_list.currentBuild->sprite, drawPos, &drawScale, NULL, NULL, NULL, &colorShift, 0);
 	}
-
-
 }
 
 
 void building_list_place_current()
 {
+	Vector2D spawnPos, offset, mousePos;
 
+	offset = camera_get_offset();
+	mousePos = mouse_get_world_position();
+
+	level_test_building(mousePos, level_manager_get_current());
+
+	//slog("Placed at x:%f, y:%f", spawnPos.x, spawnPos.y);
+}
+
+Bool building_list_is_current()
+{
+	if (building_list.currentBuild)
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void building_list_free()

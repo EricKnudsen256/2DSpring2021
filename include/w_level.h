@@ -108,7 +108,7 @@ Building *level_building_new(Vector2D gridPos, Vector2D size, Level *level);
 void level_building_free(Building *building, Level *level);
 
 
-void level_test_building(Level *level);
+void level_test_building(Vector2D buildPos, Level *level);
 
 
 Vector2D level_get_start_pos(Level *level);
