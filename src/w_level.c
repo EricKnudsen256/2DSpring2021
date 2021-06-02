@@ -1304,6 +1304,7 @@ Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *l
 				{
 					if (gridPosArray[j].y >= level->building_list[i]->gridPos.y && gridPosArray[j].y < level->building_list[i]->gridPos.y + level->building_list[i]->size.y)
 					{
+						free(gridPosArray);
 						return false;
 					}
 				}
@@ -1311,7 +1312,7 @@ Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *l
 		}
 	}
 
-	//free(gridPosArray);
+	free(gridPosArray);
 	return true;
 
 }
