@@ -1271,6 +1271,51 @@ Building *level_building_new(Vector2D gridPos, Vector2D size, Level *level)
 	return NULL;
 }
 
+Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *level)
+{
+	//position is the top left of the object
+
+	Vector2D gridPos, tempGridPos;
+	Vector2D *gridPosArray;
+	int count = 0;
+
+	gridPosArray = gfc_allocate_array(sizeof(Vector2D), size.x * size.y);
+
+	gridPos = vector2d((int)position.x / 32, (int)position.y / 32);
+
+	for (int x = 0; x < size.x; x++)
+	{
+		for (int y = 0; y < size.y; y++)
+		{
+			gridPosArray[count] = vector2d(gridPos.x + x, gridPos.y + y);
+			count++;
+		}
+	}
+
+	for (int i = 0; i < level->max_buildings; i++)
+	{
+		if (level->building_list[i])
+		{
+			for (int j = 0; j < size.x * size.y; j++)
+			{
+				//slog("Building x:%f, y:%f. Test x:%f, y:%f", level->building_list[i]->gridPos.x, level->building_list[i]->gridPos.y, gridPosArray[j].x, gridPosArray[j].y);
+
+				if (gridPosArray[j].x >= level->building_list[i]->gridPos.x && gridPosArray[j].x < level->building_list[i]->gridPos.x + level->building_list[i]->size.x)
+				{
+					if (gridPosArray[j].y >= level->building_list[i]->gridPos.y && gridPosArray[j].y < level->building_list[i]->gridPos.y + level->building_list[i]->size.y)
+					{
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	//free(gridPosArray);
+	return true;
+
+}
+
 void level_building_free(Building *building, Level *level)
 {
 	if (!building)

@@ -108,6 +108,9 @@ Building *level_building_new(Vector2D gridPos, Vector2D size, Level *level);
 void level_building_free(Building *building, Level *level);
 
 
+Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *level);
+
+
 void level_test_building(Vector2D buildPos, Level *level);
 
 

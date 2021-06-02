@@ -34,6 +34,8 @@ typedef struct Building_List_Item_s
 	Sprite *sprite;
 	char *buildingName;
 
+	Vector2D size;
+
 }Building_List_Item;
 
 typedef struct Building_List_s
@@ -41,7 +43,6 @@ typedef struct Building_List_s
 	Building_List_Item **building_list;
 	Building_List_Item *currentBuild;
 	Uint32  total_buildings;
-
 
 }Building_List;
 

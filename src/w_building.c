@@ -42,6 +42,7 @@ void building_list_set_current_build(const char *buildingName)
 
 	building_list.currentBuild->buildingName = "testBuilding";
 	building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
+	building_list.currentBuild->size = vector2d(2, 2);
 
 	return;
 
@@ -79,6 +80,8 @@ void building_list_draw_current()
 {
 	Vector2D drawPos, offset, mousePos;
 	Vector2D drawScale = camera_get_scale();
+	Vector4D colorShift;
+
 
 	offset = camera_get_offset();
 	mousePos = mouse_get_world_position();
@@ -88,7 +91,18 @@ void building_list_draw_current()
 		drawPos.x = (int)mousePos.x - ((int)mousePos.x % 32) + offset.x;
 		drawPos.y = (int)mousePos.y - ((int)mousePos.y % 32) + offset.y;
 
-		Vector4D colorShift = vector4d(255, 255, 255, 125);
+		//check to see if spot has building, if so, change color
+
+		if (level_building_check_if_placable(mousePos, building_list.currentBuild->size, level_manager_get_current()))
+		{
+			colorShift = vector4d(0, 255, 0, 175);
+		}
+		else
+		{
+			colorShift = vector4d(255, 0, 0, 175);
+		}
+
+		
 
 		gf2d_sprite_draw(building_list.currentBuild->sprite, drawPos, &drawScale, NULL, NULL, NULL, &colorShift, 0);
 	}
@@ -97,12 +111,19 @@ void building_list_draw_current()
 
 void building_list_place_current()
 {
-	Vector2D spawnPos, offset, mousePos;
+	Vector2D spawnPos, offset, mousePos, gridPos;
 
 	offset = camera_get_offset();
 	mousePos = mouse_get_world_position();
 
-	level_test_building(mousePos, level_manager_get_current());
+	//check to see if placing building in this spot is possible
+
+	if (level_building_check_if_placable(mousePos, building_list.currentBuild->size, level_manager_get_current()))
+	{
+		level_test_building(mousePos, level_manager_get_current());
+	}
+
+	
 
 	//slog("Placed at x:%f, y:%f", spawnPos.x, spawnPos.y);
 }
