@@ -44,6 +44,8 @@ void building_list_set_current_build(const char *buildingName)
 	building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
 	building_list.currentBuild->size = vector2d(2, 2);
 
+	building_list.currentBuild->_inuse = 1;
+
 	return;
 
 	for (int i = 0; i < building_list.total_buildings; i++)
@@ -130,7 +132,7 @@ void building_list_place_current()
 
 Bool building_list_is_current()
 {
-	if (building_list.currentBuild)
+	if (building_list.currentBuild->_inuse == 1)
 	{
 		return true;
 	}

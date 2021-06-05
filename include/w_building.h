@@ -31,9 +31,10 @@ typedef struct Building_s
 
 typedef struct Building_List_Item_s
 {
+	Bool _inuse;
 	Sprite *sprite;
 	char *buildingName;
-
+	
 	Vector2D size;
 
 }Building_List_Item;
