@@ -9,6 +9,8 @@ typedef struct Building_s
 {
 	int			id;				//location in building list of level
 
+	char		*buildingName;
+
 	Bool		_inuse;
 
 	Vector2D	gridPos;		//top left of building is 0,0
@@ -21,6 +23,7 @@ typedef struct Building_s
 	Sprite		*sprite;
 	
 	Interactable *interact;
+
 
 	void(*update)(struct Building *building);
 	void(*think)(struct Building *building);

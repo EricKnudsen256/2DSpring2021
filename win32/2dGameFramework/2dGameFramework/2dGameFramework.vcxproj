@@ -112,6 +112,7 @@
     <ClCompile Include="..\..\..\src\gf2d_mouse.c" />
     <ClCompile Include="..\..\..\src\gf2d_shape.c" />
     <ClCompile Include="..\..\..\src\gf2d_windows.c" />
+    <ClCompile Include="..\..\..\src\g_anim.c" />
     <ClCompile Include="..\..\..\src\g_camera.c" />
     <ClCompile Include="..\..\..\src\e_enemy.c" />
     <ClCompile Include="..\..\..\src\e_entity.c" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\..\..\include\gf2d_mouse.h" />
     <ClInclude Include="..\..\..\include\gf2d_shape.h" />
     <ClInclude Include="..\..\..\include\gf2d_windows.h" />
+    <ClInclude Include="..\..\..\include\g_anim.h" />
     <ClInclude Include="..\..\..\include\g_camera.h" />
     <ClInclude Include="..\..\..\include\e_enemy.h" />
     <ClInclude Include="..\..\..\include\e_entity.h" />

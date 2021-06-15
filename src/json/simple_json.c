@@ -83,7 +83,7 @@ SJson *sj_load(const char *filename)
     }
     else
     {
-        if (__SJ_DEBUG) printf("read %li characters of %li available",read,size);
+       if (__SJ_DEBUG) printf("read %li characters of %li available",read,size);
     }
     if (__SJ_DEBUG) printf("file contents:\n%s\n",buffer);
     fclose(file);

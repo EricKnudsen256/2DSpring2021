@@ -59,7 +59,7 @@ Entity *enemy_spawn_random(Vector2D position)
 	//ent->sprite = gf2d_sprite_load_all("assets/sprites/enemy1.png", 64, 64, 1);
 	vector2d_copy(ent->position, position);
 
-	slog("spawn x:%f, spawn y:%f", position.x, position.y);
+	//slog("spawn x:%f, spawn y:%f", position.x, position.y);
 	return ent;
 }
 

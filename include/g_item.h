@@ -7,25 +7,35 @@ typedef struct Item_s
 {
 	char *name;
 	Sprite *sprite;
-	char *description;
 	int stackNum;
 
 }Item;
 
+typedef struct ItemTemplate_s
+{
+	char *name;
+	Sprite *sprite;
+	char *description;
+	int maxStacks;
+
+}ItemTemplate;
+
 typedef struct
 {
-	Item *item_list;
+	ItemTemplate *item_list;
 	Uint32  max_item_types;
 
-}ItemDescList;
+}ItemList;
 
-static ItemDescList itemDescList = { 0 };
+static ItemList itemList = { 0 };
 
-void item_desc_list_init();
+/**
+*  @brief Creates list of all items with their discriptions from config file
+*/
 
-void item_desc_load_from_file();
+void item_load_from_file();
 
-void item_desc_list_free();
+void item_list_free();
 
 Item *item_new(char *name, int stackNum, char* spritePath);
 

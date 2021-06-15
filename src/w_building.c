@@ -38,15 +38,33 @@ void building_list_set_current_build(const char *buildingName)
 
 	//for testing purposes
 
-	memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
 
-	building_list.currentBuild->buildingName = "testBuilding";
-	building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
-	building_list.currentBuild->size = vector2d(2, 2);
+	if (buildingName == "testBuilding")
+	{
+		slog("test");
+		memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
 
-	building_list.currentBuild->_inuse = 1;
+		building_list.currentBuild->buildingName = "testBuilding";
+		building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
+		building_list.currentBuild->size = vector2d(2, 2);
 
-	return;
+		building_list.currentBuild->_inuse = 1;
+
+		return;
+	}
+	else if (buildingName == "testBuilding2")
+	{
+		memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
+
+		building_list.currentBuild->buildingName = "testBuilding2";
+		building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/test4x4.png");
+		building_list.currentBuild->size = vector2d(4, 4);
+
+		building_list.currentBuild->_inuse = 1;
+
+		return;
+	}
+
 
 	for (int i = 0; i < building_list.total_buildings; i++)
 	{

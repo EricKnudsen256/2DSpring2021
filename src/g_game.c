@@ -24,6 +24,7 @@
 #include "g_projectile.h"
 #include "g_input.h"
 #include "g_mouse.h"
+#include "g_item.h"
 
 #include "m_pause.h"
 #include "m_inventory.h"
@@ -76,12 +77,13 @@ void init_game()
 {
 	entity_manager_init(300);
 	projectile_manager_init(100);
-	level_manager_init(64);
 	player_inventory_init(32);
 
 	//room_manager_init(8, 8, 64, 100);
 	building_list_init(50);
 	level_manager_init(10);
+
+	item_load_from_file();
 }
 
 void close_main_game()
@@ -124,6 +126,7 @@ void game_main()
 
 	Level *testLevel;
 
+
 	font = font_load("assets/fonts/DotGothic16-Regular.ttf", 24);
 
 
@@ -141,7 +144,7 @@ void game_main()
 
 	player = player_spawn(spawnPos);
 
-	slog("Spawning player at x:%f, y:%f", spawnPos.x, spawnPos.y);
+	//slog("Spawning player at x:%f, y:%f", spawnPos.x, spawnPos.y);
 
 	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
 	//slog("maxItems: %i", player_inventory_get_max());

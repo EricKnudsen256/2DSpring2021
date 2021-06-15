@@ -425,7 +425,7 @@ Tile *room_new_tile(Room *room, Vector2D pos, Vector2D gridPos)
 	if (room->tileArray[x][y])
 	{
 		//tile_free(&room->tileArray[x][y]);
-		slog("tile already exists");
+		//slog("tile already exists");
 		return;
 	}
 
@@ -444,7 +444,7 @@ void room_free_tile(int x, int y, Room* room)
 {
 	if (!room->tileArray[x][y])
 	{
-		slog("no tile to free");
+		//slog("no tile to free");
 		return;
 	}
 	if (!room)

@@ -73,6 +73,9 @@ void build_create_slots(Menu *buildMenu)
 
 	buildMenu->buttonList[0]->data = "testBuilding";
 	buildMenu->buttonList[0]->sprite2 = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
+
+	buildMenu->buttonList[1]->data = "testBuilding2";
+	buildMenu->buttonList[1]->sprite2 = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
 }
 
 void build_choose_item(Button *button, Menu *buildMenu)

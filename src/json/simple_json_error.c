@@ -40,7 +40,7 @@ void sj_set_error(char *error,...)
     va_end(ap);
     
     // output error
-    printf("%s\n",er);
+    //printf("%s\n",er);
     sj_string_set(&_error,er);
     
     //cleanup

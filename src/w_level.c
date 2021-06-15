@@ -33,7 +33,7 @@ void level_manager_init(Uint32 max_levels)
 	}
 
 	level_manager.max_levels = max_levels;
-	slog("room system initialized");
+	slog("level system initialized");
 
 }
 
@@ -1348,8 +1348,8 @@ void level_test_building(Vector2D buildPos, Level *level)
 {
 	Building *building;
 
-	building = level_building_new(vector2d((int)(buildPos.x / 32), (int)(buildPos.y / 32)), vector2d(2, 2), level);
-	building->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
+	building = level_building_new(vector2d((int)(buildPos.x / 32), (int)(buildPos.y / 32)), vector2d(4, 4), level);
+	building->sprite = gf2d_sprite_load_image("assets/sprites/buildings/test4x4.png");
 }
 
 Vector2D level_get_start_pos(Level *level)
