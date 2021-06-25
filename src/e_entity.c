@@ -472,16 +472,26 @@ void entity_draw(Entity *ent)
 		drawPosition.x = ent->position.x + offset.x;
 		drawPosition.y = ent->position.y + offset.y;
 
+		if (ent->animList)
+		{
+			
+			anim_list_draw(ent->animList, ent->animListLen, drawPosition);
+		}
+		else if (ent->sprite)
+		{
+			
+			gf2d_sprite_draw(
+				ent->sprite,
+				drawPosition,
+				&drawScale,
+				NULL,
+				&ent->rotation,
+				NULL,
+				NULL,
+				(Uint32)ent->frame);
+		}
 
-		gf2d_sprite_draw(
-			ent->sprite,
-			drawPosition,
-			&drawScale,
-			NULL,
-			&ent->rotation,
-			NULL,
-			NULL,
-			(Uint32)ent->frame);
+		
 
 		//test code to draw the hitboxes for an ent that has one
 

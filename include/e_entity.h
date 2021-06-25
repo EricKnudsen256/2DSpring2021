@@ -6,6 +6,8 @@
 #include "gfc_audio.h"
 #include "gf2d_sprite.h"
 
+#include "g_anim.h"
+
 typedef enum 
 {
 	ENEMY_WALKER,
@@ -45,6 +47,10 @@ typedef struct Entity_s
 	Uint32		lastJump;				/** used for player to determine if can double jump again */
 	int			max_sounds;				/** maximum number of sounds in the entities' sound list */
 	Sound		**soundList;
+
+	Anim		**animList;
+	int			animListLen;
+
 	void(*update)(struct Entity_s *self);
 	void(*think)(struct Entity_s *self);
 	void(*draw)(struct Entity_s *self);

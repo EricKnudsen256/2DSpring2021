@@ -116,7 +116,7 @@ void game_main()
 	int done = 0;
 	const Uint8 * keys;
 
-	TextLine fps_text, zoom_text;
+	TextLine fps_text, zoom_text, time_text;
 	Entity *player;
 	Menu *pauseMenu, *inventoryMenu, *minimap, *buildMenu;
 	Sound *bgMusic;
@@ -222,6 +222,9 @@ void game_main()
 
 		gfc_line_sprintf(zoom_text, "Zoom: x:%f, y:%f", camera_get_scale().x, camera_get_scale().y);
 		font_render(font, zoom_text, vector2d(32, 64), gfc_color8(255, 255, 255, 255));
+
+		gfc_line_sprintf(time_text, "Time: %f", SDL_GetTicks()/ 1000.0);
+		font_render(font, time_text, vector2d(32, 96), gfc_color8(255, 255, 255, 255));
 
 
 		menu_manager_draw_menus();

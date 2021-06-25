@@ -147,6 +147,11 @@ Entity *player_spawn(Vector2D position)
 
 	player_load_sounds(ent);
 
+	ent->animListLen = 10;
+	ent->animList = anim_list_new(ent->animListLen);
+
+	ent->animList[0] = anim_new("assets/sprites/testPlayer2-sheet.png","player_idle", ANIM_IDLE, 0, 29, 15, 48, 64, 6);
+
 	return ent;
 }
 
@@ -187,6 +192,7 @@ void player_update(Entity *self)
 		self->facing = 3;
 	}
 
+	anim_list_update(self->animList, self->animListLen);
 
 }
 
