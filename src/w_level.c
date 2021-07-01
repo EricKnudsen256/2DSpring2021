@@ -547,6 +547,9 @@ Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templ
 	level->building_list = (Building *)gfc_allocate_array(sizeof (Building), max_buildings);
 	level->max_buildings = max_buildings;
 
+	level->ore_list = (Ore_Node*)gfc_allocate_array(sizeof(Ore_Node), 100);
+	level->max_ore = 100;
+
 	level_load_all_templates(level);
 
 	return level;
@@ -569,6 +572,14 @@ void level_update(Level *level)
 			room_update(level->room_list[x][y]);
 		}
 	}
+
+	for (int i = 0; i < level->max_ore; i++)
+	{
+		if (!level->ore_list[i])continue;
+		ore_node_update(level->ore_list[i]);
+	}
+
+	
 }
 
 void level_draw(Level *level)
@@ -594,6 +605,14 @@ void level_draw(Level *level)
 		if (!level->building_list[i])continue;
 
 		building_draw(level->building_list[i]);
+	}
+
+	for (i = 0; i < level->max_ore; i++)
+	{
+
+		if (!level->ore_list[i])continue;
+
+		ore_node_draw(level->ore_list[i]);
 	}
 
 }
@@ -1336,8 +1355,6 @@ void level_building_free(Building *building, Level *level)
 		return;
 	}
 
-	level->building_list[building->id];
-
 	memset(level->building_list[building->id], 0, sizeof(Building));
 
 	level->building_list[building->id]->_inuse = false;
@@ -1350,6 +1367,63 @@ void level_test_building(Vector2D buildPos, Level *level)
 
 	building = level_building_new(vector2d((int)(buildPos.x / 32), (int)(buildPos.y / 32)), vector2d(4, 4), level);
 	building->sprite = gf2d_sprite_load_image("assets/sprites/buildings/test4x4.png");
+}
+
+Ore_Node *level_ore_node_new(Vector2D gridPos, Level *level)
+{
+	Ore_Node *node;
+
+	int i;
+	if (level->ore_list == NULL)
+	{
+		slog("level does not have an ore list!");
+		return NULL;
+	}
+	for (i = 0; i < level->max_ore; i++)
+	{
+		if (level->ore_list[i])continue;// someone else is using this one
+		level->ore_list[i] = ore_node_new(gridPos);
+		level->ore_list[i]->_inuse = 1;
+		level->ore_list[i]->id = i;
+
+		return level->ore_list[i];
+	}
+
+	slog("no ore node slots available");
+	return NULL;
+}
+
+void level_ore_node_free(Ore_Node *node, Level *level)
+{
+	if (!node)
+	{
+		slog("no node given");
+		return;
+	}
+	if (!level)
+	{
+		slog("no level given");
+		return;
+	}
+
+	if (!node->id)
+	{
+		slog("node has no id, cannot free. How was this created?");
+		return;
+	}
+
+
+	memset(level->building_list[node->id], 0, sizeof(Building));
+	
+	level->building_list[node->id]->_inuse = false;
+	level->building_list[node->id] = NULL;
+}
+
+void level_test_node(Vector2D gridPos, Level *level)
+{
+	Ore_Node *node;
+
+	node = level_ore_node_new(gridPos, level);
 }
 
 Vector2D level_get_start_pos(Level *level)

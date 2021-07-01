@@ -107,6 +107,14 @@ void input_game()
 					inventory_set_inactive(NULL, inventoryMenu);
 				}
 			}
+
+			if (e.button.button == SDL_SCANCODE_L)
+			{
+				Level *level = level_manager_get_current();
+				Vector2D playerPos = entity_manager_get_player_ent()->position;
+
+				level_test_node(vector2d((int)(playerPos.x / 32), (int)(playerPos.y / 32) - 2), level);
+			}
 		}
 		else if (e.type == SDL_MOUSEWHEEL)
 		{

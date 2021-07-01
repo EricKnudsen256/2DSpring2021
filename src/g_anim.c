@@ -63,7 +63,7 @@ void anim_list_update(Anim **animList, int animListLen)
 
 	}
 
-	slog("CurrentTime: %i, LastTime: %i", currentTime, currentAnim->lastframe);
+	//slog("CurrentTime: %i, LastTime: %i", currentTime, currentAnim->lastframe);
 
 	if (currentTime > currentAnim->lastframe + (int)(1000.0 / currentAnim->framerate))
 	{
@@ -73,8 +73,24 @@ void anim_list_update(Anim **animList, int animListLen)
 
 	if (currentAnim->currentframe >= currentAnim->endframe)
 	{
-		currentAnim->currentframe = currentAnim->startframe;
-		currentAnim->lastframe = currentAnim->currentframe;
+		if (currentAnim->animType == ANIM_IDLE)
+		{
+			currentAnim->currentframe = currentAnim->startframe;
+			currentAnim->lastframe = currentAnim->currentframe;
+		}
+		else
+		{
+			currentAnim->_current = 0;
+
+			for (int i = 0; i < animListLen; i++)
+			{
+				if (animList[i] && animList[i]->animType == ANIM_IDLE)
+				{
+					animList[i]->_current = 1;
+				}
+			}
+		}
+		
 	}
 }
 
@@ -97,6 +113,7 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos)
 
 	if (!currentAnim)
 	{
+
 		if (animList[0] && animList[0]->animType == ANIM_IDLE)
 		{
 			currentAnim = animList[0];
@@ -108,6 +125,8 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos)
 		
 	}
 
+	slog("Draw x:%f, draw y:%f", drawPos.x, drawPos.y);
+
 	gf2d_sprite_draw(
 		currentAnim->spriteSheet,
 		drawPos,
@@ -117,4 +136,24 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos)
 		NULL,
 		NULL,
 		(Uint32)currentAnim->currentframe);
+}
+
+void anim_list_change_anim(Anim **animList, int oldAnim, int newAnim)
+{
+	Anim *oldanim;
+	Anim *newanim;
+	
+
+	if (animList[oldAnim] && animList[newAnim])
+	{
+		oldanim = animList[oldAnim];
+		newanim = animList[newAnim];
+
+		oldanim->currentframe = oldanim->startframe;
+		newanim->currentframe = newanim->startframe;
+
+		oldanim->_current = 0;
+		newanim->_current = 1;
+
+	}
 }

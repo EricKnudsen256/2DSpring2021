@@ -11,7 +11,7 @@
 #include "w_tile.h"
 #include "w_room.h"
 #include "w_interactable.h"
-
+#include "w_ore_node.h"
 
 
 
@@ -34,6 +34,9 @@ typedef struct
 
 	int			max_buildings;
 	Building	**building_list;
+
+	int			max_ore;
+	Ore_Node	**ore_list;
 
 	Uint32		max_rooms;
 }Level;
@@ -112,6 +115,15 @@ Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *l
 
 
 void level_test_building(Vector2D buildPos, Level *level);
+
+
+Ore_Node *level_ore_node_new(Vector2D gridPos, Level *level);
+
+
+void level_ore_node_free(Ore_Node *node, Level *level);
+
+
+void level_test_node(Vector2D gridPos, Level *level);
 
 
 Vector2D level_get_start_pos(Level *level);
