@@ -125,7 +125,7 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos)
 		
 	}
 
-	slog("Draw x:%f, draw y:%f", drawPos.x, drawPos.y);
+	//slog("Draw x:%f, draw y:%f", drawPos.x, drawPos.y);
 
 	gf2d_sprite_draw(
 		currentAnim->spriteSheet,

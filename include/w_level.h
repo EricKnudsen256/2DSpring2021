@@ -126,6 +126,9 @@ void level_ore_node_free(Ore_Node *node, Level *level);
 void level_test_node(Vector2D gridPos, Level *level);
 
 
+void level_layout_ore(int orePerRoom, int maxOre, Level *level);
+
+
 Vector2D level_get_start_pos(Level *level);
 
 

@@ -930,13 +930,15 @@ void level_init_all(Level *level)
 
 			if (room->roomType != 4)
 			{
-				enemy_spawn_random(enemyPos);
-				enemy_spawn_random(enemyPos);
-				enemy_spawn_random(enemyPos);
+				//enemy_spawn_random(enemyPos);
+				//enemy_spawn_random(enemyPos);
+				//enemy_spawn_random(enemyPos);
 			}
 
 		}
 	}
+
+	level_layout_ore(1, 100, level);
 }
 
 void level_build_branches(Level *level)
@@ -1424,6 +1426,54 @@ void level_test_node(Vector2D gridPos, Level *level)
 	Ore_Node *node;
 
 	node = level_ore_node_new(gridPos, level);
+}
+
+void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
+{
+
+	//edit to use ore per room/ore per level
+
+
+	Bool placed;
+	Room *room;
+	int x, y;
+	int count;
+
+	for (int c = 0; c < level->maxColumns; c++)
+	{
+		for (int r = 0; r < level->maxColumns; r++)
+		{
+			placed = false;
+			room = level->room_list[c][r];
+
+			count = 0;
+
+			while (!placed && room)
+			{
+				//x = random_int_range(4, room->roomWidth - 12);
+				//y = random_int_range(4, room->roomHeight - 6);
+
+				x = random_int_range(4, 4);
+				y = random_int_range(room->roomHeight - 6, room->roomHeight - 6);
+				//check to see if
+
+				placed = true;
+				level_test_node(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+
+				if (room->tileArray[x][y + 1])
+				{
+					
+				}
+				count++;
+
+				if (count > 100)
+				{
+					slog("ore could not be placed randomly");
+					break;
+				}
+			}
+		}
+	}
 }
 
 Vector2D level_get_start_pos(Level *level)
