@@ -9,9 +9,20 @@
 //update so you can specify what ore type to create, or do that in each specific ore class
 
 
-Ore_Node *ore_node_new(Vector2D gridPos)
+
+Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 {
 	Ore_Node *node;
+
+	int rockSprite = random_int_range(1, 8);
+	int oreNum = 0;
+
+	char filename[50];
+	char filenum[5];
+
+	char filestart[] = "assets/sprites/map/";
+	char fileend[] = ".png";
+	strcpy(filename, "");
 
 	node = (Ore_Node*)malloc(sizeof(Ore_Node));
 
@@ -28,10 +39,119 @@ Ore_Node *ore_node_new(Vector2D gridPos)
 	node->animList = anim_list_new(node->animListLen);
 
 
-	node->animList[0] = anim_new("assets/sprites/map/copperNode.png", "copper_idle", ANIM_IDLE, 0, 0, 15, 256, 128, 3);
-	node->animList[0]->_current = 1;
+	if (strcmp(oreType, "random") == 0)
+	{
+		oreNum = random_int_range(0, 4);
+	}
+	else if (strcmp(oreType, "copper") == 0)
+	{
+		oreNum = 0;
+	}
+	else if (strcmp(oreType, "iron") == 0)
+	{
+		oreNum = 1;
+	}
+	else if (strcmp(oreType, "gold") == 0)
+	{
+		oreNum = 2;
+	}
+	else if (strcmp(oreType, "aluminum") == 0)
+	{
+		oreNum = 3;
+	}
+	else if (strcmp(oreType, "coal") == 0)
+	{
+		oreNum = 4;
+	}
 
-	node->animList[1] = anim_new("assets/sprites/map/copperNode.png", "copper_shine", ANIM_ACTION, 1, 16, 15, 256, 128, 3);
+
+	switch (oreNum)
+	{
+		case 0:
+
+
+
+			itoa(rockSprite, &filenum, 10);
+
+			strcat(filename, filestart);
+			strcat(filename, "copperSmall");
+			strcat(filename, filenum);
+			strcat(filename, fileend);
+
+			node->animList[0] = anim_new(filename, "copper_idle", ANIM_IDLE, 0, 0, 15, 64, 64, 5);
+			node->animList[0]->_current = 1;
+
+			node->animList[1] = anim_new(filename, "copper_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			break;
+
+		case 1:
+
+
+			itoa(rockSprite, filenum, 10);
+
+			strcat(filename, filestart);
+			strcat(filename, "ironSmall");
+			strcat(filename, filenum);
+			strcat(filename, fileend);
+
+			node->animList[0] = anim_new(filename, "iron_idle", ANIM_IDLE, 0, 0, 15, 64, 64, 5);
+			node->animList[0]->_current = 1;
+
+			node->animList[1] = anim_new(filename, "iron_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			break;
+
+		case 2:
+
+
+			itoa(rockSprite, filenum, 10);
+
+			strcat(filename, filestart);
+			strcat(filename, "goldSmall");
+			strcat(filename, filenum);
+			strcat(filename, fileend);
+
+			node->animList[0] = anim_new(filename, "gold_idle", ANIM_IDLE, 0, 0, 15, 64, 64, 5);
+			node->animList[0]->_current = 1;
+
+			node->animList[1] = anim_new(filename, "gold_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			break;
+
+		case 3:
+
+			itoa(rockSprite, filenum, 10);
+
+			strcat(filename, filestart);
+			strcat(filename, "aluminumSmall");
+			strcat(filename, filenum);
+			strcat(filename, fileend);
+
+			node->animList[0] = anim_new(filename, "aluminum_idle", ANIM_IDLE, 0, 0, 15, 64, 64, 5);
+			node->animList[0]->_current = 1;
+
+			node->animList[1] = anim_new(filename, "aluminum_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			break;
+
+		case 4:
+
+
+			itoa(rockSprite, filenum, 10);
+
+			strcat(filename, filestart);
+			strcat(filename, "coalSmall");
+			strcat(filename, filenum);
+			strcat(filename, fileend);
+
+			node->animList[0] = anim_new(filename, "coal_idle", ANIM_IDLE, 0, 0, 15, 64, 64, 5);
+			node->animList[0]->_current = 1;
+
+			node->animList[1] = anim_new(filename, "coal_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			break;
+
+	}
+
+
+
+	
 
 	node->nextShine = random_int_range(5000, 10000);
 

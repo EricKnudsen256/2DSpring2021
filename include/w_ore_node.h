@@ -44,7 +44,7 @@ typedef struct Ore_Node_s
 
 }Ore_Node;
 
-Ore_Node *ore_node_new(Vector2D gridPos);
+Ore_Node *ore_node_new(Vector2D gridPos, char *oreType);
 
 void ore_node_update(Ore_Node *node);
 

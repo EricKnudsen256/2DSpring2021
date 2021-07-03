@@ -547,8 +547,8 @@ Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templ
 	level->building_list = (Building *)gfc_allocate_array(sizeof (Building), max_buildings);
 	level->max_buildings = max_buildings;
 
-	level->ore_list = (Ore_Node*)gfc_allocate_array(sizeof(Ore_Node), 100);
-	level->max_ore = 100;
+	level->ore_list = (Ore_Node*)gfc_allocate_array(sizeof(Ore_Node), 1000);
+	level->max_ore = 1000;
 
 	level_load_all_templates(level);
 
@@ -1384,7 +1384,7 @@ Ore_Node *level_ore_node_new(Vector2D gridPos, Level *level)
 	for (i = 0; i < level->max_ore; i++)
 	{
 		if (level->ore_list[i])continue;// someone else is using this one
-		level->ore_list[i] = ore_node_new(gridPos);
+		level->ore_list[i] = ore_node_new(gridPos, "random");
 		level->ore_list[i]->_inuse = 1;
 		level->ore_list[i]->id = i;
 
@@ -1434,35 +1434,76 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 	//edit to use ore per room/ore per level
 
 
-	Bool placed;
+	int placedCount;
+	int toPlace;
 	Room *room;
 	int x, y;
 	int count;
+	int left, right;
+
+	left = 0; right = 0;
 
 	for (int c = 0; c < level->maxColumns; c++)
 	{
 		for (int r = 0; r < level->maxColumns; r++)
 		{
-			placed = false;
+			//toPlace = random_int_range(1, 5);
+			toPlace = 3;
+			placedCount = 0;
 			room = level->room_list[c][r];
 
 			count = 0;
 
-			while (!placed && room)
+			if (random_int_range(0, 1))
 			{
-				//x = random_int_range(4, room->roomWidth - 12);
-				//y = random_int_range(4, room->roomHeight - 6);
+				continue;
+			}
 
-				x = random_int_range(4, 4);
-				y = random_int_range(room->roomHeight - 6, room->roomHeight - 6);
-				//check to see if
+			while (placedCount < toPlace && room)
+			{
+				x = random_int_range(4, room->roomWidth - 6);
+				y = random_int_range(6, room->roomHeight - 4);
 
-				placed = true;
-				level_test_node(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+				//check to see if there are tiles under the ore
 
-				if (room->tileArray[x][y + 1])
+				
+
+				if (room->tileArray[x][y] && room->tileArray[x + 1][y])
 				{
-					
+					level_test_node(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+					placedCount++;
+
+					level_test_node(vector2d(x + 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+					placedCount++;
+
+					level_test_node(vector2d(x - 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+					placedCount++;
+
+
+					/*
+					while (placedCount < toPlace)
+					{
+						if (x - left - 1 < 0 || x + right + 2 >= room->roomWidth)
+						{
+							break;
+						}
+
+						if (room->tileArray[x - left -  1][y] && room->tileArray[x - left - 2][y])
+						{
+							
+							
+						}
+						if (room->tileArray[x + right + 2][y] && room->tileArray[x + right + 3][y])
+						{
+							
+							
+						}
+
+						left += 2;
+						right += 2;
+					}
+					*/
+
 				}
 				count++;
 

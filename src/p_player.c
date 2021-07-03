@@ -179,7 +179,7 @@ void player_update(Entity *self)
 	cameraSize = camera_get_dimensions();
 	cameraScale = camera_get_scale();
 	camera.x = self->position.x + 32;
-	camera.y = self->position.y + 32;
+	camera.y = self->position.y + 32 - 75;
 	camera_center_on_position(camera);
 
 	if (self->health <= 0)
