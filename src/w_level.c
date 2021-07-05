@@ -1371,7 +1371,7 @@ void level_test_building(Vector2D buildPos, Level *level)
 	building->sprite = gf2d_sprite_load_image("assets/sprites/buildings/test4x4.png");
 }
 
-Ore_Node *level_ore_node_new(Vector2D gridPos, Level *level)
+Ore_Node *level_ore_node_new(Vector2D gridPos, char *type, Level *level)
 {
 	Ore_Node *node;
 
@@ -1384,7 +1384,7 @@ Ore_Node *level_ore_node_new(Vector2D gridPos, Level *level)
 	for (i = 0; i < level->max_ore; i++)
 	{
 		if (level->ore_list[i])continue;// someone else is using this one
-		level->ore_list[i] = ore_node_new(gridPos, "random");
+		level->ore_list[i] = ore_node_new(gridPos, type);
 		level->ore_list[i]->_inuse = 1;
 		level->ore_list[i]->id = i;
 
@@ -1425,7 +1425,7 @@ void level_test_node(Vector2D gridPos, Level *level)
 {
 	Ore_Node *node;
 
-	node = level_ore_node_new(gridPos, level);
+	node = level_ore_node_new(gridPos, "random", level);
 }
 
 void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
@@ -1440,6 +1440,8 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 	int x, y;
 	int count;
 	int left, right;
+	int randomOre;
+	int oreName;
 
 	left = 0; right = 0;
 
@@ -1453,6 +1455,27 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 			room = level->room_list[c][r];
 
 			count = 0;
+
+			randomOre = random_int_range(0, 4);
+
+			switch (randomOre)
+			{
+				case 0:
+					oreName = "copper";
+					break;
+				case 1:
+					oreName = "iron";
+					break;
+				case 2:
+					oreName = "gold";
+					break;
+				case 3:
+					oreName = "aluminum";
+					break;
+				case 4:
+					oreName = "coal";
+					break;
+			}
 
 			if (random_int_range(0, 1))
 			{
@@ -1470,13 +1493,13 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 
 				if (room->tileArray[x][y] && room->tileArray[x + 1][y])
 				{
-					level_test_node(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+					level_ore_node_new(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
 					placedCount++;
 
-					level_test_node(vector2d(x + 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+					level_ore_node_new(vector2d(x + 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
 					placedCount++;
 
-					level_test_node(vector2d(x - 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), level);
+					level_ore_node_new(vector2d(x - 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
 					placedCount++;
 
 

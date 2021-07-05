@@ -117,7 +117,7 @@ Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *l
 void level_test_building(Vector2D buildPos, Level *level);
 
 
-Ore_Node *level_ore_node_new(Vector2D gridPos, Level *level);
+Ore_Node *level_ore_node_new(Vector2D gridPos, char *type, Level *level);
 
 
 void level_ore_node_free(Ore_Node *node, Level *level);
