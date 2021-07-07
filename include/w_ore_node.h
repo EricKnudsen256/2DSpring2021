@@ -5,6 +5,7 @@
 #include "gf2d_sprite.h"
 
 #include "g_anim.h"
+#include "w_interactable.h"
 
 typedef enum
 {
@@ -25,7 +26,7 @@ typedef struct Ore_Node_s
 	Bool		_inuse;
 	Vector2D	pos;
 	Vector2D	gridPos;
-	//SDL_Rect	interactionBox;
+	Interactable	*interact;
 
 	int			id;
 

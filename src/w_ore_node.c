@@ -4,6 +4,7 @@
 #include "g_random.h"
 
 #include "w_ore_node.h"
+#include "w_level.h"
 
 
 //update so you can specify what ore type to create, or do that in each specific ore class
@@ -37,6 +38,7 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 
 	node->animListLen = 4;
 	node->animList = anim_list_new(node->animListLen);
+
 
 
 	if (strcmp(oreType, "random") == 0)
@@ -155,7 +157,7 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 
 	node->nextShine = random_int_range(5000, 10000);
 
-	slog("Node spawned at x:%f, y:%f", node->pos.x, node->pos.y);
+	//slog("Node spawned at x:%f, y:%f", node->pos.x, node->pos.y);
 
 	return node;
 }

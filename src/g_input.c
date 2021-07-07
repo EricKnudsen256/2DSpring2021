@@ -113,7 +113,7 @@ void input_game()
 				Level *level = level_manager_get_current();
 				Vector2D playerPos = entity_manager_get_player_ent()->position;
 
-				level_test_node(vector2d((int)(playerPos.x / 32), (int)(playerPos.y / 32) - 2), level);
+				level_interact_new(&playerPos, NULL, 200, 200, level);
 			}
 		}
 		else if (e.type == SDL_MOUSEWHEEL)

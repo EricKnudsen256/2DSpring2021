@@ -104,7 +104,7 @@ void level_build_branches(Level *level);
 
 void level_build_branch_room(Room *startRoom, Level *level);
 
-
+//building functions
 Building *level_building_new(Vector2D gridPos, Vector2D size, Level *level);
 
 
@@ -116,7 +116,7 @@ Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *l
 
 void level_test_building(Vector2D buildPos, Level *level);
 
-
+//ore functions
 Ore_Node *level_ore_node_new(Vector2D gridPos, char *type, Level *level);
 
 
@@ -127,6 +127,17 @@ void level_test_node(Vector2D gridPos, Level *level);
 
 
 void level_layout_ore(int orePerRoom, int maxOre, Level *level);
+
+
+//interactable functions
+Interactable *level_interact_new(Vector2D *position, Vector2D *gridPos, int width, int height, Level *level);
+
+
+void level_interact_free(Interactable *interact, Level *level);
+
+
+//uses gridposes
+Bool level_check_for_tiles(Vector2D position, Vector2D size, Level *level);
 
 
 Vector2D level_get_start_pos(Level *level);

@@ -7,6 +7,7 @@
 
 #include "w_level.h"
 #include "w_building.h"
+#include "w_interactable.h"
 
 static LevelManager level_manager = { 0 };
 
@@ -541,7 +542,7 @@ Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templ
 	level->template_list = (Room *)gfc_allocate_array(sizeof (Room), max_templates);
 	level->maxTemplates = max_templates;
 
-	level->interactable_list = (Interactable *)gfc_allocate_array(sizeof(Interactable), 100);
+	level->interactable_list = (Interactable *)gfc_allocate_array(sizeof(Interactable), max_interactables);
 	level->max_interactables = max_interactables;
 
 	level->building_list = (Building *)gfc_allocate_array(sizeof (Building), max_buildings);
@@ -568,7 +569,6 @@ void level_update(Level *level)
 		for (y = 0; y < level->maxRows; y++)
 		{
 			if (!level->room_list[x][y])continue;
-
 			room_update(level->room_list[x][y]);
 		}
 	}
@@ -577,6 +577,12 @@ void level_update(Level *level)
 	{
 		if (!level->ore_list[i])continue;
 		ore_node_update(level->ore_list[i]);
+	}
+
+	for (int i = 0; i < level->max_interactables; i++)
+	{
+		if (!level->interactable_list[i])continue;
+		interactable_update(level->interactable_list[i]);
 	}
 
 	
@@ -613,6 +619,14 @@ void level_draw(Level *level)
 		if (!level->ore_list[i])continue;
 
 		ore_node_draw(level->ore_list[i]);
+	}
+
+	for (i = 0; i < level->max_interactables; i++)
+	{
+
+		if (!level->interactable_list[i])continue;
+
+		interactable_draw(level->interactable_list[i]);
 	}
 
 }
@@ -1300,9 +1314,16 @@ Bool level_building_check_if_placable(Vector2D position, Vector2D size, Level *l
 	Vector2D *gridPosArray;
 	int count = 0;
 
-	gridPosArray = gfc_allocate_array(sizeof(Vector2D), size.x * size.y);
 
 	gridPos = vector2d((int)position.x / 32, (int)position.y / 32);
+
+	if (!level_check_for_tiles(gridPos, size, level))
+	{
+		return false;
+	}
+
+	gridPosArray = gfc_allocate_array(sizeof(Vector2D), size.x * size.y);
+
 
 	for (int x = 0; x < size.x; x++)
 	{
@@ -1381,12 +1402,23 @@ Ore_Node *level_ore_node_new(Vector2D gridPos, char *type, Level *level)
 		slog("level does not have an ore list!");
 		return NULL;
 	}
+
+	/*
+	if (!level_building_check_if_placable(gridPos, vector2d(2, 2), level))
+	{
+		slog("can't place ore in wall");
+		return;
+	}
+	*/
+
 	for (i = 0; i < level->max_ore; i++)
 	{
 		if (level->ore_list[i])continue;// someone else is using this one
 		level->ore_list[i] = ore_node_new(gridPos, type);
 		level->ore_list[i]->_inuse = 1;
 		level->ore_list[i]->id = i;
+
+		level->ore_list[i]->interact = level_interact_new(NULL, &level->ore_list[i]->gridPos, 64, 64, level);
 
 		return level->ore_list[i];
 	}
@@ -1449,8 +1481,8 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 	{
 		for (int r = 0; r < level->maxColumns; r++)
 		{
-			//toPlace = random_int_range(1, 5);
-			toPlace = 3;
+			toPlace = random_int_range(3, 5);
+
 			placedCount = 0;
 			room = level->room_list[c][r];
 
@@ -1493,41 +1525,37 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 
 				if (room->tileArray[x][y] && room->tileArray[x + 1][y])
 				{
-					level_ore_node_new(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
-					placedCount++;
-
-					level_ore_node_new(vector2d(x + 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
-					placedCount++;
-
-					level_ore_node_new(vector2d(x - 2 + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
-					placedCount++;
 
 
-					/*
-					while (placedCount < toPlace)
+					if (level_check_for_tiles(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), vector2d(2, 2), level))
 					{
-						if (x - left - 1 < 0 || x + right + 2 >= room->roomWidth)
+						level_ore_node_new(vector2d(x + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
+						placedCount++;
+					}
+
+					for (int offset = 2; placedCount < toPlace; offset += 2)
+					{
+						if (level_check_for_tiles(vector2d(x + offset + c * room->roomHeight, (y + r * room->roomWidth) - 2), vector2d(2, 2), level))
+						{
+							level_ore_node_new(vector2d(x + offset + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
+							placedCount++;
+						}
+
+						if (placedCount >= toPlace)
 						{
 							break;
 						}
 
-						if (room->tileArray[x - left -  1][y] && room->tileArray[x - left - 2][y])
+						if (level_check_for_tiles(vector2d(x - offset + c * room->roomHeight, (y + r * room->roomWidth) - 2), vector2d(2, 2), level))
 						{
-							
-							
+							level_ore_node_new(vector2d(x - offset + c * room->roomHeight, (y + r * room->roomWidth) - 2), oreName, level);
+							placedCount++;
 						}
-						if (room->tileArray[x + right + 2][y] && room->tileArray[x + right + 3][y])
-						{
-							
-							
-						}
-
-						left += 2;
-						right += 2;
 					}
-					*/
 
+					
 				}
+
 				count++;
 
 				if (count > 100)
@@ -1538,6 +1566,142 @@ void level_layout_ore(int orePerRoom, int orePerLevel, Level *level)
 			}
 		}
 	}
+}
+
+Interactable *level_interact_new(Vector2D *position, Vector2D *gridPos, int width, int height, Level *level)
+{
+	Interactable *interact;
+
+	int i;
+	if (level->interactable_list == NULL)
+	{
+		slog("level does not have an interactable list!");
+		return NULL;
+	}
+
+
+	for (i = 0; i < level->max_interactables; i++)
+	{
+		if (level->interactable_list[i])continue;// someone else is using this one
+		level->interactable_list[i] = interactable_new(width, height, position, gridPos);
+
+		if (level->interactable_list[i])
+		{
+			level->interactable_list[i]->_inuse = 1;
+			level->interactable_list[i]->id = i;
+
+
+			return level->interactable_list[i];
+
+		}
+		return NULL;
+	}
+
+	slog("no interactable slots available");
+	return NULL;
+}
+
+
+void level_interact_free(Interactable *interact, Level *level)
+{
+	int id;
+	if (!interact)
+	{
+		slog("no interact given");
+		return;
+	}
+	if (!level)
+	{
+		slog("no level given");
+		return;
+	}
+
+	if (!interact->id)
+	{
+		slog("node has no id, cannot free. How was this created?");
+		return;
+	}
+
+	id = interact->id;
+
+	memset(level->building_list[id], 0, sizeof(Building));
+
+	level->building_list[id]->_inuse = false;
+	level->building_list[id] = NULL;
+}
+
+
+//uses gridposes
+Bool level_check_for_tiles(Vector2D position, Vector2D size, Level *level)
+{
+	//position is the top left of the object
+
+	Vector2D roomGridPos;
+	Vector2D *gridPosArray;
+	int count = 0;
+
+	gridPosArray = gfc_allocate_array(sizeof(Vector2D), size.x * size.y);
+
+	for (int x = 0; x < size.x; x++)
+	{
+		for (int y = 0; y < size.y; y++)
+		{
+			gridPosArray[count] = vector2d((int)position.x % 38 + x, (int)position.y % 38 + y);
+			count++;
+		}
+	}
+
+	roomGridPos = vector2d((int)(position.x / 38), (int)(position.y / 38));
+
+
+	if (position.x < 0 || position.x > level->maxColumns * 38 || position.y < 0 || position.y > level->maxRows * 38)
+	{
+		//slog("X:%f, Y:%f", position.x, position.y);
+		free(gridPosArray);
+		return false;
+	}
+
+	if (roomGridPos.x < 0 || roomGridPos.x > level->maxColumns - 1 || roomGridPos.y < 0 || roomGridPos.y > level->maxRows - 1)
+	{
+		free(gridPosArray);
+		return false;
+	}
+
+	//slog("X:%f, Y:%f", roomGridPos.x, roomGridPos.y);
+	Room *room = level->room_list[(int)(roomGridPos.x)][(int)(roomGridPos.y)];
+
+	if (!room)
+	{
+		free(gridPosArray);
+		return false;
+	}
+
+	for (int j = 0; j < size.x * size.y; j++)
+	{
+		if ((int)gridPosArray[j].x > room->roomWidth - 1 || gridPosArray[j].y > room->roomHeight - 1)
+		{
+			free(gridPosArray);
+			return false;
+		}
+
+		if (room->tileArray[(int)gridPosArray[j].x][(int)gridPosArray[j].y])
+		{
+			free(gridPosArray);
+			return false;
+		}
+
+		if (gridPosArray[j].x < 3 || gridPosArray[j].x > room->roomWidth - 4 || gridPosArray[j].y < 3 || gridPosArray[j].y > room->roomHeight - 4)
+		{
+			free(gridPosArray);
+			return false;
+		}
+	}
+
+	
+
+	free(gridPosArray);
+	return true;
+
 }
 
 Vector2D level_get_start_pos(Level *level)
