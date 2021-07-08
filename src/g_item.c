@@ -168,6 +168,8 @@ Item *item_new_by_name(char *name, int stackNum)
 			item->name = name;
 			item->description = itemList.item_list[i].description;
 			item->sprite = itemList.item_list[i].sprite;
+			item->stackNum = stackNum;
+
 
 			return item;
 		}

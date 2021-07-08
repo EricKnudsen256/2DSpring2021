@@ -494,7 +494,7 @@ Room *level_room_new_template(Level *level)
 	return NULL;
 }
 
-Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates, Uint32 max_buildings, Uint32 max_interactables)
+Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates, Uint32 max_buildings, Uint32 max_interactables, Uint32 max_drops)
 {
 	Level *level;
 	int i;
@@ -551,7 +551,8 @@ Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templ
 	level->ore_list = (Ore_Node*)gfc_allocate_array(sizeof(Ore_Node), 1000);
 	level->max_ore = 1000;
 
-	level_load_all_templates(level);
+	level->drop_list = (Drop*)gfc_allocate_array(sizeof(Drop), max_drops);
+	level->max_drops = max_drops;
 
 	return level;
 }
@@ -1443,17 +1444,17 @@ void level_ore_node_free(Ore_Node *node, Level *level)
 		return;
 	}
 
-	if (!node->id)
+	if (node->id < 0 || node->id > level->max_ore)
 	{
-		slog("node has no id, cannot free. How was this created?");
+		slog("node ID not in list. How was this created?");
 		return;
 	}
 
+	level_interact_free(level->ore_list[node->id]->interact, level);
 
-	memset(level->building_list[node->id], 0, sizeof(Building));
-	
-	level->building_list[node->id]->_inuse = false;
-	level->building_list[node->id] = NULL;
+	level->ore_list[node->id]->_inuse = false;
+	level->ore_list[node->id] = NULL;
+
 }
 
 void level_test_node(Vector2D gridPos, Level *level)
@@ -1627,10 +1628,10 @@ void level_interact_free(Interactable *interact, Level *level)
 
 	id = interact->id;
 
-	memset(level->building_list[id], 0, sizeof(Building));
+	memset(level->interactable_list[id], 0, sizeof(Interactable));
 
-	level->building_list[id]->_inuse = false;
-	level->building_list[id] = NULL;
+	level->interactable_list[id]->_inuse = false;
+	level->interactable_list[id] = NULL;
 }
 
 Bool level_check_interact(Level *level)

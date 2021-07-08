@@ -131,7 +131,7 @@ void interactable_free(Interactable *interact)
 
 	memset(interact, 0, sizeof(Interactable));
 
-	interact->_inuse = false;
+	free(interact);
 	interact = NULL;
 }
 

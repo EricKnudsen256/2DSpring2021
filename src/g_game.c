@@ -75,7 +75,7 @@ void init_main_menu()
 
 void init_game()
 {
-	entity_manager_init(300);
+	entity_manager_init(1000);
 	projectile_manager_init(100);
 	player_inventory_init(32);
 

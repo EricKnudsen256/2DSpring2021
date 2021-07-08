@@ -6,6 +6,7 @@
 #include "gf2d_sprite.h"
 
 #include "e_entity.h"
+#include "e_drop.h"
 
 #include "w_building.h"
 #include "w_tile.h"
@@ -37,6 +38,9 @@ typedef struct
 
 	int			max_ore;
 	Ore_Node	**ore_list;
+
+	int			max_drops; //should be less drops than possible entities
+	Drop		**drop_list;
 
 	Uint32		max_rooms;
 }Level;
@@ -84,7 +88,7 @@ Room *level_room_empty(Vector2D gridPos, Level *level);
 Room *level_room_new_template(Level *level);
 
 
-Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates, Uint32 max_buildings, Uint32 max_interactables);
+Level *level_new(int maxRows, int maxColumns, Uint32 max_rooms, Uint32 max_templates, Uint32 max_buildings, Uint32 max_interactables, Uint32 max_drops);
 
 
 void level_update(Level *level);
@@ -137,6 +141,14 @@ void level_interact_free(Interactable *interact, Level *level);
 
 
 Bool level_check_interact(Level *level);
+
+
+//drop functions
+
+Drop *level_new_drop(Vector2D position, Item *item, Level *level);
+
+
+void level_drop_free(Drop *drop, Level *level);
 
 
 //uses gridposes

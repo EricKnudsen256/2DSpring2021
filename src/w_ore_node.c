@@ -260,6 +260,8 @@ void ore_node_interact(Ore_Node *node)
 
 	node->oreTotal--;
 
+	slog("Node Total:%i", node->oreTotal);
+
 	if (node->oreTotal <= 0)
 	{
 		level_ore_node_free(node, level_manager_get_current());

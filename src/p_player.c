@@ -44,6 +44,19 @@ void player_inventory_add_item(Item *item)
 
 	for (int i = 0; i < inventory.max_items; i++)
 	{
+		if (inventory.item_list[i] && strcmp(inventory.item_list[i]->name, item->name) == 0)
+		{
+			if (inventory.item_list[i]->stackNum >= 100)
+			{
+				continue;
+			}
+			inventory.item_list[i]->stackNum += item->stackNum;
+			return;
+		}
+	}
+
+	for (int i = 0; i < inventory.max_items; i++)
+	{
 		if (inventory.item_list[i] == NULL)
 		{
 			inventory.item_list[i] = item;
