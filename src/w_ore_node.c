@@ -3,6 +3,8 @@
 #include "g_camera.h"
 #include "g_random.h"
 
+#include "p_player.h"
+
 #include "w_ore_node.h"
 #include "w_level.h"
 
@@ -84,6 +86,8 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 			node->animList[0]->_current = 1;
 
 			node->animList[1] = anim_new(filename, "copper_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+
+			node->oreType = ORE_COPPER;
 			break;
 
 		case 1:
@@ -100,6 +104,7 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 			node->animList[0]->_current = 1;
 
 			node->animList[1] = anim_new(filename, "iron_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			node->oreType = ORE_IRON;
 			break;
 
 		case 2:
@@ -116,6 +121,7 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 			node->animList[0]->_current = 1;
 
 			node->animList[1] = anim_new(filename, "gold_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			node->oreType = ORE_GOLD;
 			break;
 
 		case 3:
@@ -131,6 +137,7 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 			node->animList[0]->_current = 1;
 
 			node->animList[1] = anim_new(filename, "aluminum_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			node->oreType = ORE_ALUMINUM;
 			break;
 
 		case 4:
@@ -147,6 +154,7 @@ Ore_Node *ore_node_new(Vector2D gridPos, char *oreType)
 			node->animList[0]->_current = 1;
 
 			node->animList[1] = anim_new(filename, "coal_shine", ANIM_ACTION, 1, 13, 15, 64, 64, 5);
+			node->oreType = ORE_COAL;
 			break;
 
 	}
@@ -210,6 +218,53 @@ void ore_node_draw(Ore_Node *node)
 			anim_list_draw(node->animList, node->animListLen, drawPosition);
 		}
 	}
+}
+
+void ore_node_interact(Ore_Node *node)
+{
+	char *itemName;
+
+	if (!node)
+	{
+		return;
+	}
+
+	switch (node->oreType)
+	{
+		case ORE_COPPER:
+			itemName = "copperOre";
+			break;
+
+		case ORE_IRON:
+			itemName = "ironOre";
+			break;
+
+		case ORE_GOLD:
+			itemName = "goldOre";
+			break;
+
+		case ORE_ALUMINUM:
+			itemName = "aluminumOre";
+			break;
+
+		case ORE_COAL:
+			itemName = "coalOre";
+			break;
+
+		default:
+			itemName = "";
+			break;
+	}
+	
+	player_inventory_add_item(item_new_by_name(itemName, 1));
+
+	node->oreTotal--;
+
+	if (node->oreTotal <= 0)
+	{
+		level_ore_node_free(node, level_manager_get_current());
+	}
+
 }
 
 void ore_node_free(Ore_Node *node)

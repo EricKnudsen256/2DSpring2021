@@ -136,6 +136,9 @@ Interactable *level_interact_new(Vector2D *position, Vector2D *gridPos, int widt
 void level_interact_free(Interactable *interact, Level *level);
 
 
+Bool level_check_interact(Level *level);
+
+
 //uses gridposes
 Bool level_check_for_tiles(Vector2D position, Vector2D size, Level *level);
 

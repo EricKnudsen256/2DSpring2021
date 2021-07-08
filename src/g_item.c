@@ -51,7 +51,7 @@ void item_load_from_file()
 		itemList.item_list[i].description = sj_get_string_value(sj_object_get_value(currentItemJS, "description"));
 		sj_get_integer_value(sj_object_get_value(currentItemJS, "maxStacks"), &itemList.item_list[i].maxStacks);
 
-		//slog("Desc %i: %i", i, itemList.item_list[i].maxStacks);
+		slog("Name %s", itemList.item_list[i].name);
 
 	}
 
@@ -147,3 +147,35 @@ Item *item_new(char *name, int stackNum, char* spritePath)
 
 	return item;
 }
+
+Item *item_new_by_name(char *name, int stackNum)
+{
+	Item *item;
+	item = (Item *)malloc(sizeof(Item));
+	if (!item)
+	{
+		slog("Failed to allocate items");
+		return NULL;
+	}
+	memset(item, 0, sizeof(Item));
+
+	for (int i = 0; i < itemList.max_item_types; i++)
+	{
+		if (strcmp(itemList.item_list[i].name, name) == 0)
+		{
+			slog("I:%i", i);
+
+			item->name = name;
+			item->description = itemList.item_list[i].description;
+			item->sprite = itemList.item_list[i].sprite;
+
+			return item;
+		}
+	}
+
+	slog("Item not found in list");
+	return NULL;
+
+}
+
+

@@ -86,13 +86,17 @@ void input_game()
 					pause_menu_set_inactive(NULL, pauseMenu);
 
 				}
-				else if (e.button.button == SDL_SCANCODE_E && buildMenu->_active == 0)
+				else if (e.button.button == SDL_SCANCODE_B && buildMenu->_active == 0)
 				{
 					build_set_active(NULL, buildMenu);
 				}
-				else if (e.button.button == SDL_SCANCODE_E && buildMenu->_active == 1)
+				else if (e.button.button == SDL_SCANCODE_B && buildMenu->_active == 1)
 				{
 					build_set_inactive(NULL, buildMenu);
+				}
+				else if (e.button.button == SDL_SCANCODE_E)
+				{
+					level_check_interact(level);
 				}
 			}
 

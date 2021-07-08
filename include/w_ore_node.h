@@ -28,6 +28,8 @@ typedef struct Ore_Node_s
 	Vector2D	gridPos;
 	Interactable	*interact;
 
+	OreType		oreType;
+
 	int			id;
 
 	int			oreTotal;
@@ -52,6 +54,8 @@ void ore_node_update(Ore_Node *node);
 void ore_node_draw(Ore_Node *node);
 
 void ore_node_free(Ore_Node *node);
+
+void ore_node_interact(Ore_Node *node);
 
 
 #endif

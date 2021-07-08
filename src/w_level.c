@@ -1419,6 +1419,9 @@ Ore_Node *level_ore_node_new(Vector2D gridPos, char *type, Level *level)
 		level->ore_list[i]->id = i;
 
 		level->ore_list[i]->interact = level_interact_new(NULL, &level->ore_list[i]->gridPos, 64, 64, level);
+		level->ore_list[i]->interact->parent = level->ore_list[i];
+		level->ore_list[i]->interact->onInteract = ore_node_interact;
+
 
 		return level->ore_list[i];
 	}
@@ -1628,6 +1631,53 @@ void level_interact_free(Interactable *interact, Level *level)
 
 	level->building_list[id]->_inuse = false;
 	level->building_list[id] = NULL;
+}
+
+Bool level_check_interact(Level *level)
+{
+	int ids[10];
+	int idsFound = 0;
+
+	SDL_Rect largest;
+	int largestID;
+	
+
+	for (int i = 0; i < level->max_interactables; i++)
+	{
+		if (level->interactable_list[i] && level->interactable_list[i]->playerInside)
+		{
+			ids[idsFound] = i;
+			idsFound++;
+		}
+		if (idsFound >= 10)
+		{
+			break;
+		}
+	}
+
+	if (idsFound == 0)
+	{
+		return false;
+	}
+
+	largest = level->interactable_list[ids[0]]->intersectAmount;
+	largestID = ids[0];
+
+	for (int i = 1; i < 10; i++)
+	{
+		if (ids[i] >= 0 && level->interactable_list[ids[i]]->intersectAmount.w * level->interactable_list[ids[i]]->intersectAmount.h > largest.w * largest.h)
+		{
+			largest = level->interactable_list[ids[i]]->intersectAmount;
+			largestID = ids[i];
+		}
+	}
+
+	//do interaction?
+
+	level->interactable_list[largestID]->onInteract(level->interactable_list[largestID]->parent);
+
+	return true;
+
 }
 
 

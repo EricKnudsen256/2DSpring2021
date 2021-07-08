@@ -57,6 +57,8 @@ void item_list_free();
 
 Item *item_new(char *name, int stackNum, char* spritePath);
 
+Item *item_new_by_name(char *name, int stackNum);
+
 void item_delete(Item *item);
 
 #endif
