@@ -7,19 +7,22 @@
 
 typedef struct Drop_s
 {
+	int id;
+	Bool _inuse;
+
 	Item *item;
 	Entity *ent;
+
+	int spawnTime;
+	int collectTime;
 
 }Drop;
 
 
-Drop *drop_new(Vector2D position, Bool randomVelocity);
+Drop *drop_new(Vector2D position, Bool randomVelocity, Item *item);
 
 
-void drop_update(Drop drop);
-
-
-void drop_draw(Drop drop);
+void drop_update(Drop *drop);
 
 
 //free function in level class

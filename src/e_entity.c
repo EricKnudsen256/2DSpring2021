@@ -459,33 +459,38 @@ void entity_draw(Entity *ent)
 	}
 	else
 	{
-		if (ent->sprite == NULL)
+		if (ent->sprite == NULL && ent->animList == NULL)
 		{
+			
 			return;// nothing to draw
 		}
 		offset = camera_get_offset();
+		/*
 		if (!camera_rect_on_screen(gfc_sdl_rect(ent->position.x, ent->position.y, ent->sprite->frame_w, ent->sprite->frame_h)))
 		{
 			//entity is off camera, skip
 			//return;
 		}
+		*/
 		drawPosition.x = ent->position.x + offset.x;
 		drawPosition.y = ent->position.y + offset.y;
 
 		if (ent->animList)
 		{
-			
 			anim_list_draw(ent->animList, ent->animListLen, drawPosition);
+			return;
 		}
-		else if (ent->sprite)
+		if (ent->sprite)
 		{
 			
+			//slog("X:%f, Y:%f", drawPosition.x, drawPosition.y);
+
 			gf2d_sprite_draw(
 				ent->sprite,
 				drawPosition,
 				&drawScale,
 				NULL,
-				&ent->rotation,
+				NULL,
 				NULL,
 				NULL,
 				(Uint32)ent->frame);

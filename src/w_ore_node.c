@@ -256,11 +256,15 @@ void ore_node_interact(Ore_Node *node)
 			break;
 	}
 	
-	player_inventory_add_item(item_new_by_name(itemName, 1));
+	//player_inventory_add_item();
+
+	Entity *player = entity_manager_get_player_ent();
+
+	level_new_drop(player->position, item_new_by_name(itemName, 1), level_manager_get_current());
 
 	node->oreTotal--;
 
-	slog("Node Total:%i", node->oreTotal);
+	//slog("Node Total:%i", node->oreTotal);
 
 	if (node->oreTotal <= 0)
 	{

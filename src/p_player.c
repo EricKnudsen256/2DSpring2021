@@ -139,7 +139,7 @@ Entity *player_spawn(Vector2D position)
 		slog("failed to create entity for the player");
 		return NULL;
 	}
-	ent->sprite = gf2d_sprite_load_all("assets/sprites/testPlayer2.png", 48, 64, 1);
+	//ent->sprite = gf2d_sprite_load_all("assets/sprites/testPlayer2.png", 48, 64, 1);
 	vector2d_copy(ent->position, position);
 	ent->frameRate = 0.1;
 	ent->frameCount = 1;

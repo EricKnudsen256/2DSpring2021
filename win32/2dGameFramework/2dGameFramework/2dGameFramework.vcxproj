@@ -98,6 +98,7 @@
     <ClCompile Include="..\..\..\gfc\src\gfc_vector.c" />
     <ClCompile Include="..\..\..\src\e_archer.c" />
     <ClCompile Include="..\..\..\src\e_bouncer.c" />
+    <ClCompile Include="..\..\..\src\e_drop.c" />
     <ClCompile Include="..\..\..\src\gf2d_actor.c" />
     <ClCompile Include="..\..\..\src\gf2d_config.c" />
     <ClCompile Include="..\..\..\src\gf2d_draw.c" />
@@ -164,6 +165,7 @@
     <ClInclude Include="..\..\..\gfc\include\gfc_vector.h" />
     <ClInclude Include="..\..\..\include\e_archer.h" />
     <ClInclude Include="..\..\..\include\e_bouncer.h" />
+    <ClInclude Include="..\..\..\include\e_drop.h" />
     <ClInclude Include="..\..\..\include\gf2d_actor.h" />
     <ClInclude Include="..\..\..\include\gf2d_draw.h" />
     <ClInclude Include="..\..\..\include\gf2d_elements.h" />

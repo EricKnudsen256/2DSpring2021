@@ -73,31 +73,42 @@ void input_game()
 
 			if (pauseMenu)
 			{
-				if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 0)
+				switch (e.button.button)
 				{
-					build_set_inactive(NULL, buildMenu);
-					pause_menu_set_active(NULL, pauseMenu);
-					inventory_set_inactive(NULL, inventoryMenu);
+					case SDL_SCANCODE_ESCAPE:
+						if (pauseMenu->_active == 0)
+						{
+							build_set_inactive(NULL, buildMenu);
+							pause_menu_set_active(NULL, pauseMenu);
+							inventory_set_inactive(NULL, inventoryMenu);
+
+						}
+						else if (pauseMenu->_active == 1)
+						{
+
+							pause_menu_set_inactive(NULL, pauseMenu);
+
+						}
+						break;
+
+					case SDL_SCANCODE_B:
+						if (buildMenu->_active == 0)
+						{
+							build_set_active(NULL, buildMenu);
+						}
+						else if (buildMenu->_active == 1)
+						{
+							build_set_inactive(NULL, buildMenu);
+						}
+						break;
+
+					case SDL_SCANCODE_E:
+						level_check_interact(level);
+						break;
 
 				}
-				else if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 1)
-				{
 
-					pause_menu_set_inactive(NULL, pauseMenu);
 
-				}
-				else if (e.button.button == SDL_SCANCODE_B && buildMenu->_active == 0)
-				{
-					build_set_active(NULL, buildMenu);
-				}
-				else if (e.button.button == SDL_SCANCODE_B && buildMenu->_active == 1)
-				{
-					build_set_inactive(NULL, buildMenu);
-				}
-				else if (e.button.button == SDL_SCANCODE_E)
-				{
-					level_check_interact(level);
-				}
 			}
 
 			if (inventoryMenu)

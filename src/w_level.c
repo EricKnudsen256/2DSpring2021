@@ -586,6 +586,11 @@ void level_update(Level *level)
 		interactable_update(level->interactable_list[i]);
 	}
 
+	for (int i = 0; i < level->max_drops; i++)
+	{
+		if (!level->drop_list[i])continue;
+		drop_update(level->drop_list[i]);
+	}
 	
 }
 
@@ -1679,6 +1684,66 @@ Bool level_check_interact(Level *level)
 
 	return true;
 
+}
+
+Drop *level_new_drop(Vector2D position, Item *item, Level *level)
+{
+	Drop *drop;
+
+	int i;
+	if (level->drop_list == NULL)
+	{
+		slog("level does not have a drop list!");
+		return NULL;
+	}
+
+
+	for (i = 0; i < level->max_drops; i++)
+	{
+		if (level->drop_list[i])continue;// someone else is using this one
+		level->drop_list[i] = drop_new(position, true, item);
+
+		if (level->drop_list[i])
+		{
+			level->drop_list[i]->_inuse = 1;
+			level->drop_list[i]->id = i;
+
+
+			return level->drop_list[i];
+
+		}
+		return NULL;
+	}
+
+	slog("no interactable slots available");
+	return NULL;
+}
+
+
+void level_drop_free(Drop *drop, Level *level)
+{
+	if (!drop)
+	{
+		slog("no drop given");
+		return;
+	}
+	if (!level)
+	{
+		slog("no level given");
+		return;
+	}
+
+	if (drop->id < 0 || drop->id > level->max_drops)
+	{
+		slog("drop ID not in list. How was this created?");
+		return;
+	}
+
+	drop->ent->_inuse = false;
+	drop->ent = NULL;
+
+	level->drop_list[drop->id]->_inuse = false;
+	level->drop_list[drop->id] = NULL;
 }
 
 
