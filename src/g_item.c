@@ -45,13 +45,15 @@ void item_load_from_file()
 	for (int i = 0; i < itemTypes; i++)
 	{
 		currentItemJS = sj_array_get_nth(itemJS, i);
+		
+
 
 		itemList.item_list[i].name = sj_get_string_value(sj_object_get_value(currentItemJS, "name"));
 		itemList.item_list[i].sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentItemJS, "sprite")));
 		itemList.item_list[i].description = sj_get_string_value(sj_object_get_value(currentItemJS, "description"));
 		sj_get_integer_value(sj_object_get_value(currentItemJS, "maxStacks"), &itemList.item_list[i].maxStacks);
 
-		slog("Name %s", itemList.item_list[i].name);
+		//slog("Name %s", itemList.item_list[i].name);
 
 	}
 

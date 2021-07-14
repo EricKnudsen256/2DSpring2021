@@ -80,7 +80,7 @@ void init_game()
 	player_inventory_init(32);
 
 	//room_manager_init(8, 8, 64, 100);
-	building_list_init(50);
+	building_list_init();
 	level_manager_init(10);
 
 	item_load_from_file();

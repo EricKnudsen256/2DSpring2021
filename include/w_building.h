@@ -37,6 +37,7 @@ typedef struct Building_List_Item_s
 	Bool _inuse;
 	Sprite *sprite;
 	char *buildingName;
+	char *description;
 	
 	Vector2D size;
 
@@ -52,7 +53,8 @@ typedef struct Building_List_s
 
 
 
-void building_list_init(Uint32 total_buildings);
+
+void building_list_init();
 
 /**
 * @brief free all entities in the system and destroy entity manager
@@ -69,6 +71,8 @@ void building_list_draw_current();
 void building_list_place_current();
 
 void building_list_free();
+
+Building_List building_list_get();
 
 
 Building *building_new(Vector2D gridPos, Vector2D size);

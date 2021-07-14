@@ -1,4 +1,5 @@
 #include "simple_logger.h"
+#include "simple_json.h"
 
 #include "g_camera.h"
 #include "g_mouse.h"
@@ -8,25 +9,64 @@
 
 Building_List building_list = { 0 };
 
-void building_list_init(Uint32 total_buildings)
+void building_list_init()
 {
-	if (total_buildings == 0)
+	SJson *json, *json2, *buildingJS, *currentBuildingJS;
+
+	int buildingTypes;
+	int x, y;
+
+
+	json = sj_load("config/buildings.cfg");
+
+	if (!json)return;
+
+	buildingJS = sj_object_get_value(json, "buildings");
+
+	buildingTypes = sj_array_get_count(buildingJS);
+
+	//create item list with size of itemJS
+
+	if (buildingTypes == 0)
 	{
-		slog("cannot allocate 0 entities!");
+		slog("0 buildings in buildings list, something is very fucking wrong");
 		return;
 	}
 	if (building_list.building_list != NULL)
 	{
 		building_list_free();
 	}
-	building_list.building_list = (Building_List_Item *)gfc_allocate_array(sizeof (Building_List_Item), total_buildings);
+	building_list.building_list = (Building_List_Item *)gfc_allocate_array(sizeof (Building_List_Item), buildingTypes);
 	if (building_list.building_list == NULL)
 	{
 		slog("failed to allocate building list!");
 		return;
 	}
+	building_list.total_buildings = buildingTypes;
+	slog("building list initialized. Size: %i", buildingTypes);
 
-	building_list.total_buildings = total_buildings;
+
+	for (int i = 0; i < buildingTypes; i++)
+	{
+		currentBuildingJS = sj_array_get_nth(buildingJS, i);
+
+		building_list.building_list[i] = (Building_List_Item *)malloc(sizeof(Building_List_Item));
+
+		memset(building_list.building_list[i], 0, sizeof(Building_List_Item));
+
+		building_list.building_list[i]->buildingName = sj_get_string_value(sj_object_get_value(currentBuildingJS, "name"));
+		building_list.building_list[i]->sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentBuildingJS, "sprite")));
+		building_list.building_list[i]->description = sj_get_string_value(sj_object_get_value(currentBuildingJS, "description"));
+
+		sj_get_integer_value(sj_object_get_value(currentBuildingJS, "sizeX"), &x);
+		sj_get_integer_value(sj_object_get_value(currentBuildingJS, "sizeY"), &y);
+
+		building_list.building_list[i]->size = vector2d(x, y);
+
+		//slog("Name %s", itemList.item_list[i].name);
+
+	}
+
 	building_list.currentBuild = malloc(sizeof(Building_List_Item));
 	building_list.currentBuild->sprite = NULL;
 
@@ -38,15 +78,31 @@ void building_list_set_current_build(const char *buildingName)
 
 	//for testing purposes
 
-
-	if (buildingName == "testBuilding")
+	if (!buildingName)
 	{
-		slog("test");
+		return;
+	}
+
+
+	if (strcmp(buildingName, "testBuilding") == 0)
+	{
 		memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
 
 		building_list.currentBuild->buildingName = "testBuilding";
 		building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
 		building_list.currentBuild->size = vector2d(2, 2);
+
+		building_list.currentBuild->_inuse = 1;
+
+		return;
+	}
+	else if (strcmp(buildingName, "testBuilding2") == 0)
+	{
+		memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
+
+		building_list.currentBuild->buildingName = "testBuilding2";
+		building_list.currentBuild->sprite = gf2d_sprite_load_image("assets/sprites/buildings/test4x4.png");
+		building_list.currentBuild->size = vector2d(4, 4);
 
 		building_list.currentBuild->_inuse = 1;
 
@@ -68,12 +124,15 @@ void building_list_set_current_build(const char *buildingName)
 
 	for (int i = 0; i < building_list.total_buildings; i++)
 	{
-		if (strcmp(building_list.building_list[i]->buildingName, buildingName))
+		if (strcmp(building_list.building_list[i]->buildingName, buildingName) == 0)
 		{
 			memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
 
 			building_list.currentBuild->buildingName = building_list.building_list[i]->buildingName;
 			building_list.currentBuild->sprite = building_list.building_list[i]->sprite;
+			building_list.currentBuild->size = building_list.building_list[i]->size;
+
+			building_list.currentBuild->_inuse = 1;
 			return;
 		}
 	}
@@ -284,4 +343,9 @@ void building_draw(Building *building)
 	SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 	}
 	*/
+}
+
+Building_List building_list_get()
+{
+	return building_list;
 }

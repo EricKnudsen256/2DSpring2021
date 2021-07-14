@@ -42,6 +42,8 @@ void build_create_slots(Menu *buildMenu)
 {
 	//buttons 0-29 are the different buildings
 
+	Building_List building_list = building_list_get();
+
 	for (int i = 0; i < 30; i++)
 	{
 		int testIndex;
@@ -66,16 +68,16 @@ void build_create_slots(Menu *buildMenu)
 		button->buttonTag = "buildButton";
 		button->sprite = gf2d_sprite_load_image("assets/sprites/menus/inventorySlot.png");
 		button->onPress = build_choose_item;
+
+		if (building_list.building_list[i])
+		{
+			buildMenu->buttonList[i]->data = building_list.building_list[i]->buildingName;
+			buildMenu->buttonList[i]->sprite2 = building_list.building_list[i]->sprite;
+		}
+
+
 	}
 
-	//this is where I would have buildings load from file, would make the most sense, but for now I'll manually code them in
-	//TODO, make global building list in w_building
-
-	buildMenu->buttonList[0]->data = "testBuilding";
-	buildMenu->buttonList[0]->sprite2 = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
-
-	buildMenu->buttonList[1]->data = "testBuilding2";
-	buildMenu->buttonList[1]->sprite2 = gf2d_sprite_load_image("assets/sprites/buildings/testBuilding2x2.png");
 }
 
 void build_choose_item(Button *button, Menu *buildMenu)
