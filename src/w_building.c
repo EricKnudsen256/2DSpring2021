@@ -55,7 +55,21 @@ void building_list_init()
 		memset(building_list.building_list[i], 0, sizeof(Building_List_Item));
 
 		building_list.building_list[i]->buildingName = sj_get_string_value(sj_object_get_value(currentBuildingJS, "name"));
-		building_list.building_list[i]->sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentBuildingJS, "sprite")));
+
+		if (sj_is_array(sj_object_get_value(currentBuildingJS, "sprite")))
+		{
+			building_list.building_list[i]->spriteList = gfc_allocate_array(sizeof(Sprite), sj_array_get_count(sj_object_get_value(currentBuildingJS, "sprite")));
+
+			for (int j = 0; j < sj_array_get_count(sj_object_get_value(currentBuildingJS, "sprite")); j++)
+			{
+				building_list.building_list[i]->spriteList[j] = sj_array_get_nth(sj_object_get_value(currentBuildingJS, "sprite"), j);
+			}
+		}
+		else
+		{
+			building_list.building_list[i]->sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentBuildingJS, "sprite")));
+		}
+		
 		building_list.building_list[i]->description = sj_get_string_value(sj_object_get_value(currentBuildingJS, "description"));
 
 		sj_get_integer_value(sj_object_get_value(currentBuildingJS, "sizeX"), &x);
@@ -215,6 +229,18 @@ Bool building_list_is_current()
 	}
 
 	return false;
+}
+
+Building_List_Item *building_list_get_by_name(char *buildingName)
+{
+	for (int i = 0; i < building_list.total_buildings; i++)
+	{
+		if (strcmp(buildingName, building_list.building_list[i]->buildingName) == 0)
+		{
+			return building_list.building_list[i];
+		}
+	}
+	return NULL;
 }
 
 void building_list_free()

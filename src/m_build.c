@@ -74,10 +74,7 @@ void build_create_slots(Menu *buildMenu)
 			buildMenu->buttonList[i]->data = building_list.building_list[i]->buildingName;
 			buildMenu->buttonList[i]->sprite2 = building_list.building_list[i]->sprite;
 		}
-
-
 	}
-
 }
 
 void build_choose_item(Button *button, Menu *buildMenu)

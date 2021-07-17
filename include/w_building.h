@@ -24,7 +24,8 @@ typedef struct Building_s
 	
 	Interactable *interact;
 
-
+	void		*parent;
+	
 	void(*update)(struct Building *building);
 	void(*think)(struct Building *building);
 	void(*draw)(struct Building *building);
@@ -36,6 +37,8 @@ typedef struct Building_List_Item_s
 {
 	Bool _inuse;
 	Sprite *sprite;
+	Sprite **spriteList;	//used for building with multiple sprites, such as the pipe
+
 	char *buildingName;
 	char *description;
 	
@@ -69,6 +72,8 @@ void building_list_update_current();
 void building_list_draw_current();
 
 void building_list_place_current();
+
+Building_List_Item *building_list_get_by_name(char * buildingName);
 
 void building_list_free();
 

@@ -96,6 +96,7 @@
     <ClCompile Include="..\..\..\gfc\src\gfc_text.c" />
     <ClCompile Include="..\..\..\gfc\src\gfc_types.c" />
     <ClCompile Include="..\..\..\gfc\src\gfc_vector.c" />
+    <ClCompile Include="..\..\..\src\b_pipe.c" />
     <ClCompile Include="..\..\..\src\e_archer.c" />
     <ClCompile Include="..\..\..\src\e_bouncer.c" />
     <ClCompile Include="..\..\..\src\e_drop.c" />
@@ -163,6 +164,7 @@
     <ClInclude Include="..\..\..\gfc\include\gfc_text.h" />
     <ClInclude Include="..\..\..\gfc\include\gfc_types.h" />
     <ClInclude Include="..\..\..\gfc\include\gfc_vector.h" />
+    <ClInclude Include="..\..\..\include\b_pipe.h" />
     <ClInclude Include="..\..\..\include\e_archer.h" />
     <ClInclude Include="..\..\..\include\e_bouncer.h" />
     <ClInclude Include="..\..\..\include\e_drop.h" />

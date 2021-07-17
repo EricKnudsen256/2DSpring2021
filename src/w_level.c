@@ -592,6 +592,14 @@ void level_update(Level *level)
 		drop_update(level->drop_list[i]);
 	}
 	
+	for (int i = 0; i < level->max_buildings; i++)
+	{
+		if (!level->building_list[i])continue;
+		if (level->building_list[i]->update)
+		{
+			level->building_list[i]->update(level->building_list[i]->parent);
+		}
+	}
 }
 
 void level_draw(Level *level)
