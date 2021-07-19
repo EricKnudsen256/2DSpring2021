@@ -3,6 +3,8 @@
 
 #include "gf2d_sprite.h"
 
+#include "g_anim.h"
+
 #include "w_interactable.h"
 
 typedef struct Building_s
@@ -24,6 +26,9 @@ typedef struct Building_s
 	
 	Interactable *interact;
 
+	Anim		**animList;
+	int			**maxAnims;
+
 	void		*parent;
 	
 	void(*update)(struct Building *building);
@@ -41,6 +46,9 @@ typedef struct Building_List_Item_s
 
 	char *buildingName;
 	char *description;
+
+	Anim		**animList;
+	int			**maxAnims;
 	
 	Vector2D size;
 

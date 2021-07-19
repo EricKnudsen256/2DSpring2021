@@ -11,8 +11,8 @@ typedef enum
 	ANIM_ACTION,
 	ANIM_DAMAGE,
 	ANIM_DEATH,
+	ANIM_OTHER
 	
-
 }AnimType;
 
 typedef struct Anim_s
@@ -47,6 +47,8 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos);
 void anim_list_change_anim(Anim **animList, int oldAnim, int newAnim);
 
 void anim_list_free(Anim **animList);
+
+Anim *anim_list_get_by_name(Anim **animList, char* animName, int animListLen);
 
 Anim *anim_new(char *spriteName, char *animName, AnimType animType, int startframe, int endframe, float framerate, int frameWidth, int frameHeight, int fpl);
 

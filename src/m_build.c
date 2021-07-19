@@ -72,7 +72,17 @@ void build_create_slots(Menu *buildMenu)
 		if (building_list.building_list[i])
 		{
 			buildMenu->buttonList[i]->data = building_list.building_list[i]->buildingName;
-			buildMenu->buttonList[i]->sprite2 = building_list.building_list[i]->sprite;
+
+			if (building_list.building_list[i]->sprite)
+			{
+				buildMenu->buttonList[i]->sprite2 = building_list.building_list[i]->sprite;
+			}
+			else if (building_list.building_list[i]->spriteList)
+			{
+				buildMenu->buttonList[i]->sprite2 = building_list.building_list[i]->sprite;
+			}
+			
+			
 		}
 	}
 }

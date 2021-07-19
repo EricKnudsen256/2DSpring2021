@@ -157,3 +157,17 @@ void anim_list_change_anim(Anim **animList, int oldAnim, int newAnim)
 
 	}
 }
+
+Anim *anim_list_get_by_name(Anim **animList, char* animName, int animListLen)
+{
+	for (int i = 0; i < animListLen; i++)
+	{
+		
+		if (strcmp(animList[i]->animName, animName) == 0)
+		{
+			return animList[i];
+		}
+		
+	}
+	return NULL;
+}

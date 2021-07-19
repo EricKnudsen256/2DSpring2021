@@ -11,7 +11,7 @@ Building_List building_list = { 0 };
 
 void building_list_init()
 {
-	SJson *json, *json2, *buildingJS, *currentBuildingJS;
+	SJson *json, *json2, *buildingJS, *currentBuildingJS, *animJS, *animListJS;
 
 	int buildingTypes;
 	int x, y;
@@ -56,18 +56,65 @@ void building_list_init()
 
 		building_list.building_list[i]->buildingName = sj_get_string_value(sj_object_get_value(currentBuildingJS, "name"));
 
-		if (sj_is_array(sj_object_get_value(currentBuildingJS, "sprite")))
-		{
-			building_list.building_list[i]->spriteList = gfc_allocate_array(sizeof(Sprite), sj_array_get_count(sj_object_get_value(currentBuildingJS, "sprite")));
+		building_list.building_list[i]->sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentBuildingJS, "sprite")));
 
-			for (int j = 0; j < sj_array_get_count(sj_object_get_value(currentBuildingJS, "sprite")); j++)
-			{
-				building_list.building_list[i]->spriteList[j] = sj_array_get_nth(sj_object_get_value(currentBuildingJS, "sprite"), j);
-			}
-		}
-		else
+		if (sj_object_get_value(currentBuildingJS, "anims"))
 		{
-			building_list.building_list[i]->sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentBuildingJS, "sprite")));
+			animListJS = sj_object_get_value(currentBuildingJS, "anims");
+			building_list.building_list[i]->animList = anim_list_new(sj_array_get_count(animListJS));
+			building_list.building_list[i]->maxAnims = sj_array_get_count(animListJS);
+
+			//uhhh fuckin put anims in the fuckin anim list
+			for (int j = 0; j < sj_array_get_count(animListJS, "anims"); j++)
+			{
+
+				int startframe = 0;
+				int endframe = 0;
+				int framerate = 0;
+				int frameWidth = 0;
+				int frameHeight = 0;
+				int fpl = 0;
+
+
+				animJS = sj_array_get_nth(animListJS, j);
+
+				char *animType = sj_get_string_value(sj_object_get_value(animJS, "ANIM_TYPE"));
+				AnimType type;
+
+				if (strcmp(animType, "ANIM_IDLE") == 0)
+				{
+					type = ANIM_IDLE;
+				}
+				else if (strcmp(animType, "ANIM_ACTION"))
+				{
+					type = ANIM_ACTION;
+				}
+				else
+				{
+					type = ANIM_OTHER;
+				}
+
+				sj_get_integer_value(sj_object_get_value(animJS, "startframe"), startframe);
+				sj_get_integer_value(sj_object_get_value(animJS, "endframe"), endframe);
+				sj_get_integer_value(sj_object_get_value(animJS, "framerate"), framerate);
+				sj_get_integer_value(sj_object_get_value(animJS, "frameWidth"), frameWidth);
+				sj_get_integer_value(sj_object_get_value(animJS, "frameHeight"), frameHeight);
+				sj_get_integer_value(sj_object_get_value(animJS, "fpl"), fpl);
+
+				
+				building_list.building_list[i]->animList[j] = anim_new(
+					sj_get_string_value(sj_object_get_value(animJS, "path")),
+					sj_get_string_value(sj_object_get_value(animJS, "animName")),
+					type,
+					startframe,
+					endframe,
+					framerate,
+					frameWidth,
+					frameHeight,
+					fpl);
+				
+			}
+
 		}
 		
 		building_list.building_list[i]->description = sj_get_string_value(sj_object_get_value(currentBuildingJS, "description"));
@@ -213,7 +260,18 @@ void building_list_place_current()
 
 	if (level_building_check_if_placable(mousePos, building_list.currentBuild->size, level_manager_get_current()))
 	{
-		level_test_building(mousePos, level_manager_get_current());
+		//check if there is a build function for current building
+
+		if (strcmp(building_list.currentBuild->buildingName, "itemPipeSlow") == 0)
+		{
+			pipe_new(mousePos, building_list.currentBuild->size, "right");
+		}
+		else
+		{
+			level_test_building(mousePos, level_manager_get_current());
+		}
+
+		
 	}
 
 	

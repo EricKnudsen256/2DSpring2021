@@ -163,7 +163,9 @@ Entity *player_spawn(Vector2D position)
 	ent->animListLen = 10;
 	ent->animList = anim_list_new(ent->animListLen);
 
-	ent->animList[0] = anim_new("assets/sprites/testPlayer2-sheet.png","player_idle", ANIM_IDLE, 0, 29, 15, 48, 64, 6);
+	//ent->animList[0] = anim_new("assets/sprites/testPlayer2-sheet.png","player_idle", ANIM_IDLE, 0, 29, 15, 48, 64, 6);
+	ent->animList[0] = anim_new("assets/sprites/buildings/pipes/RPipeSheet.png", "right_pipe_idle", ANIM_IDLE, 0, 15, 15, 64, 64, 4);
+	ent->animList[0]->_current = 1;
 
 	return ent;
 }
