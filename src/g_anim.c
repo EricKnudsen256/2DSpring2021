@@ -11,6 +11,8 @@ Anim **anim_list_new(int length)
 
 Anim *anim_new(char *spriteName, char *animName, AnimType animType, int startframe, int endframe, float framerate, int frameWidth, int frameHeight, int fpl)
 {
+
+
 	int i;
 
 	Anim* anim;
@@ -33,6 +35,7 @@ Anim *anim_new(char *spriteName, char *animName, AnimType animType, int startfra
 
 	anim->lastframe = 0;
 
+
 	return anim;
 
 }
@@ -41,6 +44,7 @@ void anim_list_update(Anim **animList, int animListLen)
 {
 	Anim *currentAnim = NULL;
 	int currentTime = SDL_GetTicks();
+
 
 	for (int i = 0; i < animListLen; i++)
 	{
@@ -62,6 +66,8 @@ void anim_list_update(Anim **animList, int animListLen)
 		}
 
 	}
+
+
 
 	//slog("CurrentTime: %i, LastTime: %i", currentTime, currentAnim->lastframe);
 
@@ -127,6 +133,8 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos)
 
 	//slog("Draw x:%f, draw y:%f", drawPos.x, drawPos.y);
 
+
+
 	gf2d_sprite_draw(
 		currentAnim->spriteSheet,
 		drawPos,
@@ -136,6 +144,7 @@ void anim_list_draw(Anim **animList, int animListLen, Vector2D drawPos)
 		NULL,
 		NULL,
 		(Uint32)currentAnim->currentframe);
+
 }
 
 void anim_list_change_anim(Anim **animList, int oldAnim, int newAnim)

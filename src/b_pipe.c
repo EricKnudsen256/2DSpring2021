@@ -2,6 +2,9 @@
 
 #include "b_pipe.h"
 
+#include "g_anim.h"
+#include "g_camera.h"
+
 #include "w_level.h"
 
 
@@ -32,6 +35,16 @@ Pipe *pipe_new(Vector2D gridPos, Vector2D size, char *direction)
 	{
 		pipe->animList[0] = anim_list_get_by_name(animTemplate, "right_pipe_idle", templateLength);
 		pipe->animList[0]->_current = true;
+
+		slog("animName:%s", pipe->animList[0]->animName);
+		slog("animType:%i", pipe->animList[0]->animType);
+		slog("startframe:%i", pipe->animList[0]->startframe);
+		slog("endframe:%i", pipe->animList[0]->endframe);
+		slog("framerate:%i", pipe->animList[0]->framerate);
+		slog("frameWidth:%i", pipe->animList[0]->frameWidth);
+		slog("frameHeight:%i", pipe->animList[0]->frameHeight);
+		slog("fpl:%i", pipe->animList[0]->fpl);
+
 	}
 	else if (strcmp(direction, "down") == 0)
 	{
@@ -46,6 +59,9 @@ Pipe *pipe_new(Vector2D gridPos, Vector2D size, char *direction)
 
 	pipe->building->parent = pipe;
 	pipe->building->update = pipe_update;
+	pipe->building->draw = pipe_draw;
+
+	//slog("Drawpos.x:%f, Drawpos.y:%f", pipe->building->position.x, pipe->building->position.x);
 
 	return pipe;
 }
@@ -57,7 +73,25 @@ void pipe_update(Pipe *pipe)
 
 void pipe_draw(Pipe *pipe)
 {
+	Vector2D drawPosition, offset;
+	Vector2D drawScale = camera_get_scale();
 
+	if (!pipe)
+	{
+		slog("cannot draw a NULL pipe");
+		return;
+	}
+	else
+	{
+		offset = camera_get_offset();
+
+		drawPosition.x = pipe->building->position.x + offset.x;
+		drawPosition.y = pipe->building->position.y + offset.y;
+
+		
+		
+		anim_list_draw(pipe->animList, pipe->animListLen, drawPosition);
+	}
 }
 
 void pipe_free(Pipe *pipe)

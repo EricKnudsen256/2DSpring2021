@@ -94,12 +94,12 @@ void building_list_init()
 					type = ANIM_OTHER;
 				}
 
-				sj_get_integer_value(sj_object_get_value(animJS, "startframe"), startframe);
-				sj_get_integer_value(sj_object_get_value(animJS, "endframe"), endframe);
-				sj_get_integer_value(sj_object_get_value(animJS, "framerate"), framerate);
-				sj_get_integer_value(sj_object_get_value(animJS, "frameWidth"), frameWidth);
-				sj_get_integer_value(sj_object_get_value(animJS, "frameHeight"), frameHeight);
-				sj_get_integer_value(sj_object_get_value(animJS, "fpl"), fpl);
+				sj_get_integer_value(sj_object_get_value(animJS, "startframe"), &startframe);
+				sj_get_integer_value(sj_object_get_value(animJS, "endframe"), &endframe);
+				sj_get_integer_value(sj_object_get_value(animJS, "framerate"), &framerate);
+				sj_get_integer_value(sj_object_get_value(animJS, "frameWidth"), &frameWidth);
+				sj_get_integer_value(sj_object_get_value(animJS, "frameHeight"), &frameHeight);
+				sj_get_integer_value(sj_object_get_value(animJS, "fpl"), &fpl);
 
 				
 				building_list.building_list[i]->animList[j] = anim_new(
@@ -112,7 +112,6 @@ void building_list_init()
 					frameWidth,
 					frameHeight,
 					fpl);
-				
 			}
 
 		}
@@ -264,7 +263,7 @@ void building_list_place_current()
 
 		if (strcmp(building_list.currentBuild->buildingName, "itemPipeSlow") == 0)
 		{
-			pipe_new(mousePos, building_list.currentBuild->size, "right");
+			pipe_new(vector2d((int)mousePos.x / 32, (int)mousePos.y / 32), building_list.currentBuild->size, "right");
 		}
 		else
 		{
@@ -379,7 +378,7 @@ void building_draw(Building *building)
 
 	if (building->draw)
 	{
-		building->draw(building);
+		building->draw(building->parent);
 	}
 	else
 	{
@@ -393,6 +392,7 @@ void building_draw(Building *building)
 			//entity is off camera, skip
 			//return;
 		}
+
 		drawPosition.x = building->position.x + offset.x;
 		drawPosition.y = building->position.y + offset.y;
 

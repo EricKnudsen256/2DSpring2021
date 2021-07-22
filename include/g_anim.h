@@ -38,6 +38,7 @@ typedef struct Anim_s
 
 }Anim;
 
+
 Anim **anim_list_new(int length);
 
 void anim_list_update(Anim *animList, int animListLen);

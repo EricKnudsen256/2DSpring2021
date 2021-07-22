@@ -27,7 +27,7 @@ typedef struct Building_s
 	Interactable *interact;
 
 	Anim		**animList;
-	int			**maxAnims;
+	int			maxAnims;
 
 	void		*parent;
 	
