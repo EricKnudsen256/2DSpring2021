@@ -49,6 +49,9 @@ typedef struct Building_List_Item_s
 
 	Anim		**animList;
 	int			**maxAnims;
+
+	int			rotation;
+	int			maxRotation;
 	
 	Vector2D size;
 
@@ -80,6 +83,12 @@ void building_list_update_current();
 void building_list_draw_current();
 
 void building_list_place_current();
+
+void building_list_rotate_current();
+
+Bool building_list_is_current();
+
+void building_list_remove_current_build();
 
 Building_List_Item *building_list_get_by_name(char * buildingName);
 

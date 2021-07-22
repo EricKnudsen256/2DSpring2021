@@ -8,7 +8,7 @@
 #include "w_level.h"
 
 
-Pipe *pipe_new(Vector2D gridPos, Vector2D size, char *direction)
+Pipe *pipe_new(Vector2D gridPos, Vector2D size, int direction)
 {
 	Pipe *pipe;
 
@@ -26,12 +26,35 @@ Pipe *pipe_new(Vector2D gridPos, Vector2D size, char *direction)
 	Anim **animTemplate = building_list_get_by_name("itemPipeSlow")->animList;
 	int	templateLength = building_list_get_by_name("itemPipeSlow")->maxAnims;
 
-	if (strcmp(direction, "left") == 0)
+	if (direction == 0)
 	{
 		pipe->animList[0] = anim_list_get_by_name(animTemplate, "left_pipe_idle", templateLength);
 		pipe->animList[0]->_current = true;
+
+		slog("animName:%s", pipe->animList[0]->animName);
+		slog("animType:%i", pipe->animList[0]->animType);
+		slog("startframe:%i", pipe->animList[0]->startframe);
+		slog("endframe:%i", pipe->animList[0]->endframe);
+		slog("framerate:%i", pipe->animList[0]->framerate);
+		slog("frameWidth:%i", pipe->animList[0]->frameWidth);
+		slog("frameHeight:%i", pipe->animList[0]->frameHeight);
+		slog("fpl:%i", pipe->animList[0]->fpl);
 	}
-	else if (strcmp(direction, "right") == 0)
+	else if (direction == 1)
+	{
+		pipe->animList[0] = anim_list_get_by_name(animTemplate, "up_pipe_idle", templateLength);
+		pipe->animList[0]->_current = true;
+
+		slog("animName:%s", pipe->animList[0]->animName);
+		slog("animType:%i", pipe->animList[0]->animType);
+		slog("startframe:%i", pipe->animList[0]->startframe);
+		slog("endframe:%i", pipe->animList[0]->endframe);
+		slog("framerate:%i", pipe->animList[0]->framerate);
+		slog("frameWidth:%i", pipe->animList[0]->frameWidth);
+		slog("frameHeight:%i", pipe->animList[0]->frameHeight);
+		slog("fpl:%i", pipe->animList[0]->fpl);
+	}
+	else if (direction == 2)
 	{
 		pipe->animList[0] = anim_list_get_by_name(animTemplate, "right_pipe_idle", templateLength);
 		pipe->animList[0]->_current = true;
@@ -46,16 +69,21 @@ Pipe *pipe_new(Vector2D gridPos, Vector2D size, char *direction)
 		slog("fpl:%i", pipe->animList[0]->fpl);
 
 	}
-	else if (strcmp(direction, "down") == 0)
+	else if (direction == 3)
 	{
-		pipe->animList[0] = anim_list_get_by_name(building_list_get_by_name("itemPipeSlow")->animList, "down_pipe_idle", building_list_get_by_name("itemPipeSlow")->maxAnims);
+		pipe->animList[0] = anim_list_get_by_name(animTemplate, "down_pipe_idle", templateLength);
 		pipe->animList[0]->_current = true;
+
+		slog("animName:%s", pipe->animList[0]->animName);
+		slog("animType:%i", pipe->animList[0]->animType);
+		slog("startframe:%i", pipe->animList[0]->startframe);
+		slog("endframe:%i", pipe->animList[0]->endframe);
+		slog("framerate:%i", pipe->animList[0]->framerate);
+		slog("frameWidth:%i", pipe->animList[0]->frameWidth);
+		slog("frameHeight:%i", pipe->animList[0]->frameHeight);
+		slog("fpl:%i", pipe->animList[0]->fpl);
 	}
-	else if (strcmp(direction, "up") == 0)
-	{
-		pipe->animList[0] = anim_list_get_by_name(building_list_get_by_name("itemPipeSlow")->animList, "up_pipe_idle", building_list_get_by_name("itemPipeSlow")->maxAnims);
-		pipe->animList[0]->_current = true;
-	}
+
 
 	pipe->building->parent = pipe;
 	pipe->building->update = pipe_update;

@@ -106,6 +106,13 @@ void input_game()
 						level_check_interact(level);
 						break;
 
+					case SDL_SCANCODE_R:
+						if (building_list_is_current())
+						{
+							building_list_rotate_current();
+						}
+						break;
+
 				}
 
 

@@ -58,6 +58,8 @@ void building_list_init()
 
 		building_list.building_list[i]->sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentBuildingJS, "sprite")));
 
+
+
 		if (sj_object_get_value(currentBuildingJS, "anims"))
 		{
 			animListJS = sj_object_get_value(currentBuildingJS, "anims");
@@ -120,6 +122,10 @@ void building_list_init()
 
 		sj_get_integer_value(sj_object_get_value(currentBuildingJS, "sizeX"), &x);
 		sj_get_integer_value(sj_object_get_value(currentBuildingJS, "sizeY"), &y);
+
+		sj_get_integer_value(sj_object_get_value(currentBuildingJS, "maxRotation"), &building_list.building_list[i]->maxRotation);
+
+		slog("%i", building_list.building_list[i]->maxRotation);
 
 		building_list.building_list[i]->size = vector2d(x, y);
 
@@ -191,6 +197,7 @@ void building_list_set_current_build(const char *buildingName)
 			building_list.currentBuild->buildingName = building_list.building_list[i]->buildingName;
 			building_list.currentBuild->sprite = building_list.building_list[i]->sprite;
 			building_list.currentBuild->size = building_list.building_list[i]->size;
+			building_list.currentBuild->maxRotation = building_list.building_list[i]->maxRotation;
 
 			building_list.currentBuild->_inuse = 1;
 			return;
@@ -206,29 +213,33 @@ void building_list_remove_current_build()
 	memset(building_list.currentBuild, 0, sizeof(Building_List_Item));
 }
 
-void building_list_load_buildings()
-{
-
-}
-
-void building_list_update_current()
-{
-}
 
 void building_list_draw_current()
 {
 	Vector2D drawPos, offset, mousePos;
 	Vector2D drawScale = camera_get_scale();
 	Vector4D colorShift;
-
+	Vector3D rotation;
 
 	offset = camera_get_offset();
 	mousePos = mouse_get_world_position();
+
 
 	if (building_list.currentBuild && building_list.currentBuild->sprite)
 	{
 		drawPos.x = (int)mousePos.x - ((int)mousePos.x % 32) + offset.x;
 		drawPos.y = (int)mousePos.y - ((int)mousePos.y % 32) + offset.y;
+
+		if (building_list.currentBuild->maxRotation)
+		{
+			rotation = vector3d(building_list.currentBuild->size.x * 16, building_list.currentBuild->size.x * 16, building_list.currentBuild->rotation * (360 / building_list.currentBuild->maxRotation));
+		}
+		else
+		{
+			rotation = vector3d(building_list.currentBuild->size.x * 16, building_list.currentBuild->size.x * 16, 0);
+		}
+
+		
 
 		//check to see if spot has building, if so, change color
 
@@ -243,7 +254,7 @@ void building_list_draw_current()
 
 		
 
-		gf2d_sprite_draw(building_list.currentBuild->sprite, drawPos, &drawScale, NULL, NULL, NULL, &colorShift, 0);
+		gf2d_sprite_draw(building_list.currentBuild->sprite, drawPos, &drawScale, NULL, &rotation, NULL, &colorShift, 0);
 	}
 }
 
@@ -263,19 +274,31 @@ void building_list_place_current()
 
 		if (strcmp(building_list.currentBuild->buildingName, "itemPipeSlow") == 0)
 		{
-			pipe_new(vector2d((int)mousePos.x / 32, (int)mousePos.y / 32), building_list.currentBuild->size, "right");
+			pipe_new(vector2d((int)mousePos.x / 32, (int)mousePos.y / 32), building_list.currentBuild->size, building_list.currentBuild->rotation);
 		}
 		else
 		{
 			level_test_building(mousePos, level_manager_get_current());
 		}
-
 		
 	}
 
-	
-
 	//slog("Placed at x:%f, y:%f", spawnPos.x, spawnPos.y);
+}
+
+void building_list_rotate_current()
+{
+	if (!building_list_is_current())
+	{
+		return;
+	}
+
+	building_list.currentBuild->rotation++;
+
+	if (building_list.currentBuild->rotation >= building_list.currentBuild->maxRotation)
+	{
+		building_list.currentBuild->rotation = 0;
+	}
 }
 
 Bool building_list_is_current()

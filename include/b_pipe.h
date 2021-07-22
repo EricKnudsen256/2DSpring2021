@@ -21,7 +21,7 @@ typedef struct Pipe_s
 
 }Pipe;
 
-Pipe *pipe_new(Vector2D gridPos, Vector2D size, char *direction);
+Pipe *pipe_new(Vector2D gridPos, Vector2D size, int direction);
 
 void pipe_update(Pipe *pipe);
 
