@@ -35,6 +35,9 @@ void player_inventory_init(Uint32 max_items);
 */
 void player_inventory_add_item(Item *item);
 
+
+void player_inventory_remove_item(int slot);
+
 /**
 * @brief gets the item in the provided inventory slot
 * @param slot the index of the inventory slot to check
@@ -78,6 +81,9 @@ Entity *player_spawn(Vector2D position);
 * @return true if it has been longer than 350 ms, false otherwise
 */
 Bool player_is_allowed_jump(Entity *self);
+
+
+void player_think(Bool left, Bool right, Bool jump, Bool down, Bool sprint, Entity *self);
 
 /**
 * @brief loads all predefined sounds for the player

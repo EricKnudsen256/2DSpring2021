@@ -7,6 +7,7 @@ typedef struct Item_s
 {
 	char *name;
 	Sprite *sprite;
+	Sprite *dropSprite;
 	char *description;
 	int stackNum;
 
@@ -16,6 +17,7 @@ typedef struct ItemTemplate_s
 {
 	char *name;
 	Sprite *sprite;
+	Sprite *dropSprite;
 	char *description;
 	int maxStacks;
 

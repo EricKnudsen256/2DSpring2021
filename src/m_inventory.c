@@ -167,6 +167,42 @@ void inventory_deselect_all(Menu *inventoryMenu)
 	}
 }
 
+Bool inventory_is_selected(Menu *inventoryMenu)
+{
+	for (int i = 0; i < player_inventory_get_max(); i++)
+	{
+		if (inventoryMenu->buttonList[i]->_selceted == true)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+Item *inventory_get_selected(Menu *inventoryMenu)
+{
+	for (int i = 0; i < player_inventory_get_max(); i++)
+	{
+		if (inventoryMenu->buttonList[i]->_selceted == true)
+		{
+			return player_inventory_get_item(i);
+		}
+	}
+	return NULL;
+}
+
+int inventory_get_selected_slot(Menu *inventoryMenu)
+{
+	for (int i = 0; i < player_inventory_get_max(); i++)
+	{
+		if (inventoryMenu->buttonList[i]->_selceted == true)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
 void inventory_draw(Menu *inventoryMenu)
 {
 	Font *font = font_load("assets/fonts/DotGothic16-Regular.ttf", 18);

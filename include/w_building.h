@@ -7,9 +7,20 @@
 
 #include "w_interactable.h"
 
+typedef enum
+{
+	BUILDING_PIPE,
+	BUILDING_CHEST
+
+}BuildingType;
+
 typedef struct Building_s
 {
 	int			id;				//location in building list of level
+
+	BuildingType type;
+
+	SDL_Rect	hitbox;
 
 	char		*buildingName;
 

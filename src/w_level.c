@@ -470,6 +470,8 @@ Room *level_room_empty(Vector2D gridPos, Level *level)
 
 	room->roomType = 0;
 
+	room->roomBounds = gfc_sdl_rect(room->tileWidth * room->roomWidth * room->roomPos.x, room->tileHeight * room->roomHeight * room->roomPos.y, room->roomWidth * 32, room->roomHeight * 32);
+
 	return room;
 }
 

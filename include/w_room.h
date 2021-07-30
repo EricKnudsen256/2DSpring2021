@@ -19,6 +19,8 @@ typedef struct
 	Uint32      roomWidth;  /**<how many tiles per row the level has*/
 	Uint32      roomHeight; /**<how many tiles per column the level has*/
 
+	SDL_Rect	roomBounds;
+
 	Bool		leftDoor, topDoor, rightDoor, botDoor;			//true means has door on that side
 
 	Vector2D	position;

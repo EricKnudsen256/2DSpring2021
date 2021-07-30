@@ -26,6 +26,10 @@ void input_game()
 	Menu *pauseMenu, *inventoryMenu, *mainMenu, *buildMenu;
 	Level *level = level_manager_get_current();
 
+	pauseMenu = menu_manager_get_by_tag("pause");
+	inventoryMenu = menu_manager_get_by_tag("inventory");
+	buildMenu = menu_manager_get_by_tag("build");
+
 	while (SDL_PollEvent(&e))
 	{
 
@@ -37,7 +41,13 @@ void input_game()
 
 				if (!menu_manager_check_click())
 				{
-					if (building_list_is_current())
+					if (inventory_is_selected(inventoryMenu))
+					{
+						level_new_drop(entity_manager_get_player_ent()->position, inventory_get_selected(inventoryMenu), level);
+						player_inventory_remove_item(inventory_get_selected_slot(inventoryMenu));
+						inventory_deselect_all(inventoryMenu);
+					}
+					else if (building_list_is_current())
 					{
 						building_list_place_current();
 					}
@@ -67,9 +77,6 @@ void input_game()
 		}
 		else if (e.type == SDL_KEYDOWN)
 		{
-			pauseMenu = menu_manager_get_by_tag("pause");
-			inventoryMenu = menu_manager_get_by_tag("inventory");
-			buildMenu = menu_manager_get_by_tag("build");
 
 			if (pauseMenu)
 			{

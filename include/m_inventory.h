@@ -3,6 +3,8 @@
 
 #include "g_menu.h"
 
+#include "g_item.h"
+
 /**
 * @brief creates a new inventory menu
 * @param buttonMax the max amount of buttons in the button list
@@ -48,6 +50,16 @@ void inventory_button_select(Button *slot, Menu *inventoryMenu);
 * @param inventoryMenu pointer to the inventory menu
 */
 void inventory_deselect_all(Menu *inventoryMenu);
+
+
+Bool inventory_is_selected(Menu *inventoryMenu);
+
+
+Item *inventory_get_selected(Menu *inventoryMenu);
+
+
+int inventory_get_selected_slot(Menu *inventoryMenu);
+
 
 /**
 * @brief draws the menu, special for the inventory

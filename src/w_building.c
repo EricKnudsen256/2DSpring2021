@@ -359,6 +359,11 @@ Building *building_new(Vector2D gridPos, Vector2D size)
 	building->size.x = size.x;
 	building->size.y = size.y;
 
+	building->hitbox.x = building->position.x;
+	building->hitbox.y = building->position.y;
+	building->hitbox.w = building->size.x * 32;
+	building->hitbox.h = building->size.y * 32;
+
 
 	building->_inuse = true;
 
@@ -430,26 +435,11 @@ void building_draw(Building *building)
 			NULL,
 			NULL,
 			0);
+
+		//test code to draw the hitboxes for an ent that has one
+
 	}
-
-	//test code to draw the hitboxes for an ent that has one
-
-	/*
-	if (&tile->hitbox)
-	{
-
-	SDL_Rect tempDraw;
-
-	tempDraw.x = tile->hitbox.x + offset.x;
-	tempDraw.y = tile->hitbox.y + offset.y;
-	tempDraw.w = tile->hitbox.w;
-	tempDraw.h = tile->hitbox.h;
-
-	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 0, 255, 0, 255);
-
-	SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
-	}
-	*/
+	
 }
 
 Building_List building_list_get()

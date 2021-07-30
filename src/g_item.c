@@ -51,6 +51,12 @@ void item_load_from_file()
 		itemList.item_list[i].name = sj_get_string_value(sj_object_get_value(currentItemJS, "name"));
 		itemList.item_list[i].sprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentItemJS, "sprite")));
 		itemList.item_list[i].description = sj_get_string_value(sj_object_get_value(currentItemJS, "description"));
+
+		if (sj_object_get_value(currentItemJS, "drop"))
+		{
+			itemList.item_list[i].dropSprite = gf2d_sprite_load_image(sj_get_string_value(sj_object_get_value(currentItemJS, "drop")));
+		}
+
 		sj_get_integer_value(sj_object_get_value(currentItemJS, "maxStacks"), &itemList.item_list[i].maxStacks);
 
 		//slog("Name %s", itemList.item_list[i].name);
@@ -171,6 +177,7 @@ Item *item_new_by_name(char *name, int stackNum)
 			item->description = itemList.item_list[i].description;
 			item->sprite = itemList.item_list[i].sprite;
 			item->stackNum = stackNum;
+			item->dropSprite = itemList.item_list[i].dropSprite;
 
 
 			return item;

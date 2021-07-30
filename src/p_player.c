@@ -65,6 +65,14 @@ void player_inventory_add_item(Item *item)
 	}
 }
 
+void player_inventory_remove_item(int slot)
+{
+	if (slot < inventory.max_items)
+	{
+		inventory.item_list[slot] = NULL;
+	}
+}
+
 Item *player_inventory_get_item(int slot)
 {
 	if (slot < inventory.max_items)
@@ -295,7 +303,12 @@ void player_think(Entity *self)
 	if (keys[SDL_SCANCODE_SPACE] && player_is_allowed_jump(self))
 	{
 		//if (self->onGround == true || self->doubleJumped == false)
-		if (true)
+		if (keys[SDL_SCANCODE_S])
+		{
+			//self->platformCollide = false;
+		}
+
+		else if (true)
 		{
 			self->velocity.y = -5;
 			self->position.y -= .1;

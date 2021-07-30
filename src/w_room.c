@@ -391,7 +391,6 @@ Room *room_empty(Vector2D gridPos)
 
 	//open doors
 
-
 	room->roomSize.x = room->roomWidth * room->tileWidth;
 	room->roomSize.y = room->roomHeight * room->tileHeight;
 
@@ -564,6 +563,15 @@ void room_draw(Room *room)
 			tile_draw(room->tileArray[x][y]);
 		}
 	}
+
+	SDL_Rect tempDraw;
+
+	tempDraw = gfc_sdl_rect((room->roomBounds.x + offset.x) * drawScale.x, (room->roomBounds.y + offset.y) * drawScale.y, room->roomBounds.w * drawScale.x, room->roomBounds.h * drawScale.y);
+
+
+	SDL_SetRenderDrawColor(gf2d_graphics_get_renderer(), 0, 255, 255, 255);
+
+	SDL_RenderDrawRect(gf2d_graphics_get_renderer(), &tempDraw);
 }
 
 

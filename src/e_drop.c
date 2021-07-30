@@ -21,10 +21,21 @@ Drop *drop_new(Vector2D position, Bool randomVelocity, Item *item)
 
 	drop->item = item;
 
-	drop->ent->sprite = item->sprite;
+	if (item->dropSprite)
+	{
+		drop->ent->sprite = item->dropSprite;
+		drop->ent->hitbox.w = 32;
+		drop->ent->hitbox.h = 32;
+	}
+	else
+	{
+		drop->ent->sprite = item->sprite;
+		drop->ent->hitbox.w = 64;
+		drop->ent->hitbox.h = 64;
+	}
+	
 
-	drop->ent->hitbox.w = 64;
-	drop->ent->hitbox.h = 64;
+
 
 	drop->ent->position = position;
 

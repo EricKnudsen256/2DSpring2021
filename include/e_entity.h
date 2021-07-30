@@ -26,6 +26,7 @@ typedef struct Entity_s
 	Bool		isPlayer;								/** flag for player enetity */
 	Bool		doubleJumped;			/** flag for if the player has double jumped */
 	Bool		hasTarget;				/** not in use, was for pathfinding? */
+	Bool		platformCollide;
 	int			health;					/** current health of entity. if 0, call entity_die */
 	int			startingHealth;			/** health the entity starts with for health bars */
 	int			contactDamage;			/** damage to deal on contact with player */
