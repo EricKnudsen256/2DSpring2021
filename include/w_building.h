@@ -34,8 +34,6 @@ typedef struct Building_s
 	Bool		**outputList;	//list of where each output face is for the machine
 
 	Sprite		*sprite;
-	
-	Interactable *interact;
 
 	Anim		**animList;
 	int			maxAnims;

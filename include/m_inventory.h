@@ -5,12 +5,14 @@
 
 #include "g_item.h"
 
+#include "g_inventory.h"
+
 /**
 * @brief creates a new inventory menu
 * @param buttonMax the max amount of buttons in the button list
 * @return a pointer to the new inventory menu
 */
-Menu *inventory_new(int buttonMax);
+Menu *inventory_menu_new(int buttonMax, Vector2D position, Inventory *inventory);
 
 /**
 * @brief creates all slots for the inventory

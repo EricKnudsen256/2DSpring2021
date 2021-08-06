@@ -1,6 +1,8 @@
 #include "simple_logger.h"
 #include "simple_json.h"
 
+#include "gfc_types.h"
+
 #include "g_camera.h"
 #include "g_mouse.h"
 
@@ -272,9 +274,16 @@ void building_list_place_current()
 	{
 		//check if there is a build function for current building
 
+		slog("%s", building_list.currentBuild->buildingName);
+
 		if (strcmp(building_list.currentBuild->buildingName, "itemPipeSlow") == 0)
 		{
 			pipe_new(vector2d((int)mousePos.x / 32, (int)mousePos.y / 32), building_list.currentBuild->size, building_list.currentBuild->rotation);
+
+		}
+		if (strcmp(building_list.currentBuild->buildingName, "chest") == 0)
+		{
+			chest_new(vector2d((int)mousePos.x / 32, (int)mousePos.y / 32), building_list.currentBuild->size, building_list.currentBuild->rotation);
 		}
 		else
 		{

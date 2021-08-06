@@ -15,7 +15,7 @@ typedef struct Interactable_s
 	Vector2D	gridPos;
 	SDL_Rect	interactionBox;
 
-	void *parent;
+	void		*parent;
 
 	void(*onInteract)(struct Interactable *interactible);
 

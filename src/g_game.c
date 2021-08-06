@@ -25,6 +25,7 @@
 #include "g_input.h"
 #include "g_mouse.h"
 #include "g_item.h"
+#include "g_inventory.h"
 
 #include "m_pause.h"
 #include "m_inventory.h"
@@ -77,7 +78,6 @@ void init_game()
 {
 	entity_manager_init(1000);
 	projectile_manager_init(100);
-	player_inventory_init(32);
 
 	//room_manager_init(8, 8, 64, 100);
 	building_list_init();
@@ -146,7 +146,7 @@ void game_main()
 
 	//slog("Spawning player at x:%f, y:%f", spawnPos.x, spawnPos.y);
 
-	player_inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"));
+	inventory_add_item(item_new("testItem", 1, "assets/sprites/items/testItem.png"), player_inventory_get());
 	//slog("maxItems: %i", player_inventory_get_max());
 
 	//player_inventory_slog();
@@ -155,9 +155,11 @@ void game_main()
 
 
 	pauseMenu = pause_menu_new(10);
-	inventoryMenu = inventory_new(50);
+	inventoryMenu = inventory_menu_new(50, vector2d(100, 100), player_inventory_get());
 	minimap = minimap_menu_new(1);
 	buildMenu = build_new(100);
+
+	inventoryMenu->tag = "player_inventory";
 
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 

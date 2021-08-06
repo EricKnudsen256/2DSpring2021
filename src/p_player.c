@@ -12,130 +12,20 @@ void player_update(Entity *self);
 void player_think(Entity *self);
 
 
-void player_inventory_init(Uint32 max_items)
-{
-	if (max_items == 0)
-	{
-		slog("cannot create player inventory with 0 items");
-		return;
-	}
-	if (inventory.item_list != NULL)
-	{
-		player_inventory_free();
-	}
-	inventory.item_list = (Item *)gfc_allocate_array(sizeof (Item), max_items);
-	if (inventory.item_list == NULL)
-	{
-		slog("failed to allocate inventory!");
-		return;
-	}
-	inventory.max_items = max_items;
-	slog("inventory initialized");
-}
-
-void player_inventory_add_item(Item *item)
-{
-	if (!item)
-	if (inventory.item_list == NULL)
-	{
-		slog("Inventory not created, call player_inventory_init first");
-		return;
-	}
-
-	for (int i = 0; i < inventory.max_items; i++)
-	{
-		if (inventory.item_list[i] && strcmp(inventory.item_list[i]->name, item->name) == 0)
-		{
-			if (inventory.item_list[i]->stackNum >= 100)
-			{
-				continue;
-			}
-			inventory.item_list[i]->stackNum += item->stackNum;
-			return;
-		}
-	}
-
-	for (int i = 0; i < inventory.max_items; i++)
-	{
-		if (inventory.item_list[i] == NULL)
-		{
-			inventory.item_list[i] = item;
-			return;
-		}
-	}
-}
-
-void player_inventory_remove_item(int slot)
-{
-	if (slot < inventory.max_items)
-	{
-		inventory.item_list[slot] = NULL;
-	}
-}
-
-Item *player_inventory_get_item(int slot)
-{
-	if (slot < inventory.max_items)
-	{
-		return inventory.item_list[slot];
-	}
-	return NULL;
-}
-
 void player_inventory_free()
 {
-	if (inventory.item_list != NULL)
+	if (playerInventory->item_list != NULL)
 	{
-		free(inventory.item_list);
+		free(playerInventory->item_list);
 	}
-	memset(&inventory, 0, sizeof(PlayerInventory));
+	memset(playerInventory, 0, sizeof(Inventory));
 	slog("inventory deleted");
 }
 
-void player_inventory_slog()
+Inventory *player_inventory_get()
 {
-
-	slog("maxItems: %i", player_inventory_get_max());
-	for (int i = 0; i < inventory.max_items; i++)
-	{
-
-
-		if (!inventory.item_list[i])
-		{
-			slog("Slot %i: empty", i);
-		}
-		else
-		{
-			slog("Slot %i: %s:%i", i, inventory.item_list[i]->name, inventory.item_list[i]->stackNum);
-		}
-	}
+	return playerInventory;
 }
-
-void player_inventory_swap(int slot1, int slot2)
-{
-	Item *temp;
-	if (slot1 < inventory.max_items && slot2 < inventory.max_items)
-	{
-		slog("Slot1: %i, Slot2: %i", slot1, slot2);
-
-		temp = inventory.item_list[slot1];
-		inventory.item_list[slot1] = inventory.item_list[slot2];
-		inventory.item_list[slot2] = temp;
-		player_inventory_slog();
-		return;
-	}
-
-	slog("Slots not in possible range. Slot1: %i, Slot2: %i", slot1, slot2);
-	return;
-
-}
-
-Uint32 player_inventory_get_max()
-{
-	return inventory.max_items;
-}
-
-
 
 
 Entity *player_spawn(Vector2D position)
@@ -173,6 +63,8 @@ Entity *player_spawn(Vector2D position)
 
 	ent->animList[0] = anim_new("assets/sprites/testPlayer2-sheet.png","player_idle", ANIM_IDLE, 0, 29, 15, 48, 64, 6);
 	ent->animList[0]->_current = 1;
+
+	playerInventory = inventory_new(30);
 
 	return ent;
 }

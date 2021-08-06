@@ -44,7 +44,7 @@ void input_game()
 					if (inventory_is_selected(inventoryMenu))
 					{
 						level_new_drop(entity_manager_get_player_ent()->position, inventory_get_selected(inventoryMenu), level);
-						player_inventory_remove_item(inventory_get_selected_slot(inventoryMenu));
+						inventory_remove_item(inventory_get_selected_slot(inventoryMenu), player_inventory_get());
 						inventory_deselect_all(inventoryMenu);
 					}
 					else if (building_list_is_current())

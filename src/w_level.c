@@ -3,6 +3,8 @@
 #include "simple_json.h"
 #include "simple_logger.h"
 
+#include "g_menu.h"
+
 #include "p_player.h"
 
 #include "w_level.h"
@@ -1690,7 +1692,12 @@ Bool level_check_interact(Level *level)
 
 	//do interaction?
 
-	level->interactable_list[largestID]->onInteract(level->interactable_list[largestID]->parent);
+	if (level->interactable_list[largestID]->onInteract)
+	{
+		level->interactable_list[largestID]->onInteract(level->interactable_list[largestID]->parent);
+	}
+
+	
 
 	return true;
 

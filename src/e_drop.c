@@ -4,6 +4,7 @@
 
 #include "g_camera.h"
 #include "g_random.h"
+#include "g_inventory.h"
 
 #include "w_level.h"
 
@@ -91,7 +92,7 @@ Bool drop_check_player_collision(Drop *drop)
 
 	if (SDL_HasIntersection(&player->hitbox, &drop->ent->hitbox) && drop->collectTime + drop->spawnTime < SDL_GetTicks())
 	{
-		player_inventory_add_item(drop->item);
+		inventory_add_item(drop->item, player_inventory_get());
 		level_drop_free(drop, level_manager_get_current());
 	}
 }

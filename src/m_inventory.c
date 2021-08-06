@@ -2,12 +2,13 @@
 
 #include "g_item.h"
 #include "g_font.h"
+#include "g_inventory.h"
 
 #include "p_player.h"
 
 #include "m_inventory.h"
 
-Menu *inventory_new(int buttonMax)
+Menu *inventory_menu_new(int buttonMax, Vector2D position, Inventory *inventory)
 {
 	Menu *inventoryMenu;
 
@@ -15,7 +16,7 @@ Menu *inventory_new(int buttonMax)
 
 
 
-	inventoryMenu->position = vector2d(100, 100);
+	inventoryMenu->position = position;
 	gfc_rect_set(inventoryMenu->windowSize, inventoryMenu->position.x, inventoryMenu->position.y, 1000, 400);
 
 
@@ -31,6 +32,8 @@ Menu *inventory_new(int buttonMax)
 
 	inventoryMenu->tag = "inventory";
 
+	inventoryMenu->data = inventory;
+
 
 	inventory_create_slots(inventoryMenu);
 
@@ -41,7 +44,15 @@ Menu *inventory_new(int buttonMax)
 
 void inventory_create_slots(Menu *inventoryMenu)
 {
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	if (!inventoryMenu->data)
+	{
+		slog("Slots not created");
+		return;
+	}
+
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		int testIndex;
 		testIndex = menu_button_new(inventoryMenu);
@@ -62,7 +73,7 @@ void inventory_create_slots(Menu *inventoryMenu)
 
 		gfc_rect_set(button->buttonSize, button->position.x, button->position.y, 64, 64);
 
-		button->buttonTag = "testButton";
+		button->buttonTag = "inventoryButton";
 		button->sprite = gf2d_sprite_load_image("assets/sprites/menus/inventorySlot.png");
 		button->onPress = inventory_button_select;
 	}
@@ -74,12 +85,14 @@ void inventory_think(Menu *inventoryMenu)
 	int selectedSlot1 = -1;
 	int	selectedSlot2 = -1;
 
+	Inventory *inventory = inventoryMenu->data;
+
 	//need to check if 2 slots are selected at the same time, if so, swap items
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	for (int i = 0; i < inventory->max_items; i++)
 	{
-		if (player_inventory_get_item(i))
+		if (inventory_get_item(i, inventory))
 		{
-			inventoryMenu->buttonList[i]->sprite2 = player_inventory_get_item(i)->sprite;
+			inventoryMenu->buttonList[i]->sprite2 = inventory_get_item(i, inventory)->sprite;
 		}
 		else
 		{
@@ -109,7 +122,7 @@ void inventory_think(Menu *inventoryMenu)
 	{
 		inventory_deselect_all(inventoryMenu);
 
-		player_inventory_swap(selectedSlot1, selectedSlot2);
+		inventory_swap(selectedSlot1, selectedSlot2, inventory);
 		selectedSlot1 = -1;
 		selectedSlot2 = -1;
 	}
@@ -124,7 +137,9 @@ void inventory_set_inactive(Button *button, Menu *inventoryMenu)
 {
 	inventoryMenu->_active = 0;
 
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		inventoryMenu->buttonList[i]->_selceted = false;
 		inventoryMenu->buttonList[i]->sprite = gf2d_sprite_load_image("assets/sprites/menus/inventorySlot.png");
@@ -135,7 +150,10 @@ void inventory_set_inactive(Button *button, Menu *inventoryMenu)
 void inventory_button_select(Button *slot, Menu *inventoryMenu)
 {
 	Bool isSelected = false;
-	for (int i = 0; i < player_inventory_get_max(); i++)
+
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		if (inventoryMenu->buttonList[i]->_selceted == true)
 		{
@@ -157,7 +175,10 @@ void inventory_button_select(Button *slot, Menu *inventoryMenu)
 
 void inventory_deselect_all(Menu *inventoryMenu)
 {
-	for (int i = 0; i < player_inventory_get_max(); i++)
+
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		if (inventoryMenu->buttonList[i]->_selceted == true)
 		{
@@ -169,7 +190,9 @@ void inventory_deselect_all(Menu *inventoryMenu)
 
 Bool inventory_is_selected(Menu *inventoryMenu)
 {
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		if (inventoryMenu->buttonList[i]->_selceted == true)
 		{
@@ -181,11 +204,13 @@ Bool inventory_is_selected(Menu *inventoryMenu)
 
 Item *inventory_get_selected(Menu *inventoryMenu)
 {
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		if (inventoryMenu->buttonList[i]->_selceted == true)
 		{
-			return player_inventory_get_item(i);
+			return inventory_get_item(i, inventory);
 		}
 	}
 	return NULL;
@@ -193,7 +218,9 @@ Item *inventory_get_selected(Menu *inventoryMenu)
 
 int inventory_get_selected_slot(Menu *inventoryMenu)
 {
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
 		if (inventoryMenu->buttonList[i]->_selceted == true)
 		{
@@ -215,13 +242,15 @@ void inventory_draw(Menu *inventoryMenu)
 
 	//slog("Draw");
 
-	for (int i = 0; i < player_inventory_get_max(); i++)
+	Inventory *inventory = inventoryMenu->data;
+
+	for (int i = 0; i < inventory->max_items; i++)
 	{
-		if (player_inventory_get_item(i))
+		if (inventory_get_item(i, inventory))
 		{
 			drawPos = vector2d(inventoryMenu->buttonList[i]->position.x + 4, inventoryMenu->buttonList[i]->position.y);
 
-			item = player_inventory_get_item(i);
+			item = inventory_get_item(i, inventory);
 
 			gfc_line_sprintf(itemNum, "%i", item->stackNum);
 
