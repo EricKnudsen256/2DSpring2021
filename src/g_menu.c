@@ -89,7 +89,6 @@ Bool menu_manager_check_click()
 			return true;
 		}
 	}
-
 	return false;
 }
 
@@ -124,6 +123,23 @@ Menu *menu_manager_get_by_tag(char* tag)
 	}
 	//slog("cannot find menu with tag");
 	return NULL;
+}
+
+Bool menu_manager_close_all_by_tag(char *tag)
+{
+	Bool rtn = false;
+
+	for (int i = 0; i < menu_manager.max_menus; i++)
+	{
+		if (menu_manager.menu_list[i]._inuse == 0) continue;
+		if (menu_manager.menu_list[i]._active == 0) continue;
+		if (menu_manager.menu_list[i].tag == tag)
+		{
+			rtn = true;
+			menu_manager.menu_list[i]._active = 0;
+		}
+	}
+	return rtn;
 }
 
 void menu_manager_free()

@@ -58,6 +58,16 @@ Chest *chest_new(Vector2D gridPos, Vector2D size, int direction)
 
 void chest_update(Chest *chest)
 {
+	Entity *player = entity_manager_get_player_ent();
+
+	Vector2D playerCenter = vector2d(player->position.x + player->hitbox.w / 2, player->position.y + player->hitbox.h / 2);
+	Vector2D chestCenter = vector2d(chest->building->position.x + chest->building->hitbox.w / 2, chest->building->position.y + chest->building->hitbox.h / 2);
+
+	if (!vector2d_distance_between_less_than(playerCenter, chestCenter, 100.0) && chest->state == CHEST_OPEN)
+	{
+		chest_close_inventory(chest);
+	}
+
 	anim_list_update(chest->animList, chest->animListLen);
 }
 
@@ -103,7 +113,7 @@ void chest_interact(Chest *chest)
 	{
 		chest_close_inventory(chest);
 	}
-	if (chest->state == CHEST_CLOSED)
+	else if (chest->state == CHEST_CLOSED)
 	{
 		chest_open_inventory(chest);
 	}
@@ -111,14 +121,22 @@ void chest_interact(Chest *chest)
 
 void chest_open_inventory(Chest *chest)
 {
-	chest->chestMenu->_active = 1;
+	inventory_set_active(NULL, chest->chestMenu);
 	chest->state = CHEST_OPEN;
+
+	Menu* inventoryMenu = menu_manager_get_by_tag("player_inventory");
+	inventory_set_active(NULL, inventoryMenu);
 }
 
 void chest_close_inventory(Chest *chest)
 {
-	chest->chestMenu->_active = 0;
+	inventory_set_inactive(NULL, chest->chestMenu);
 	chest->state = CHEST_CLOSED;
+
+	Menu* inventoryMenu = menu_manager_get_by_tag("player_inventory");
+	inventory_set_inactive(NULL, inventoryMenu);
+	
+	//slog("test");
 }
 
 void chest_free(Chest *chest)

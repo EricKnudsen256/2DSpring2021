@@ -74,6 +74,9 @@ void menu_manager_draw_menus();
 */
 Menu *menu_manager_get_by_tag(char* tag);
 
+//returns true if inventory was found, false if not
+Bool menu_manager_close_all_by_tag(char *tag);
+
 
 /**
 * @brief frees the menu manager
@@ -132,6 +135,7 @@ void menu_buttons_check_click(Menu *menu);
 * @param the menu to draw the buttons of
 */
 void menu_buttons_draw(Menu *menu);
+
 
 
 #endif

@@ -16,6 +16,8 @@ Inventory *inventory_new(Uint32 max_items)
 
 	inventory->max_items = max_items;
 
+	inventory->selected = -1;
+
 	return inventory;
 }
 
@@ -103,16 +105,16 @@ void inventory_slog(Inventory *inventory)
 }
 
 
-void inventory_swap(int slot1, int slot2, Inventory *inventory)
+void inventory_swap(int slot1, int slot2, Inventory *inventory1, Inventory *inventory2)
 {
 	Item *temp;
-	if (slot1 < inventory->max_items && slot2 < inventory->max_items)
+	if (slot1 < inventory1->max_items && slot2 < inventory2->max_items)
 	{
 		slog("Slot1: %i, Slot2: %i", slot1, slot2);
 
-		temp = inventory->item_list[slot1];
-		inventory->item_list[slot1] = inventory->item_list[slot2];
-		inventory->item_list[slot2] = temp;
+		temp = inventory1->item_list[slot1];
+		inventory1->item_list[slot1] = inventory2->item_list[slot2];
+		inventory2->item_list[slot2] = temp;
 		//inventory_slog(inventory);
 		return;
 	}

@@ -161,6 +161,7 @@ void game_main()
 
 	inventoryMenu->tag = "player_inventory";
 
+
 	bgMusic = gfc_sound_load("assets/audio/UFO Gang.wav", 1, 1);
 
 

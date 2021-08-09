@@ -27,7 +27,7 @@ void input_game()
 	Level *level = level_manager_get_current();
 
 	pauseMenu = menu_manager_get_by_tag("pause");
-	inventoryMenu = menu_manager_get_by_tag("inventory");
+	inventoryMenu = menu_manager_get_by_tag("player_inventory");
 	buildMenu = menu_manager_get_by_tag("build");
 
 	while (SDL_PollEvent(&e))
@@ -85,10 +85,23 @@ void input_game()
 					case SDL_SCANCODE_ESCAPE:
 						if (pauseMenu->_active == 0)
 						{
-							build_set_inactive(NULL, buildMenu);
-							pause_menu_set_active(NULL, pauseMenu);
-							inventory_set_inactive(NULL, inventoryMenu);
-
+							Bool foundMenu = false;
+							if (menu_manager_close_all_by_tag("inventory"))
+							{
+								foundMenu = true;
+							}
+							if (menu_manager_close_all_by_tag("build"))
+							{
+								foundMenu = true;
+							}
+							if (menu_manager_close_all_by_tag("player_inventory"))
+							{
+								foundMenu = true;
+							}
+							if (!foundMenu)
+							{
+								pause_menu_set_active(NULL, pauseMenu);
+							}
 						}
 						else if (pauseMenu->_active == 1)
 						{
@@ -134,15 +147,8 @@ void input_game()
 				else if (e.button.button == SDL_SCANCODE_TAB && inventoryMenu->_active == 1)
 				{
 					inventory_set_inactive(NULL, inventoryMenu);
+					menu_manager_close_all_by_tag("inventory");
 				}
-			}
-
-			if (e.button.button == SDL_SCANCODE_L)
-			{
-				Level *level = level_manager_get_current();
-				Vector2D playerPos = entity_manager_get_player_ent()->position;
-
-				level_interact_new(&playerPos, NULL, 200, 200, level);
 			}
 		}
 		else if (e.type == SDL_MOUSEWHEEL)
@@ -199,13 +205,12 @@ void input_editor()
 			{
 				if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 0)
 				{
-
+					menu_manager_close_all_by_tag("inventory");
 					pause_menu_set_active(NULL, pauseMenu);
 
 				}
 				else if (e.button.button == SDL_SCANCODE_ESCAPE && pauseMenu->_active == 1)
 				{
-
 					pause_menu_set_inactive(NULL, pauseMenu);
 
 				}

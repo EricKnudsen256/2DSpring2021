@@ -9,7 +9,8 @@ typedef struct
 	Item **item_list;
 	Uint32  max_items;
 
-	int *selected;
+	int selected;
+
 }Inventory;
 
 /**
@@ -49,7 +50,7 @@ void inventory_slog(Inventory *inventory);
 * @param slot1 the slot of the first item
 * @param slot2 the slot of the second item
 */
-void inventory_swap(int slot1, int slot2, Inventory *inventory);
+void inventory_swap(int slot1, int slot2, Inventory *inventory1, Inventory *inventory2);
 
 /**
 * @brief returns the size of the inventory

@@ -69,4 +69,5 @@ int inventory_get_selected_slot(Menu *inventoryMenu);
 */
 void inventory_draw(Menu *inventoryMenu);
 
+
 #endif
