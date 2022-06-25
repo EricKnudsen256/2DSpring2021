@@ -1,0 +1,33 @@
+c:\users\eric\git\gameframework2d\src\g_game.c:48: ---==== BEGIN ====---
+c:\users\eric\git\gameframework2d\src\gf2d_graphics.c:143: graphics initialized
+c:\users\eric\git\gameframework2d\src\gf2d_sprite.c:47: sprite system initialized
+c:\users\eric\git\gameframework2d\src\g_mouse.c:15: mouse initialized
+c:\users\eric\git\gameframework2d\src\g_menu.c:31: menu system initialized
+c:\users\eric\git\gameframework2d\gfc\src\gfc_audio.c:77: sound system initialized
+c:\users\eric\git\gameframework2d\gfc\src\gfc_audio.c:47: audio system initialized
+c:\users\eric\git\gameframework2d\src\e_entity.c:32: entity system initialized
+c:\users\eric\git\gameframework2d\src\g_projectile.c:88: projectile system initialized
+c:\users\eric\git\gameframework2d\src\w_building.c:48: building list initialized. Size: 8
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 2
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 4
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 4
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 2
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 2
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 2
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 2
+c:\users\eric\git\gameframework2d\src\w_building.c:130: 0
+c:\users\eric\git\gameframework2d\src\w_level.c:39: level system initialized
+c:\users\eric\git\gameframework2d\src\g_item.c:42: item list initialized. Size: 28
+c:\users\eric\git\gameframework2d\src\g_item.c:97: recipe list initialized. Size: 14
+c:\users\eric\git\gameframework2d\src\w_level.c:1584: ore could not be placed randomly
+c:\users\eric\git\gameframework2d\src\g_game.c:248: ---==== END ====---
+c:\users\eric\git\gameframework2d\src\e_entity.c:42: entity system closed
+c:\users\eric\git\gameframework2d\src\g_projectile.c:98: projectile system closed
+c:\users\eric\git\gameframework2d\src\w_level.c:80: level system closed
+c:\users\eric\git\gameframework2d\src\p_player.c:22: inventory deleted
+c:\users\eric\git\gameframework2d\src\w_building.c:342: building list closed
+c:\users\eric\git\gameframework2d\gfc\src\gfc_audio.c:64: sound system closed
+c:\users\eric\git\gameframework2d\gfc\src\gfc_audio.c:52: audio system closed
+c:\users\eric\git\gameframework2d\src\g_menu.c:152: menu system closed
+c:\users\eric\git\gameframework2d\src\gf2d_sprite.c:30: sprite system closed
+c:\users\eric\git\gameframework2d\src\gf2d_graphics.c:174: graphics closed
