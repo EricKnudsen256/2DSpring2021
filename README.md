@@ -1,5 +1,13 @@
 # 2D Factory Final
 
+## Additions Since This Class Ended
+* Improvments to collision detection/avoidance to improve performance with many entities
+* Created interactible base objects. Objects with a red box around them can be interacted with by pressing E
+* Implemented simple animation system
+* Small ore nodes now spawn around the map. Interacting with an ore node will drop ore on the ground that the player can pick up after a few seconds
+* Improved the inventory system to be functional with multiple inventories
+* Added in simple building system. Most buildings are unfinished, however, chests can be placed that the player can store items in. The player can interact with chests by pressing E
+
 ## Basics
 
 In order to start the game, simply run the 2dGameFramework.exe
