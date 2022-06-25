@@ -10,7 +10,9 @@
 
 ## Basics
 
-In order to start the game, simply run the 2dGameFramework.exe
+In order to start the game on Windows, simply download the files in the "Build" branch and run the 2dGameFramework.exe
+
+On Linux and Mac, the game would need to be recompiled using the makefiles included in the src and the /gfc/src directories. Feel free to email me at e.knudsen256@gmail.com if you want me to attempt to compile this for a specific platform. 
 
 # Midterm Specific Deliverables 
 
